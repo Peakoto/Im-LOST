@@ -1,19 +1,27 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Link} from "react-router-dom";
 import React from 'react'
 
 // Import pages
-import Home from "./pages/Home/Home.jsx";
-import PostLost from "./pages/Post_lost/PostLost.jsx";
-import PostFound from "./pages/Post_found/PostFound.jsx";
-import Profile from "./pages/Profile/Profile.jsx";
+import Home from "./pages/Home/Home";
+import PostLost from "./pages/Post_lost/PostLost";
+import PostFound from "./pages/Post_found/PostFound";
+import Profile from "./pages/Profile/Profile";
 
 // Import MainLayout
-import MainLayout from './layout/MainLayout.jsx';
+import MainLayout from './layout/MainLayout';
 
-const App = () => {
+function App(){
   return (
-    <Router>
+    <BrowserRouter>
+      {/* <nav>
+        <Link to="/">Home</Link> |{" "}
+        <Link to="/post-lost">Post Lost</Link> |{" "}
+        <Link to="/post-found">Post Found</Link> |{" "}
+
+        <Link to="/profile">profile</Link>
+      </nav> */}
+
       <Routes>
         <Route
           path="/"
@@ -53,7 +61,7 @@ const App = () => {
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

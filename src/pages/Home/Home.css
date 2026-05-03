@@ -1,0 +1,13 @@
+.item {
+    display: flex;
+    background-color: blue;
+    flex-wrap: wrap;
+    /* width:300px;
+    margin:auto; */
+}
+.item > div {
+    background-color: antiquewhite;
+  width:24%;
+  margin: 5px;
+  padding: 10px;
+}
