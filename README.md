@@ -1,5 +1,17 @@
+<<<<<<< HEAD
 # React + Vite
+=======
+<<<<<<< HEAD
+>>>>>>> 56e5d5969392d3f288a0e932efba78493ecc2528
 
+=======
+# IMPORTANT
+To run on your system, please install react-router-dom into the directory using 
+npm install react-router-dom 
+
+Use this tutorial to set up the directory: https://www.w3schools.com/react/react_getstarted.asp
+
+# React + Vite
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
