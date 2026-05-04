@@ -20,3 +20,29 @@
 // - item name descending
 // - date ascending
 // - date descending
+
+import React from "react";
+
+const DropdownRadio = ({ name, options, selected, setSelected, closeDropdown }) => {
+    return (
+        <>
+            {options.map((option, index) => (
+                <label key={index} className="dropdown-item">
+                    <input 
+                        type="radio" 
+                        name={name}
+                        value={option}
+                        checked={selected === option}
+                        onChange={() => {
+                            setSelected(option);
+                            closeDropdown();
+                        }}
+                    />
+                    <span>{option}</span>
+                </label>
+            ))}
+        </>
+    )
+}
+
+export default DropdownRadio;

@@ -1,0 +1,19 @@
+.home {
+    padding: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 200px);
+    gap: 20px;
+    justify-content: center;
+}
+
+.top {
+    margin-bottom: 20px;
+    margin-top: -20px;
+    justify-content: center;
+    gap: 30px;
+    flex-direction: row;
+    display: flex;
+}

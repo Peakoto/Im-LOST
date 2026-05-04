@@ -2,6 +2,7 @@ import "./MainLayout.css";
 import logo from "../assets/logo_binus.png";
 import profile_icon from "../assets/profile_icon.png"; // button that navigates to profile page
 import history_icon from "../assets/history_icon.png"; // button that shows the popup of HistoryModal
+import Button from "../components/Button";
 
 function MainLayout({children}) {
     return (
@@ -15,9 +16,13 @@ function MainLayout({children}) {
                     </div>
 
                     <div className="right">
+                        <Button 
+                            type="login"
+                            label="Log In"
+                            // to="../auth/ModalLogin.jsx"
+                        />
                         <img src={history_icon} alt="history" className="icon"/>
                         <img src={profile_icon} alt="profile" className="icon"/>
-                        
                     </div>
                 </div>
             </header>

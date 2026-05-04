@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-# React + Vite
-=======
-<<<<<<< HEAD
->>>>>>> 56e5d5969392d3f288a0e932efba78493ecc2528
-
 =======
 # IMPORTANT
 To run on your system, please install react-router-dom into the directory using 

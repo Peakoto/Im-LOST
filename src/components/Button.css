@@ -1,0 +1,41 @@
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-login {
+    background-color: #fff;
+    color:black
+}
+
+.btn-filter {
+    background-color: #fff;
+    color:black;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    border: 1px solid #2289E6;
+    width: 130px;
+    
+}
+
+.btn-filter:hover {
+    background-color: #2289E6;
+    color: #fff;
+}
+
+.btn-post {
+    background-color: #2289E6;
+    color:#fff;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    border: 1px solid #fff;
+    width: 165px;
+    
+}
+
+.btn-post:hover {
+    background-color: #fff;
+    color: black;
+    border-color: #2289E6;
+}
