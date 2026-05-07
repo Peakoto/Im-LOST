@@ -16,11 +16,11 @@ import { useNavigate } from "react-router-dom";
 import "./Button.css";
 
 const Button = ({ type, label, to, onClick}) => {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     
     const handleClick = () => {
         if (onClick) onClick();
-        // if (to) navigate(to);
+        if (to) navigate(to);
     };
 
     return (

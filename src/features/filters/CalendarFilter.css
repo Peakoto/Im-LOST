@@ -1,0 +1,25 @@
+.calendar-filter {
+    width: 100%;
+}
+
+.calendar-input {
+    width: 100%;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    outline: none;
+}
+
+.calendar-input:focus {
+    border-color: #2289e6;
+}
+
+.calendar-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-group label {
+    font-size: 14px;
+    font-weight: bold;
+}

@@ -1,0 +1,118 @@
+import placeholder from "../assets/water_bottle.jpeg";
+
+const items = [
+    {
+      id: 1,
+      title: "Lost Glass Bottle (a)",
+      campus: "Alam Sutera",
+      date: "2026-05-01",
+      image: placeholder,
+      category: "Bottle",
+      location: "LKC",
+      color: ["Blue"],
+      description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus maiores dolore odio iusto sed, quod atque non doloremque modi assumenda perferendis voluptas quo quos reiciendis? Suscipit corrupti eveniet, eligendi minus, pariatur ex odit possimus reprehenderit odio molestiae veniam alias repellendus amet labore accusamus. Fugiat magnam necessitatibus placeat unde voluptates expedita aut aliquid eius eveniet blanditiis ea in sed dolorum quam, magni perspiciatis cupiditate ipsum assumenda facere! Nihil, nesciunt? Laboriosam vero soluta fugiat eligendi ut quis sint ex repudiandae excepturi? Incidunt praesentium dolor rem ratione aut. Illum alias ipsum eligendi beatae ea ab voluptatibus dolore quas natus, repellendus numquam, nemo veritatis?",
+      locationDescription: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae rerum sint quas a voluptate dignissimos fugit temporibus autem eaque, in eius praesentium ipsum est pariatur dolorum eligendi quod possimus ipsa ad nostrum! Aperiam consectetur quas laborum corrupti voluptatibus temporibus beatae neque unde odio maiores velit autem mollitia, placeat error consequatur.",
+      founder:"Roland",
+      floor: "1"
+    },
+    {
+      id: 2,
+      title: "Lost Glass Bottle (a)",
+      campus: "Alam Sutera",
+      date: "2026-05-03",
+      image: placeholder,
+      category: "Bottle",
+      location: "LKC",
+      color: ["Red"],
+      description: "This is the description of the item.",
+      locationDescription: "This is the location description of the item.",
+      founder:"Roland",
+      floor: "1"
+    },
+    {
+      id: 3,
+      title: "Lost Glass Bottle (a)",
+      campus: "Alam Sutera",
+      date: "2026-05-05",
+      image: placeholder,
+      category: "Bottle",
+      location: "LKC",
+      color: ["Blue"],
+      description: "This is the description of the item.",
+      locationDescription: "This is the location description of the item.",
+      founder:"Roland",
+      floor: "1"
+    },
+    {
+      id: 4,
+      title: "Lost Glass Bottle (a)",
+      campus: "Alam Sutera",
+      date: "2026-05-07",
+      image: placeholder,
+      category: "Bottle",
+      location: "LKC",
+      color: ["Red", "Blue"],
+      description: "This is the description of the item.",
+      locationDescription: "This is the location description of the item.",
+      founder:"Roland",
+      floor: "1"
+    },
+    {
+      id: 5,
+      title: "Lost Glass Bottle (b)",
+      campus: "Bandung",
+      date: "2026-05-09",
+      image: placeholder,
+      category: "Bottle",
+      location: "LKC",
+      color: ["Red"],
+      description: "This is the description of the item.",
+      locationDescription: "This is the location description of the item.",
+      founder:"Roland",
+      floor: "1"
+    },
+    {
+      id: 6,
+      title: "Lost Glass Bottle (b)",
+      campus: "Bandung",
+      date: "2026-04-11",
+      image: placeholder,
+      category: "Bottle",
+      location: "LKC",
+      color: ["Red"],
+      description: "This is the description of the item.",
+      locationDescription: "This is the location description of the item.",
+      founder:"Roland",
+      floor: "1"
+    },
+    {
+      id: 7,
+      title: "Lost Glass Bottle (b)",
+      campus: "Bandung",
+      date: "2026-04-16",
+      image: placeholder,
+      category: "Bottle",
+      location: "LKC",
+      color: ["Blue"],
+      description: "This is the description of the item.",
+      locationDescription: "This is the location description of the item.",
+      founder:"Roland",
+      floor: "1"
+    },
+    {
+      id: 8,
+      title: "Lost Glass Bottle (a)",
+      campus: "Alam Sutera",
+      date: "2026-04-20",
+      image: placeholder,
+      category: "Bottle",
+      location: "LKC",
+      color: ["Blue", "Red"],
+      description: "This is the description of the item.",
+      locationDescription: "This is the location description of the item.",
+      founder:"Roland",
+      floor: "1"
+    },
+  ]
+
+export default items;
