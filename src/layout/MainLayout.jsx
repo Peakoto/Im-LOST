@@ -3,8 +3,12 @@ import logo from "../assets/logo_binus.png";
 import profile_icon from "../assets/profile_icon.png"; // button that navigates to profile page
 import history_icon from "../assets/history_icon.png"; // button that shows the popup of HistoryModal
 import Button from "../components/Button";
+import Login from "../features/auth/ModalLogin.jsx";
+import { useState } from "react";
 
 function MainLayout({children}) {
+    const [showLogin, setShowLogin] = useState(false);
+
     return (
         <div className="layout">
             {/* La Header */}
@@ -19,7 +23,7 @@ function MainLayout({children}) {
                         <Button 
                             type="login"
                             label="Log In"
-                            // to="../auth/ModalLogin.jsx"
+                            onClick={() => setShowLogin(true)}
                         />
                         <img src={history_icon} alt="history" className="icon"/>
                         <img src={profile_icon} alt="profile" className="icon"/>
@@ -48,7 +52,10 @@ function MainLayout({children}) {
                     {"\n\n"}Tlp (021) 53696969 Ext. 1007
                 </p>
             </footer>
-
+            
+            {showLogin && (
+                <Login onClose={() => setShowLogin(false)} />
+            )}
         </div>
     )
 }

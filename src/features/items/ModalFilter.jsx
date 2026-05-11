@@ -58,10 +58,7 @@ const ModalFilter = ({onClose,
                 {/* La ⨉ close button */}
                 <div className="modal-header">
                 <h2>Filter</h2>
-                <button 
-                    className="close-btn"
-                    onClick={onClose}
-                >
+                <button className="close-btn" onClick={onClose}>
                     ⨉
                 </button>
                 </div>

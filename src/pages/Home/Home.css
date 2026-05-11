@@ -17,3 +17,12 @@
     flex-direction: row;
     display: flex;
 }
+
+.empty-state{
+    width:100%;
+    text-align:center;
+    padding:40px 0;
+
+    font-size:18px;
+    color:#777;
+}

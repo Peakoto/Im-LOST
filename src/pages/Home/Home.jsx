@@ -193,17 +193,29 @@ const Home = () => {
       
       {/* The Grid for those items */}
       <div className="grid">
-        {filteredItems.map((item) => (
-          <ItemCard 
-            key={item.id} 
-            item={item} 
+
+      {filteredItems.length > 0 ? (
+
+        filteredItems.map((item) => (
+          <ItemCard
+            key={item.id}
+            item={item}
             onClick={(clickedItem) => {
               setSelectedItem(clickedItem);
               setShowItemDetails(true);
             }}
           />
-        ))}
-      </div>
+        ))
+
+      ) : (
+
+        <div className="empty-state">
+          No items found.
+        </div>
+
+      )}
+
+    </div>
     </div> 
   )
 }
