@@ -18,7 +18,7 @@ const App = () => {
         <Route
           path="/"
           element={
-            <MainLayout>
+            <MainLayout pageTitle={<>LIST OF <span className="title-bold">LOST</span> ITEMS</>}>
               <Home />
             </MainLayout>
           }
@@ -27,7 +27,7 @@ const App = () => {
         <Route
           path="/post-lost"
           element={
-            <MainLayout>
+            <MainLayout pageTitle={<>POST <span className="title-bold">LOST</span> ITEM</>}>
               <PostLost />
             </MainLayout>
           }
@@ -36,7 +36,7 @@ const App = () => {
         <Route
           path="/post-found"
           element={
-            <MainLayout>
+            <MainLayout pageTitle={<>POST <span className="title-bold">FOUND</span> ITEM</>}>
               <PostFound />
             </MainLayout>
           }
@@ -45,7 +45,7 @@ const App = () => {
         <Route
           path="/profile"
           element={
-            <MainLayout>
+            <MainLayout pageTitle={<>USER <span className="title-bold">PROFILE</span></>}>
               <Profile />
             </MainLayout>
           }

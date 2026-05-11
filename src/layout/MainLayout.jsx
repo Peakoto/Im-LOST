@@ -5,30 +5,52 @@ import history_icon from "../assets/history_icon.png"; // button that shows the 
 import Button from "../components/Button";
 import Login from "../features/auth/ModalLogin.jsx";
 import { useState } from "react";
+// import History from "../features/history/ModalHistory.jsx";
 
-function MainLayout({children}) {
+function MainLayout({children, pageTitle = "LOST AND FOUND"}) {
     const [showLogin, setShowLogin] = useState(false);
+    // const [showHistory, setShowHistory] = useState(false);
 
     return (
         <div className="layout">
-            {/* La Header */}
+            {/* HEADER */}
             <header className="header">
-                <div className="header-container">
-                    <div className="left">
-                        <img src={logo} alt="logo" className="logo"/>
-                        <h1 className="title">Lost & Found</h1>
-                    </div>
 
-                    <div className="right">
-                        <Button 
-                            type="login"
-                            label="Log In"
-                            onClick={() => setShowLogin(true)}
-                        />
-                        <img src={history_icon} alt="history" className="icon"/>
-                        <img src={profile_icon} alt="profile" className="icon"/>
-                    </div>
+                {/* Logo Container */}
+                <div className="header-logo">
+                    <img src={logo} alt="logo" className="logo" />
                 </div>
+
+                {/* Title Container */}
+                <div className="header-title">
+                    <h1 className="title">{pageTitle}</h1>
+                </div>
+
+                {/* Actions Container */}
+                <div className="header-actions">
+
+                    <Button
+                        type="login"
+                        label="Log In"
+                        onClick={() => setShowLogin(true)}
+                    />
+
+                    <Button
+                        type="header"
+                        icon={profile_icon}
+                        iconOnly={true}
+                        to="profile"
+                    />
+
+                    <Button
+                        type="header"
+                        icon={history_icon}
+                        iconOnly={true}
+                        // onClick={() => setShowHistory(true)}
+                    />
+
+                </div>
+
             </header>
 
             {/* Content */}
@@ -56,11 +78,12 @@ function MainLayout({children}) {
             {showLogin && (
                 <Login onClose={() => setShowLogin(false)} />
             )}
+            
+            {/* {showHistory && (
+                <History onClose={() => setShowHistory(false)} />
+            )} */}
         </div>
     )
 }
 
 export default MainLayout;
-
-
-

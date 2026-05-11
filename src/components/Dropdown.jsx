@@ -4,7 +4,7 @@ import "./Dropdown.css";
 import arrow from "../assets/arrow.png";
 
 
-const Dropdown = ({ label, children }) => {
+const Dropdown = ({ label, children, type="default" }) => {
     const [open, setOpen] = useState(false);
     const ref = useRef();
 
@@ -22,7 +22,7 @@ const Dropdown = ({ label, children }) => {
     return (
         <div className="dropdown" ref={ref}>
             <button 
-                className="dropdown-btn"
+                className={`dropdown-btn dropdown-btn-${type}`}
                 onClick={() => setOpen(!open)}
             >
                 {label}

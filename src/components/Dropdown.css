@@ -10,7 +10,7 @@
     background: white;
     cursor: pointer;
     border-radius: 5px;
-    box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    /* box-shadow: 2px 2px 8px rgba(0,0,0,0.5); */
     min-width: 140px;
     font-size: 16px;
 }
@@ -37,6 +37,11 @@
 
 .dropdown-item:hover {
     background-color: #ddd;
+}
+
+.dropdown-btn-campus {
+    font-size: 18px;
+    height: 50px;
 }
 
 .arrow {

@@ -20,6 +20,11 @@
     
 }
 
+.btn-header:hover {
+    transform: scale(1.1);
+    background-color: transparent;
+}
+
 .btn-filter:hover {
     background-color: #2289E6;
     color: #fff;
@@ -28,14 +33,50 @@
 .btn-post {
     background-color: #2289E6;
     color:#fff;
-    box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    /* box-shadow: 2px 2px 8px rgba(0,0,0,0.5); */
     border: 1px solid #fff;
-    width: 165px;
-    
+    width: 180px;
+    height: 50px;
+    font-size: 18px;
 }
 
 .btn-post:hover {
     background-color: #fff;
     color: black;
     border-color: #2289E6;
+}
+
+.btn-login {
+    font-size: 18px;
+}
+
+.btn-login:hover {
+    background-color: #dddddd;
+    /* color: #fff; */
+}
+
+.button-icon {
+    width: 40px;
+    height: auto;
+    object-fit: contain;
+}
+
+.btn-icon-only {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: fit-content;
+    height: fit-content;
+    box-shadow: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.btn-icon-only:hover {
+    transform: scale(1.1);
+    background: transparent;
 }

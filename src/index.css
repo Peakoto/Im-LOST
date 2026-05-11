@@ -4,9 +4,12 @@
   box-sizing: border-box;
 }
 
+/* npm install @fontsource/inter */
+/* npm install @fontsource/manrope */
+/* for installing the inter font on the terminal */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #dedede;
+  font-family: 'Manrope', Helvetica, Arial, sans-serif;
+  background-color: #e7e7e7;
   margin: 0;
 }
 

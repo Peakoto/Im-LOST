@@ -1,0 +1,46 @@
+the filters options name
+
+campus={[
+    "Alam Sutera",
+    "Anggrek",
+    "Bekasi",
+    "Bandung",
+    "Malang",
+    "Semarang",
+    "Senayan",
+    "Syahdan & Kijang"
+]}
+category={[
+    "Accessories",
+    "Bottle",
+    "Clothing",
+    "Documents",
+    "Electronics",
+    "ID Card",
+    "Stationery"
+]}
+color={[
+    "Red",
+    "Orange",
+    "Yellow",
+    "Green",
+    "Blue",
+    "Purple",
+    "Pink",
+    "Brown",
+    "Black",
+    "White",
+    "Grey"
+]}
+location={[
+    "Canteen",
+    "Classroom",
+    "Gym",
+    "Hallway",
+    "Lift Area",
+    "LKC",
+    "Lobby",
+    "Parking Lot",
+    "Toilet",
+    "Others"
+]}

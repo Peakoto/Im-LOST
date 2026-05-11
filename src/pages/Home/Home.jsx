@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import ItemCard from "../../components/ItemCard";
 import "./Home.css";
 import Button from "../../components/Button";
@@ -7,7 +7,11 @@ import DropdownRadio from "../../components/DropdownRadio";
 import ModalFilter from "../../features/items/ModalFilter";
 import SearchBar from "../../components/SearchBar";
 import ModalItemDetailsStudentView from "../../features/items/ModalItemDetailsStudentView";
-import mockItems from "../../data/mockItems.js";
+// import mockItems from "../../data/mockItems.js";
+import filterIcon from "../../assets/filter_icon.png";
+import { supabase } from "../../data/supabase";
+import { mapItem } from "../../data/mapItem";
+
 
 // later when backend is done
 // import { getItems } from "../../api/itemApi"; 
@@ -15,11 +19,37 @@ import mockItems from "../../data/mockItems.js";
 // later on, to implement the backend, use the url
 // ex -> image: "http://localhost:5000/uploads/image.jpg"
 
+console.log(import.meta.env);
+
 const Home = () => {
   // mock items or dummies 
-  const items = mockItems;
+  // const items = mockItems;
   // later replace mockItems with
   // const [items, setItems] = useState([]);
+
+  const [items, setItems] = useState([]);
+
+  const fetchItems = async () => {
+    const { data, error } = await supabase
+      .from("items")
+      .select("*");
+
+    console.log(data);
+    console.log(error);
+
+    if (error) {
+      console.error("Error fetching items:", error);
+      return;
+    }
+  // transform database columns from supabase to the react column names '../../utils/mapItem.js'
+  const formattedItems = data.map(mapItem);
+
+  setItems(formattedItems);
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
 
   // defaulting the campus dropdown
   const [campus, setCampus] = useState("Alam Sutera");
@@ -43,8 +73,7 @@ const Home = () => {
 
   // popup states for the item card
   const [showItemDetails, setShowItemDetails] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-
+  const [selectedItem, setSelectedItem] = useState(null);  
 
   // filtering the item based on the applied filters
   const filteredItems = items
@@ -119,11 +148,17 @@ const Home = () => {
   return (
     <div className="home">
       <div className="top">
-        {/* Search Barr */}
-        <SearchBar onSearch={setSearchTitle} />
+
+        {/* Filter Layout Button */}
+        <Button 
+          type="filter"
+          icon={filterIcon}
+          iconOnly={true}
+          onClick={() => setShowFilter(true)}
+        />
 
         {/* Campus Dropdown */}
-        <Dropdown label={campus}>
+        <Dropdown label={campus} type="campus">
           <DropdownRadio
             name="campus"
             options={["Alam Sutera", "Anggrek", "Bandung", "Bekasi", "Malang", "Semarang", "Senayan", "Syahdan & Kijang"]}
@@ -131,13 +166,9 @@ const Home = () => {
             setSelected={setCampus}
           />
         </Dropdown>
-        
-        {/* Filter Layout Button */}
-        <Button 
-          type="filter"
-          label="Filter"
-          onClick={() => setShowFilter(true)}
-        />
+
+        {/* Search Barr */}
+        <SearchBar onSearch={setSearchTitle} />
 
         {/* the filter applier */}
         {showFilter && (

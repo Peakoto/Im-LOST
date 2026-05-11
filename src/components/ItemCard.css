@@ -1,6 +1,6 @@
 .item-card {
-    height: 300px;
-    width: 200px;
+    height: 350px;
+    width: 250px;
     padding: 15px;
     background: #fff;
     border-radius: 10px;
@@ -22,15 +22,15 @@
 }
 
 .item-image {
-    width: 130px;
-    height: 130px;
+    width: 200px;
+    height: 180px;
     object-fit: cover;
     border-radius: 10px;
 }
 
 .item-content {
-    width: 170px;
-    min-height: 120px;
+    width: 220px;
+    min-height: 160px;
     padding: 5px;
     background-color: #2289E6;
     border-radius: 5px;
@@ -40,17 +40,19 @@
 .item-subcontent{
     background-color: #A6CDF1;
     padding: 5px;
+    border-radius: 5px;
+    min-height: 125px;
 }
 
 .item-title {
-    font-size: 16px;
+    font-size: 18px;
     margin: 0;
     color: #fff;
     text-align: center;
 }
 
 .item-subcontent-title{
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
 }
 .item-location,

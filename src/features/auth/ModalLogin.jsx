@@ -110,12 +110,12 @@ const ModalLogin = ({item, onClose}) => {
 
                         <h4>Don't have an account? <a href="#" className="sign-up-link" onClick={() => setShowSignUp(true)}>Sign Up</a></h4> 
 
-                        <div className="divider">
+                        {/* <div className="divider">
                             <span>or</span>
-                        </div>
+                        </div> */}
 
                         {/* for now won't be functionable yet */}
-                        <button className="login-continue">
+                        {/* <button className="login-continue">
                             <img src={microsoft} alt="Microsoft" />
                             <span>Continue with Microsoft</span>
                         </button>
@@ -123,7 +123,7 @@ const ModalLogin = ({item, onClose}) => {
                         <button className="login-continue">
                             <img src={google} alt="Google" />
                             <span>Continue with Google</span>
-                        </button>
+                        </button> */}
 
                     </form>
                 </div>

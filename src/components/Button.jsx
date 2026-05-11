@@ -15,17 +15,32 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Button.css";
 
-const Button = ({ type, label, to, onClick}) => {
+const Button = ({ type, label, to, onClick, icon, iconOnly }) => {
     const navigate = useNavigate();
-    
+
     const handleClick = () => {
         if (onClick) onClick();
         if (to) navigate(to);
     };
 
     return (
-        <button className={`btn btn-${type}`} onClick={handleClick}>
-            {label}
+        <button 
+            className={`
+                btn 
+                btn-${type} 
+                ${iconOnly ? "btn-icon-only" : ""}
+            `}
+            onClick={handleClick}
+        >
+            {icon && (
+                <img 
+                    src={icon} 
+                    alt="button icon" 
+                    className="button-icon"
+                />
+            )}
+
+            {label && label}
         </button>
     );
 };
