@@ -9,6 +9,7 @@ import React from "react";
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import Button from "../../components/Button";
+import "../../components/Button.css";
 import Dropdown from "../../components/Dropdown";
 import DropdownRadio from "../../components/DropdownRadio";
 import DropdownCheckBox from "../../components/DropdownCheckBox";
@@ -113,13 +114,13 @@ const PostFound = () => {
   //submit button
   const handleSubmit = (e) => {
     e.preventDefault()
-    let {itemName, personName, descitems, descloc, floor, lostDate} = inputs;
+    let { itemName, personName, descitems, descloc, floor, lostDate } = inputs;
 
     const itemtry = {
       "itemName": itemName,
       "personName": personName,
-      "descloc":descloc,
-      "descitems":descitems,
+      "descloc": descloc,
+      "descitems": descitems,
       "floor": floor,
       "campus": campus,
       "location": location,
@@ -139,128 +140,249 @@ const PostFound = () => {
   }
   return (
     <div className="layout_found">
-      <ImgUpload />
+      <table>
+        <tbody>
+          <tr>
+            <td rowSpan={3}>
+              <ImgUpload />
+            </td>
+            <td>
+              <div className="inputhere">
+                <p>Item Name</p>
+                <form>
+                  <label>
+                    <input
+                      type="text"
+                      name="itemName"
+                      value={inputs.itemName}
+                      onChange={handleChange}
+                    />
+                  </label>
+                </form>
+              </div>
+
+
+            </td>
+            <td colSpan={2}>
+              <div className="inputhere">
+                <p>Your Name (Founder of the item)</p>
+                <form>
+                  <label>
+                    <input
+                      type="text"
+                      name="personName"
+                      value={inputs.personName}
+                      onChange={handleChange}
+                    />
+                  </label>
+                </form>
+              </div>
+
+
+            </td>
+
+          </tr>
+          <tr>
+            <td>
+              <div className="inputhere">
+                <p>Date Lost:</p>
+                <form>
+                  <label htmlFor="">
+                    <input type="date" name="lostDate" value={inputs.lostDate} onChange={handleChange}></input>
+                  </label>
+                </form>
+              </div>
+
+            </td>
+            <td>
+              <div className="inputhere">
+                <p>Campus</p>
+                {/* <br></br> */}
+                <Dropdown label={campus} type="campus">
+                  <DropdownRadio
+                    name="campus"
+                    options={[
+                      "Alam Sutera",
+                      "Anggrek",
+                      "Bandung",
+                      "Bekasi",
+                      "Malang",
+                      "Semarang",
+                      "Senayan",
+                      "Syahdan & Kijang"
+                    ]}
+                    selected={campus}
+                    setSelected={setCampus}
+                  />
+                </Dropdown>
+              </div>
+            </td>
+            <td>
+              <div className="inputhere">
+                <p>Location</p>
+                <Dropdown label={location} type="location">
+                  <DropdownRadio
+                    name="location"
+                    options={[
+                      "Canteen",
+                      "Classroom",
+                      "Gym",
+                      "Hallway",
+                      "Lift Area",
+                      "LKC",
+                      "Lobby",
+                      "Parking Lot",
+                      "Toilet",
+                      "Others"
+                    ]}
+                    selected={location}
+                    setSelected={setLocation}
+                  />
+                </Dropdown>
+              </div>
+
+
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div className="inputhere">
+                <p>Category</p>
+
+                <Dropdown label={category} type="category">
+                  <DropdownRadio
+                    name="category"
+                    options={[
+                      "Accessories",
+                      "Bottle",
+                      "Clothing",
+                      "Documents",
+                      "Electronics",
+                      "ID Card",
+                      "Stationery"
+                    ]}
+                    selected={category}
+                    setSelected={setCategory}
+                  />
+                </Dropdown>
+
+              </div>
+
+            </td>
+            <td>
+              <div className="inputhere">
+                <p>Colour</p>
+                <Dropdown label={"Colours: " + [colour]} type="colour">
+                  <DropdownCheckBox
+                    name="color"
+                    options={[
+                      "Red",
+                      "Orange",
+                      "Yellow",
+                      "Green",
+                      "Blue",
+                      "Purple",
+                      "Pink",
+                      "Brown",
+                      "Black",
+                      "White",
+                      "Grey"
+                    ]}
+                    selected={colour}
+                    setSelected={setColour}
+                  />
+                </Dropdown>
+              </div>
+            </td>
+            <td>
+              <div className="inputhere">
+                <p>Floor</p>
+                <form>
+                  <label htmlFor="">
+                    <input type="number" name="floor" min="0" max="20" value={inputs.floor} onChange={handleChange} />
+                  </label>
+                </form>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={4}>
+              <h3>Description</h3>
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={2}>
+              <form>
+                <label>
+                  <textarea name="descitems" value={inputs.descitems} onChange={handleChange}>Item:</textarea>
+                </label>
+              </form>
+            </td>
+            <td colSpan={2}>
+              <form>
+                <label>
+                  <textarea name="descloc" value={inputs.descloc} onChange={handleChange}>Location:</textarea>
+                </label>
+              </form>
+
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+
+
       {/* uploads image */}
 
-      <form>
-        {/* do not move the dropdowns into the inside of the forum as it causes a weird instant reload thing*/}
-        <label>Item Name
+      {/* <form> */}
+      {/* do not move the dropdowns into the inside of the forum as it causes a weird instant reload thing*/}
+      {/* <label>Item Name
           <input
             type="text"
             name="itemName"
             value={inputs.itemName}
             onChange={handleChange}
           />
-        </label>
-        <label>Your Name (Founder of the item)
+        </label> */}
+      {/* <label>Your Name (Founder of the item)
           <input
             type="text"
             name="personName"
             value={inputs.personName}
             onChange={handleChange}
           />
-        </label>
-        <label>desc item
+        </label> */}
+      {/* <label>desc item
           <textarea name="descitems" value={inputs.descitems} onChange={handleChange}>Item:</textarea>
-        </label>
+        </label> */}
 
-        <label>desc location
+      {/* <label>desc location
           <textarea name="descloc" value={inputs.descloc} onChange={handleChange}>Location:</textarea>
-        </label>
+        </label> */}
 
-        <label htmlFor="">Floor
+      {/* <label htmlFor="">Floor
           <input type="number" name="floor" min="0" max="20" value={inputs.floor} onChange={handleChange} />
-        </label>
+        </label> */}
 
-        <label htmlFor="">Date Lost:
+      {/* <label htmlFor="">Date Lost:
           <input type="date" name="lostDate" value={inputs.lostDate} onChange={handleChange}></input>
-        </label>
+        </label> */}
 
-      </form>
+      {/* </form> */}
 
-      <Dropdown label={campus} type="campus">
-        <DropdownRadio
-          name="campus"
-          options={[
-            "Alam Sutera",
-            "Anggrek",
-            "Bandung", 
-            "Bekasi", 
-            "Malang", 
-            "Semarang", 
-            "Senayan", 
-            "Syahdan & Kijang"
-          ]}
-          selected={campus}
-          setSelected={setCampus}
-        />
-      </Dropdown>
 
-      <Dropdown label={location} type="location">
-        <DropdownRadio
-          name="location"
-          options={[
-            "Canteen",
-            "Classroom", 
-            "Gym", 
-            "Hallway", 
-            "Lift Area", 
-            "LKC", 
-            "Lobby", 
-            "Parking Lot", 
-            "Toilet", 
-            "Others"
-          ]}
-          selected={location}
-          setSelected={setLocation}
-        />
-      </Dropdown>
 
-      <Dropdown label={category} type="category">
-        <DropdownRadio
-          name="category"
-          options={[
-            "Accessories",
-            "Bottle",
-            "Clothing",
-            "Documents",
-            "Electronics",
-            "ID Card",
-            "Stationery"
-          ]}
-          selected={category}
-          setSelected={setCategory}
-        />
-      </Dropdown>
 
-      <Dropdown label={"Colours: " + [colour]} type="colour">
-        <DropdownCheckBox
-          name="color"
-          options={[
-            "Red",
-            "Orange",
-            "Yellow",
-            "Green",
-            "Blue",
-            "Purple",
-            "Pink",
-            "Brown",
-            "Black",
-            "White",
-            "Grey"
-          ]}
-          selected={colour}
-          setSelected={setColour}
-        />
-      </Dropdown>
+
       {/* <CalendarFilter
         startDate={startDate}
         endDate={endDate}
         setStartDate={setStartDate}
         setEndDate={setEndDate}
       /> */}
-      
-      <button onClick={handleSubmit}>Submit</button>
+      {/* <br /> */}
+      <button className="btn btn-post" onClick={handleSubmit}>Submit</button>
 
     </div>
 

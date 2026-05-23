@@ -1,4 +1,4 @@
-.image-upload{
+.image-upload {
     border: 4px dashed rgb(143, 143, 143);
     background-color: aliceblue;
     width: 300px;
@@ -10,37 +10,41 @@
     flex-direction: column;
     gap: 12px;
 }
+
 /* .image-upload span{
     color:rgb(103, 103, 103);
 } */
-.image-upload:hover{
+.image-upload:hover {
     border-color: rgb(0, 140, 255);
     color: rgb(0, 140, 255);
 }
 
-.image-upload span:hover{
-    color:rgb(0, 140, 255);
+.image-upload span:hover {
+    color: rgb(0, 140, 255);
 }
-.image-upload input{
+
+.image-upload input {
     display: none;
 }
-.img-preview{
+
+.img-preview {
     width: 300px;
     aspect-ratio: 1/1;
     border-radius: 16px;
     overflow: hidden;
     position: relative;
-    
+
 }
 
-.img-preview img{
+.img-preview img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-.img-preview .overlay{
-    background: linear-gradient(225deg,rgba(0,0,0,.5),transparent);
+
+.img-preview .overlay {
+    background: linear-gradient(225deg, rgba(0, 0, 0, .5), transparent);
     width: 100%;
     height: 100%;
     position: absolute;
@@ -50,18 +54,71 @@
     /* align-items: center; */
 
 }
-.img-preview .overlay span{
+
+.img-preview .overlay span {
     color: white;
 }
-.img-preview .close-btn{
+
+.img-preview .close-btn {
     background-color: transparent;
     border: none;
     cursor: pointer;
 }
 
 .layout_found {
-    background-color: aquamarine;
+    background-color: rgb(255, 255, 255);
     padding: 10px;
     border-radius: 10px;
+    border: 2px solid #2289E6;
 
 }
+
+.layout_found .btn {
+    float: right;
+}
+table,
+th,
+td {
+    border-collapse: collapse;
+    /* border: 1px solid red; */
+}
+
+/* td{
+    padding: 0px 5px 0px 10px;
+} */
+
+table {
+    width: 100%
+}
+
+.inputhere {
+    padding: 0px 5px 0px 10px;
+    /* background-color: blueviolet; */
+}
+
+.inputhere > p {
+    font-weight: bold;
+}
+/* label{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+} */
+
+/* label,
+
+*/
+
+textarea,
+input[type=text],
+input[type=number],
+input[type=date] {
+    padding: 12px 20px;
+    margin: 8px 0;
+    width: 90%;
+    display: inline-block;
+    border: 1px solid #2289E6;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
