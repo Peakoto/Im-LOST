@@ -80,3 +80,18 @@
     transform: scale(1.1);
     background: transparent;
 }
+
+.btn-home {
+    background-color: #355978;
+    color:#fff;
+    border: 1px solid #fff;
+    width: 180px;
+    height: 50px;
+    font-size: 18px;
+}
+
+.btn-home:hover {
+    background-color: #fff;
+    color: black;
+    border-color: #2289E6;
+}
