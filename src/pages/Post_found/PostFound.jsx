@@ -1,15 +1,8 @@
 // only admin can access it
-//to do list: proper image validation,
-//  submission validation,
-//  make css pretty,
-//  link to post lost item
 
 import "./PostFound.css";
 import React from "react";
-import { useState } from 'react';
-import { createRoot } from 'react-dom/client';
 import Button from "../../components/Button";
-import "../../components/Button.css";
 import Dropdown from "../../components/Dropdown";
 import DropdownRadio from "../../components/DropdownRadio";
 import DropdownCheckBox from "../../components/DropdownCheckBox";

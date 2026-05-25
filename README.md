@@ -1,4 +1,7 @@
-=======
+NOTE to Run:
+manually add .env.local file with the supabase url and key;
+
+
 # IMPORTANT
 To run on your system, please install react-router-dom into the directory using 
 npm install react-router-dom 
