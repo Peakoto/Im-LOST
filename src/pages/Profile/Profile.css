@@ -1,0 +1,65 @@
+.profile {
+    padding: 30px;
+}
+
+.top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+.top img {
+    width: 28px;
+    height: 28px;
+}
+
+.profile-card {
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 24px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+    margin-bottom: 30px;
+}
+
+.profile-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 6px;
+
+    font-weight: 600;
+}
+
+.input-group input {
+    padding: 10px;
+
+    border-radius: 8px;
+
+    border: 1px solid #ccc;
+}
+
+.profile-buttons {
+    margin-top: 24px;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+}

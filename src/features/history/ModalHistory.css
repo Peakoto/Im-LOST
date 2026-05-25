@@ -1,0 +1,82 @@
+.history {
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 24px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+    margin-top: 24px;
+}
+
+.history-header {
+    margin-bottom: 20px;
+}
+
+.history-table-wrapper {
+    overflow-x: auto;
+}
+
+.history-table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.history-table th,
+.history-table td {
+    padding: 14px 12px;
+
+    text-align: left;
+
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.history-table th {
+    font-weight: 700;
+
+    background-color: #f8f8f8;
+}
+
+.status {
+    padding: 4px 10px;
+
+    border-radius: 999px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.status.found {
+    background-color: #d8f5dd;
+}
+
+.status.lost {
+    background-color: #ffe0e0;
+}
+
+.action-buttons {
+    display: flex;
+
+    gap: 8px;
+}
+
+.icon-button {
+    border: none;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    font-size: 16px;
+}
+
+.empty-message {
+    text-align: center;
+
+    padding: 20px;
+
+    color: #777;
+}
