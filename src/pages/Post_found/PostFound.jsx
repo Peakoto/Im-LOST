@@ -18,6 +18,8 @@ import plus from "../../assets/plus-svgrepo-com.svg";
 import close from "../../assets/cancel-close-svgrepo-com.svg";
 import dummy from "../../assets/water_bottle.jpeg";
 import CalendarFilter from "../../features/filters/CalendarFilter";
+import homeIcon from "../../assets/home_button.png";
+
 
 const PostFound = () => {
   const [campus, setCampus] = useState("Alam Sutera");
@@ -31,7 +33,6 @@ const PostFound = () => {
   const [imgInfo, setImgInfo] = useState(null)
   const [imgSize, setImgSize] = useState(null)
   const [imgReady, setimgReady] = useState(false)
-
   //got from https://www.youtube.com/watch?v=SMim5-ox0K4
   // ideally this portion would be in the components folder but imgSrc is required to pass on and I have no idea how to pass on these variables
   const ImgUpload = () => {
@@ -127,263 +128,248 @@ const PostFound = () => {
       "category": category,
       "colour": colour,
       "lostDate": lostDate,
-      "imgSrc": imgSrc
+      "imgSrc": imgSrc,
 
     }
-    if (imgReady) {
-      console.log(imgReady)
-      console.log(itemtry)
+
+    let thereIsNull = 0;
+    Object.entries(itemtry).forEach(([key, value]) => {
+      // console.log(`${key}: ${value}`);
+      if (value == undefined) {
+        thereIsNull += 1;
+      }
+    });
+
+    //filter date
+    if (itemtry.floor < 0 || itemtry.floor > 25) {
+      console.log("Floor Not Correct");
+    }
+    //check floor
+
+    if (thereIsNull == 0) {
+      console.log("Submitted!");
     } else {
-      console.log("Cannot go!")
+      console.log("All Entries must be filled!")
+      console.log(thereIsNull);
     }
+    console.log(itemtry);
 
+    // if (imgReady) {
+    //   // console.log(imgReady)
+    //   console.log(itemtry)
+    // } else {
+    //   console.log("Cannot go!")
+    // }
   }
   return (
-    <div className="layout_found">
-      <table>
-        <tbody>
-          <tr>
-            <td rowSpan={3}>
-              <ImgUpload />
-            </td>
-            <td>
-              <div className="inputhere">
-                <p>Item Name</p>
-                <form>
-                  <label>
-                    <input
-                      type="text"
-                      name="itemName"
-                      value={inputs.itemName}
-                      onChange={handleChange}
+    <div>
+      <Button
+        type="home"
+        label="Home"
+        icon={homeIcon}
+        to="/"
+      />
+      <br />
+      <div className="layout_found">
+        <table>
+          <tbody>
+            <tr>
+              <td rowSpan={3}>
+                <ImgUpload />
+              </td>
+              <td>
+                <div className="inputhere">
+                  <p>Item Name</p>
+                  <form>
+                    <label>
+                      <input
+                        type="text"
+                        name="itemName"
+                        value={inputs.itemName}
+                        onChange={handleChange}
+                      />
+                    </label>
+                  </form>
+                </div>
+
+
+              </td>
+              <td colSpan={2}>
+                <div className="inputhere">
+                  <p>Your Name (Founder of the item)</p>
+                  <form>
+                    <label>
+                      <input
+                        type="text"
+                        name="personName"
+                        value={inputs.personName}
+                        onChange={handleChange}
+                      />
+                    </label>
+                  </form>
+                </div>
+
+
+              </td>
+
+            </tr>
+            <tr>
+              <td>
+                <div className="inputhere">
+                  <p>Date Lost:</p>
+                  <form>
+                    <label htmlFor="">
+                      <input type="date" name="lostDate" value={inputs.lostDate} onChange={handleChange}></input>
+                    </label>
+                  </form>
+                </div>
+
+              </td>
+              <td>
+                <div className="inputhere">
+                  <p>Campus</p>
+                  {/* <br></br> */}
+                  <Dropdown label={campus} type="campus">
+                    <DropdownRadio
+                      name="campus"
+                      options={[
+                        "Alam Sutera",
+                        "Anggrek",
+                        "Bandung",
+                        "Bekasi",
+                        "Malang",
+                        "Semarang",
+                        "Senayan",
+                        "Syahdan & Kijang"
+                      ]}
+                      selected={campus}
+                      setSelected={setCampus}
                     />
-                  </label>
-                </form>
-              </div>
-
-
-            </td>
-            <td colSpan={2}>
-              <div className="inputhere">
-                <p>Your Name (Founder of the item)</p>
-                <form>
-                  <label>
-                    <input
-                      type="text"
-                      name="personName"
-                      value={inputs.personName}
-                      onChange={handleChange}
+                  </Dropdown>
+                </div>
+              </td>
+              <td>
+                <div className="inputhere">
+                  <p>Location</p>
+                  <Dropdown label={location} type="location">
+                    <DropdownRadio
+                      name="location"
+                      options={[
+                        "Canteen",
+                        "Classroom",
+                        "Gym",
+                        "Hallway",
+                        "Lift Area",
+                        "LKC",
+                        "Lobby",
+                        "Parking Lot",
+                        "Toilet",
+                        "Others"
+                      ]}
+                      selected={location}
+                      setSelected={setLocation}
                     />
-                  </label>
-                </form>
-              </div>
+                  </Dropdown>
+                </div>
 
 
-            </td>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div className="inputhere">
+                  <p>Category</p>
 
-          </tr>
-          <tr>
-            <td>
-              <div className="inputhere">
-                <p>Date Lost:</p>
+                  <Dropdown label={category} type="category">
+                    <DropdownRadio
+                      name="category"
+                      options={[
+                        "Accessories",
+                        "Bottle",
+                        "Clothing",
+                        "Documents",
+                        "Electronics",
+                        "ID Card",
+                        "Stationery"
+                      ]}
+                      selected={category}
+                      setSelected={setCategory}
+                    />
+                  </Dropdown>
+
+                </div>
+
+              </td>
+              <td>
+                <div className="inputhere">
+                  <p>Colour</p>
+                  <Dropdown label={"Colours: " + [colour]} type="colour">
+                    <DropdownCheckBox
+                      name="color"
+                      options={[
+                        "Red",
+                        "Orange",
+                        "Yellow",
+                        "Green",
+                        "Blue",
+                        "Purple",
+                        "Pink",
+                        "Brown",
+                        "Black",
+                        "White",
+                        "Grey"
+                      ]}
+                      selected={colour}
+                      setSelected={setColour}
+                    />
+                  </Dropdown>
+                </div>
+              </td>
+              <td>
+                <div className="inputhere">
+                  <p>Floor</p>
+                  <form>
+                    <label htmlFor="">
+                      <input type="number" name="floor" min="0" max="25" value={inputs.floor} onChange={handleChange} />
+                    </label>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colSpan={4}>
+                <h3>Description</h3>
+              </td>
+            </tr>
+            <tr>
+              <td colSpan={2}>
                 <form>
-                  <label htmlFor="">
-                    <input type="date" name="lostDate" value={inputs.lostDate} onChange={handleChange}></input>
+                  <label>Item:
+                    <textarea name="descitems" value={inputs.descitems} onChange={handleChange}></textarea>
                   </label>
                 </form>
-              </div>
-
-            </td>
-            <td>
-              <div className="inputhere">
-                <p>Campus</p>
-                {/* <br></br> */}
-                <Dropdown label={campus} type="campus">
-                  <DropdownRadio
-                    name="campus"
-                    options={[
-                      "Alam Sutera",
-                      "Anggrek",
-                      "Bandung",
-                      "Bekasi",
-                      "Malang",
-                      "Semarang",
-                      "Senayan",
-                      "Syahdan & Kijang"
-                    ]}
-                    selected={campus}
-                    setSelected={setCampus}
-                  />
-                </Dropdown>
-              </div>
-            </td>
-            <td>
-              <div className="inputhere">
-                <p>Location</p>
-                <Dropdown label={location} type="location">
-                  <DropdownRadio
-                    name="location"
-                    options={[
-                      "Canteen",
-                      "Classroom",
-                      "Gym",
-                      "Hallway",
-                      "Lift Area",
-                      "LKC",
-                      "Lobby",
-                      "Parking Lot",
-                      "Toilet",
-                      "Others"
-                    ]}
-                    selected={location}
-                    setSelected={setLocation}
-                  />
-                </Dropdown>
-              </div>
-
-
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div className="inputhere">
-                <p>Category</p>
-
-                <Dropdown label={category} type="category">
-                  <DropdownRadio
-                    name="category"
-                    options={[
-                      "Accessories",
-                      "Bottle",
-                      "Clothing",
-                      "Documents",
-                      "Electronics",
-                      "ID Card",
-                      "Stationery"
-                    ]}
-                    selected={category}
-                    setSelected={setCategory}
-                  />
-                </Dropdown>
-
-              </div>
-
-            </td>
-            <td>
-              <div className="inputhere">
-                <p>Colour</p>
-                <Dropdown label={"Colours: " + [colour]} type="colour">
-                  <DropdownCheckBox
-                    name="color"
-                    options={[
-                      "Red",
-                      "Orange",
-                      "Yellow",
-                      "Green",
-                      "Blue",
-                      "Purple",
-                      "Pink",
-                      "Brown",
-                      "Black",
-                      "White",
-                      "Grey"
-                    ]}
-                    selected={colour}
-                    setSelected={setColour}
-                  />
-                </Dropdown>
-              </div>
-            </td>
-            <td>
-              <div className="inputhere">
-                <p>Floor</p>
+              </td>
+              <td colSpan={2}>
                 <form>
-                  <label htmlFor="">
-                    <input type="number" name="floor" min="0" max="20" value={inputs.floor} onChange={handleChange} />
+                  <label>Location:
+                    <textarea name="descloc" value={inputs.descloc} onChange={handleChange}></textarea>
                   </label>
                 </form>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td colSpan={4}>
-              <h3>Description</h3>
-            </td>
-          </tr>
-          <tr>
-            <td colSpan={2}>
-              <form>
-                <label>
-                  <textarea name="descitems" value={inputs.descitems} onChange={handleChange}>Item:</textarea>
-                </label>
-              </form>
-            </td>
-            <td colSpan={2}>
-              <form>
-                <label>
-                  <textarea name="descloc" value={inputs.descloc} onChange={handleChange}>Location:</textarea>
-                </label>
-              </form>
 
-            </td>
-          </tr>
-        </tbody>
+              </td>
+            </tr>
+          </tbody>
 
-      </table>
+        </table>
 
+        {/* uploads image */}
 
+        {/* <form> */}
+        {/* do not move the dropdowns into the inside of the forum as it causes a weird instant reload thing*/}
 
-      {/* uploads image */}
+        <button className="btn btn-post" onClick={handleSubmit}>Submit</button>
 
-      {/* <form> */}
-      {/* do not move the dropdowns into the inside of the forum as it causes a weird instant reload thing*/}
-      {/* <label>Item Name
-          <input
-            type="text"
-            name="itemName"
-            value={inputs.itemName}
-            onChange={handleChange}
-          />
-        </label> */}
-      {/* <label>Your Name (Founder of the item)
-          <input
-            type="text"
-            name="personName"
-            value={inputs.personName}
-            onChange={handleChange}
-          />
-        </label> */}
-      {/* <label>desc item
-          <textarea name="descitems" value={inputs.descitems} onChange={handleChange}>Item:</textarea>
-        </label> */}
-
-      {/* <label>desc location
-          <textarea name="descloc" value={inputs.descloc} onChange={handleChange}>Location:</textarea>
-        </label> */}
-
-      {/* <label htmlFor="">Floor
-          <input type="number" name="floor" min="0" max="20" value={inputs.floor} onChange={handleChange} />
-        </label> */}
-
-      {/* <label htmlFor="">Date Lost:
-          <input type="date" name="lostDate" value={inputs.lostDate} onChange={handleChange}></input>
-        </label> */}
-
-      {/* </form> */}
-
-
-
-
-
-      {/* <CalendarFilter
-        startDate={startDate}
-        endDate={endDate}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-      /> */}
-      {/* <br /> */}
-      <button className="btn btn-post" onClick={handleSubmit}>Submit</button>
-
+      </div>
     </div>
 
   )

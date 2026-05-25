@@ -80,16 +80,15 @@ table,
 th,
 td {
     border-collapse: collapse;
-    /* border: 1px solid red; */
+    border: 1px solid red;
 }
 
-/* td{
-    padding: 0px 5px 0px 10px;
-} */
 
 table {
-    width: 100%
+    width: 100%;
 }
+
+
 
 .inputhere {
     padding: 0px 5px 0px 10px;
