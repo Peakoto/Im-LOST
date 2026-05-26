@@ -22,14 +22,12 @@ import "./ModalHistory.css";
 import Button from "../../components/Button.jsx";
 import infoIcon from "../../assets/info_icon.png"
 import editIcon from "../../assets/edit_icon.png"
-import StudentEditModal from "../../features/items/ModalItemDetailsStudentEdit.jsx"
 import StudentViewModal from "../../features/items/ModalItemDetailsStudentView.jsx"
 import { useState } from "react"
 
 function ModalHistory({ historyData = [] }) {
 
     const [showStudentViewModal, setShowStudentViewModal] = useState(false);
-    const [showStudentEditModal, setShowStudentEditModal] = useState(false);
 
     return (
         <div className="history">
@@ -83,7 +81,6 @@ function ModalHistory({ historyData = [] }) {
                                             />
                                             <Button
                                                 icon={editIcon}
-                                                onClick={() => setShowStudentEditModal(true)}
                                             />
                                         </td>
 
@@ -105,12 +102,6 @@ function ModalHistory({ historyData = [] }) {
                 showStudentViewModal &&
                 <ModalItemDetailsStudentView
                     onclose={() => setShowStudentViewModal(false)}
-                />
-            }
-            {
-                showStudentEditModal &&
-                <ModalItemDetailsStudentEdit
-                    onclose={() => setShowStudentEditModal(false)}
                 />
             }
         </div>
