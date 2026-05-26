@@ -20,13 +20,22 @@
 
 import "./ModalHistory.css";
 import Button from "../../components/Button.jsx";
+import infoIcon from "../../assets/info_icon.png"
+import editIcon from "../../assets/edit_icon.png"
+import StudentEditModal from "../../features/items/ModalItemDetailsStudentEdit.jsx"
+import StudentViewModal from "../../features/items/ModalItemDetailsStudentView.jsx"
+import { useState } from "react"
 
 function ModalHistory({ historyData = [] }) {
+
+    const [showStudentViewModal, setShowStudentViewModal] = useState(false);
+    const [showStudentEditModal, setShowStudentEditModal] = useState(false);
+
     return (
         <div className="history">
 
             <div className="history-header">
-                <h2>Lost Item History</h2>
+                <h1>Lost Item History</h1>
             </div>
 
             <div className="history-table-wrapper">
@@ -40,7 +49,7 @@ function ModalHistory({ historyData = [] }) {
                             <th>Item Name</th>
                             <th>Campus</th>
                             <th>Location</th>
-                            <th>Action</th>
+                            <th></th>
                         </tr>
                     </thead>
 
@@ -68,11 +77,13 @@ function ModalHistory({ historyData = [] }) {
 
                                         <td className="action-buttons">
                                             <Button 
-                                                type="" //showstudentview
-
+                                                icon={infoIcon}
+                                                onClick={() => setShowStudentViewModal(true)}
+                                                
                                             />
                                             <Button
-                                                type="" //showstudentedit
+                                                icon={editIcon}
+                                                onClick={() => setShowStudentEditModal(true)}
                                             />
                                         </td>
 
@@ -89,6 +100,19 @@ function ModalHistory({ historyData = [] }) {
                     </tbody>
                 </table>
             </div>
+            {/* STUDENT VIEW MODAL */}
+            {
+                showStudentViewModal &&
+                <ModalItemDetailsStudentView
+                    onclose={() => setShowStudentViewModal(false)}
+                />
+            }
+            {
+                showStudentEditModal &&
+                <ModalItemDetailsStudentEdit
+                    onclose={() => setShowStudentEditModal(false)}
+                />
+            }
         </div>
     );
 }

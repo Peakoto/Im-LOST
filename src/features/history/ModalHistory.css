@@ -59,18 +59,7 @@
 
 .action-buttons {
     display: flex;
-
     gap: 8px;
-}
-
-.icon-button {
-    border: none;
-
-    background: transparent;
-
-    cursor: pointer;
-
-    font-size: 16px;
 }
 
 .empty-message {
