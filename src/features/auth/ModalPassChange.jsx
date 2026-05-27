@@ -5,8 +5,9 @@
 // - confirm new password
 // - save button
 
-import React, {useState} from 'react'
-import './ModalPassChange.css'
+import React, {useState} from 'react';
+import './ModalPassChange.css';
+import {supabase} from "../../data/supabase";
 
 const ModalPassChange = ({onClose}) => {
     const [oldPassword, setOldPassword] = useState("");

@@ -8,11 +8,12 @@
 // - continue with google button
 
 import "./ModalLogin.css";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import microsoft from "../../assets/microsoft_icon.png";
 import google from "../../assets/google_icon.png";
 import ModalPassChange from "./ModalPassChange.jsx";
 import ModalSignUp from "./ModalSignUp.jsx";
+import {supabase} from "../../data/supabase";
 
 const ModalLogin = ({item, onClose}) => {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -25,32 +26,62 @@ const ModalLogin = ({item, onClose}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
+    useEffect(()=>{
+        const remembered= localStorage.getItem("rememberMe")
+        const savedEmail= localStorage.getItem("email")
+
+        if (remembered=="true" && savedEmail){
+            setEmail(savedEmail)
+            setRememberMe(true)
+        }
+    },[])
+
     const handleLogin = async (e) => {
         e.preventDefault();
-
         setError("");
 
         if (!email || !password) {
             setError("Please fill all fields.");
             return;
         }
-
-        try {
+        try {            
             setLoading(true);
 
-            // BACKEND API CALL LATER
-            // await axios.post("/api/login", {
-            //     email,
-            //     password,
-            //     rememberMe
-            // });
-
-            console.log({
-                email,
-                password,
-                rememberMe
+            const { data, error: authError } = await supabase.auth.signInWithPassword({
+                email, password,
             });
 
+            console.log("authError:", authError)
+            console.log("data:", data)
+
+            if (authError) {
+                setError("Invalid email or password!");
+                return; 
+            }
+
+            // Remember Me
+            if (rememberMe) {
+                localStorage.setItem("rememberMe", "true")
+                localStorage.setItem("email", email)
+            } else {
+                localStorage.removeItem("rememberMe")
+                localStorage.removeItem("email")
+            }
+
+            // Check if user exists in User table
+            const { data: Userdata, error: userError } = await supabase
+                .from("User")
+                .select("*")
+                .eq("email", email)
+                .single()
+
+            if (userError || !Userdata) {
+                setError("Account does not exist");
+                return;
+            }
+
+            console.log("Logged in user:", Userdata);
+            onClose();
         } catch (err) {
             setError("Login failed.");
         } finally {

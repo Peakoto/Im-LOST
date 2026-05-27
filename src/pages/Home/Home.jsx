@@ -31,7 +31,7 @@ const Home = () => {
 
   const fetchItems = async () => {
     const { data, error } = await supabase
-      .from("items")
+      .from("Item")
       .select("*");
 
     console.log(data);
