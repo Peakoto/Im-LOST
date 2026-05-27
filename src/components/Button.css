@@ -90,6 +90,22 @@
     font-size: 18px;
 }
 
+.btn-home.btn-icon-only {
+    background: transparent;
+    border: none;
+    width: fit-content;
+    height: fit-content;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+.btn-home.btn-icon-only .button-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
 .btn-home:hover {
     background-color: #fff;
     color: black;

@@ -5,7 +5,9 @@
 }
 
 .searchbar-input {
-    width: 30vw;
+    width: 100%;
+    min-width: 500px;
+    max-width: 800px;
     height: 50px;
     padding: 10px 45px 10px 14px;
     border: 1px solid #2289E6;

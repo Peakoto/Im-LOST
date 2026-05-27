@@ -10,7 +10,7 @@ const ItemCard = ({ item, onClick }) => {
                 <h3 className="item-title">{item.title}</h3>
                 <div className="item-subcontent">
                     <p className="item-subcontent-title">Date Found</p>
-                    <p className="item-date">{item.date}</p>
+                    <p className="item-date">{new Date(item.date).toLocaleDateString()}</p>
 
                     <p className="item-subcontent-title">Location</p>
                     <p className="item-location">{item.location}</p>

@@ -1,11 +1,25 @@
 // la search bar yessssss
 
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import magGlass from "../assets/mag_glass.png";
 import "./SearchBar.css";
+import useDebounce from "../hooks/useDebounce";
 
 const SearchBar = ({onSearch}) => {
     const [input, setInput] = useState("");
+
+    const debouncedSearch = useDebounce(input, 500);
+
+    useEffect(() => {
+
+        if (!debouncedSearch.trim()) {
+            onSearch("");
+            return;
+        }
+
+        onSearch(debouncedSearch);
+
+    }, [debouncedSearch, onSearch]);
 
     const handleSearch = () => {
         onSearch(input);

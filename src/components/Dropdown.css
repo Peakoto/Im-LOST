@@ -1,7 +1,7 @@
 .dropdown {
     position: relative;
-    display: inline-block;
-    z-index: 99;
+    /* display: inline-block;
+    z-index: 99; */
 }
 
 .dropdown-btn {
@@ -24,7 +24,7 @@
     border-radius: 5px;
     min-width: 180px;
     padding: 10px;
-    z-index: 100;
+    z-index: 9999;
 }
 
 .dropdown-item {
@@ -47,17 +47,17 @@
 .arrow {
     width: 12px;
     height: 12px;
-    transition: transform 0.2s ease;
+    transition: transform 0.4s ease;
     margin-left: 5px;
 }
 
 /* default point right */
 .arrow {
-    transform: rotate(-90deg);
+    transform: rotate(0deg);
 }
 
 .arrow.open {
-    transform: rotate(0deg);
+    transform: rotate(-180deg);
 }
 
 .dropdown-item input {

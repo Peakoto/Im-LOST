@@ -1,17 +1,16 @@
 // only admin can access it
 
-import "./PostFound.css";
-import React from "react";
+import "./PostLostFound.css";
+import React, {useState, useEffect} from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import DropdownRadio from "../../components/DropdownRadio";
 import DropdownCheckBox from "../../components/DropdownCheckBox";
-import NumberTicker from "../../components/NumberTicker";
-import plus from "../../assets/plus-svgrepo-com.svg";
-import close from "../../assets/cancel-close-svgrepo-com.svg";
-import dummy from "../../assets/water_bottle.jpeg";
+import plus from "../../assets/plus_icon.png";
 import CalendarFilter from "../../features/filters/CalendarFilter";
-import homeIcon from "../../assets/home_button.png";
+import homeIcon from "../../assets/home_icon.png";
+import { supabase } from "../../data/supabase";
+import useDebounce from "../../hooks/useDebounce";
 
 
 const PostFound = () => {
@@ -28,6 +27,23 @@ const PostFound = () => {
   const [imgReady, setimgReady] = useState(false)
   //got from https://www.youtube.com/watch?v=SMim5-ox0K4
   // ideally this portion would be in the components folder but imgSrc is required to pass on and I have no idea how to pass on these variables
+  
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const debouncedSearch = useDebounce(inputs.itemName, 500);
+
+  const [imgFile, setImgFile] = useState(null);
+  
+  useEffect(() => {
+
+    if (!debouncedSearch) return;
+
+    console.log("Searching:", debouncedSearch);
+
+  }, [debouncedSearch]);
+
   const ImgUpload = () => {
 
     const handleDragOver = e => {
@@ -51,6 +67,13 @@ const PostFound = () => {
     const handleFiles = files => {
       if (!files) return
       const file = files[0]
+
+      setImgFile(file);
+
+      console.log("File object:", file);
+      console.log("File name:", file.name);
+      console.log("File size:", file.size);
+      console.log("File type:", file.type);
 
       if (file.size < 10000000 && (file.type.includes("image/png") || file.type.includes("image/jpg") || file.type.includes("image/jpeg"))) {
         setimgReady(true);
@@ -87,7 +110,7 @@ const PostFound = () => {
           <span>Size: {imgSize} MB</span>
           <span>Ready: {imgReady.toString()}</span>
           <button onClick={() => setImgSrc(null)} className="close-btn">
-            <img src={close} alt="" />
+            ⨉
           </button>
         </div>
 
@@ -102,36 +125,44 @@ const PostFound = () => {
     const name = e.target.name;
     const value = e.target.value;
     setInputs(values => ({ ...values, [name]: value }))
-    console.log(inputs)
+    // console.log(inputs)
   }
 
   //submit button
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     let { itemName, personName, descitems, descloc, floor, lostDate } = inputs;
 
     const itemtry = {
-      "itemName": itemName,
-      "personName": personName,
-      "descloc": descloc,
-      "descitems": descitems,
-      "floor": floor,
-      "campus": campus,
-      "location": location,
-      "category": category,
-      "colour": colour,
-      "lostDate": lostDate,
-      "imgSrc": imgSrc,
-
+      itemName,
+      personName,
+      descloc,
+      descitems,
+      floor,
+      campus,
+      location,
+      category,
+      colour,
+      lostDate,
     }
 
     let thereIsNull = 0;
+
     Object.entries(itemtry).forEach(([key, value]) => {
       // console.log(`${key}: ${value}`);
-      if (value == undefined) {
+      if (
+        value === undefined ||
+        value === null ||
+        value === ""
+      ) {
         thereIsNull += 1;
       }
     });
+    if (thereIsNull > 0) {
+      setError("All entries must be filled.");
+      return;
+    }
+
 
     //filter date
     if (itemtry.floor < 0 || itemtry.floor > 25) {
@@ -139,29 +170,86 @@ const PostFound = () => {
     }
     //check floor
 
-    if (thereIsNull == 0) {
-      console.log("Submitted!");
-    } else {
-      console.log("All Entries must be filled!")
-      console.log(thereIsNull);
-    }
-    console.log(itemtry);
-
     // if (imgReady) {
     //   // console.log(imgReady)
     //   console.log(itemtry)
     // } else {
     //   console.log("Cannot go!")
     // }
+
+    try {
+      setLoading(true);
+
+      // get logged in user
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        throw new Error("User not logged in.");
+      }
+
+      // insert into Item table
+      const { data: itemData, error: itemError } = await supabase
+        .from("Item")
+        .insert([
+          {
+            item_category: category,
+            item_description: descitems,
+            item_name: itemName,
+            campus_location: campus,
+            location: location,
+            item_color: colour.toString(),
+            floor: floor,
+          },
+        ])
+        .select();
+
+      if (itemError) throw itemError;
+
+      // get inserted item_id
+      const item_id = itemData[0].item_id;
+
+      // insert into FoundReport table
+      const { error: foundError } = await supabase
+        .from("FoundReport")
+        .insert([
+          {
+            user_id: user.id,
+            item_id: item_id,
+            date_found: lostDate,
+          },
+        ]);
+
+      if (foundError) throw foundError;
+
+      setSuccess("Found report submitted successfully!");
+
+      // optional reset form
+      setInputs({});
+      setImgSrc(null);
+
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Submission failed.");
+    } finally {
+      setLoading(false);
+    }
+
+
   }
   return (
     <div>
-      <Button
-        type="home"
-        label="Home"
-        icon={homeIcon}
-        to="/"
-      />
+      <div className="home-btn-wrap">
+        <Button
+          type="home"
+          icon={homeIcon}
+          to="/"
+          iconOnly={true}
+        />
+      </div>
+
       <br />
       <div className="layout_found">
         <table>
@@ -187,7 +275,7 @@ const PostFound = () => {
 
 
               </td>
-              <td colSpan={2}>
+              <td colSpan={2} className="desc-cell">
                 <div className="inputhere">
                   <p>Your Name (Founder of the item)</p>
                   <form>
@@ -335,17 +423,27 @@ const PostFound = () => {
               </td>
             </tr>
             <tr>
-              <td colSpan={2}>
+              <td colSpan={2} className="desc-cell">
                 <form>
-                  <label>Item:
-                    <textarea name="descitems" value={inputs.descitems} onChange={handleChange}></textarea>
+                  <label className="textarea-label">
+                    <span>Item</span>
+                    <textarea
+                      name="descitems"
+                      value={inputs.descitems}
+                      onChange={handleChange}
+                    ></textarea>
                   </label>
                 </form>
               </td>
-              <td colSpan={2}>
+              <td colSpan={2} className="desc-cell">
                 <form>
-                  <label>Location:
-                    <textarea name="descloc" value={inputs.descloc} onChange={handleChange}></textarea>
+                  <label className="textarea-label">
+                    <span>Location</span>
+                    <textarea
+                      name="descloc"
+                      value={inputs.descloc}
+                      onChange={handleChange}
+                    ></textarea>
                   </label>
                 </form>
 
@@ -359,8 +457,26 @@ const PostFound = () => {
 
         {/* <form> */}
         {/* do not move the dropdowns into the inside of the forum as it causes a weird instant reload thing*/}
+        
+        {error && (
+          <p className="error-text">
+            {error}
+          </p>
+        )}
 
-        <button className="btn btn-post" onClick={handleSubmit}>Submit</button>
+        {success && (
+          <p className="success-text">
+            {success}
+          </p>
+        )}
+
+        <button
+          className="btn btn-post"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Submit"}
+        </button>
 
       </div>
     </div>
