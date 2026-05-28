@@ -12,7 +12,7 @@ import homeIcon from "../../assets/home_icon.png";
 import { supabase } from "../../data/supabase";
 
 
-const PostLost = () => {
+const PostLost = ({ isLoggedIn }) => {
   const [campus, setCampus] = useState("Alam Sutera");
   const [location, setLocation] = useState("Canteen");
   const [category, setCategory] = useState("Category");
@@ -110,6 +110,10 @@ const PostLost = () => {
 
   //submit button
   const handleSubmit = async (e) => {
+    if (!isLoggedIn) {
+      setError("Please log in to post a lost item report.");
+      return;
+    }
     e.preventDefault()
     let { itemName, personName, descitems, descloc, floor, lostDate } = inputs;
 

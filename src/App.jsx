@@ -28,7 +28,7 @@ const App = () => {
           path="/post-lost"
           element={
             <MainLayout pageTitle={<>POST <span className="title-bold">LOST</span> ITEM</>}>
-              <PostLost />
+              <PostLost isLoggedIn={isLoggedIn}/>
             </MainLayout>
           }
         />
