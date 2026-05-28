@@ -4,13 +4,28 @@ import profile_icon from "../assets/profile_icon.png"; // button that navigates 
 import history_icon from "../assets/history_icon.png"; // button that shows the popup of HistoryModal
 import Button from "../components/Button";
 import Login from "../features/auth/ModalLogin.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "../data/supabase.js";
 // import History from "../features/history/ModalHistory.jsx";
 
 function MainLayout({children, pageTitle = "LOST AND FOUND"}) {
     const [showLogin, setShowLogin] = useState(false);
+    const[isLoggedIn,setIsLoggedIn]= useState(false);
+    const[currentUser,setCurrentUser]= useState(null);
     // const [showHistory, setShowHistory] = useState(false);
 
+    //crate login status to see if user is logged in or not
+    useEffect(()=>{
+        const getSession = async()=>{
+            const{data}= await supabase.auth.getSession()
+            if(data.session){
+                setIsLoggedIn(true)
+                setCurrentUser(data.session.user)
+            }
+            console.log("Islogged in:",isLoggedIn)
+            console.log("Current user:",currentUser )
+        }
+    },[])
     return (
         <div className="layout">
             {/* HEADER */}
@@ -76,7 +91,10 @@ function MainLayout({children, pageTitle = "LOST AND FOUND"}) {
             </footer>
             
             {showLogin && (
-                <Login onClose={() => setShowLogin(false)} />
+                <Login onClose={() => setShowLogin(false)} 
+                    setIsLoggedIn={setIsLoggedIn}
+                    setCurrentuser={setCurrentUser}
+                />
             )}
             
             {/* {showHistory && (

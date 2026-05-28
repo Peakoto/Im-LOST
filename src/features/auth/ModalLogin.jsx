@@ -15,7 +15,7 @@ import ModalPassChange from "./ModalPassChange.jsx";
 import ModalSignUp from "./ModalSignUp.jsx";
 import {supabase} from "../../data/supabase";
 
-const ModalLogin = ({item, onClose}) => {
+const ModalLogin = ({item, onClose,setIsLoggedIn, setCurrentUser}) => {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
 
@@ -79,8 +79,9 @@ const ModalLogin = ({item, onClose}) => {
                 setError("Account does not exist");
                 return;
             }
-
             console.log("Logged in user:", Userdata);
+            setIsLoggedIn(true)
+            setCurrentUser(Userdata)
             onClose();
         } catch (err) {
             setError("Login failed.");
@@ -134,27 +135,13 @@ const ModalLogin = ({item, onClose}) => {
                             <button className="forgot-password" onClick={() => setShowForgotPassword(true)}>Forgot Your Password?</button>
                         </div>
                         
+                        {error && <p className="error-text">{error}</p>}
                         <button type="submit" className="login-button">
                             {loading ? "Logging in..." : "Log In"}
                         </button>
                         
 
                         <h4>Don't have an account? <a href="#" className="sign-up-link" onClick={() => setShowSignUp(true)}>Sign Up</a></h4> 
-
-                        {/* <div className="divider">
-                            <span>or</span>
-                        </div> */}
-
-                        {/* for now won't be functionable yet */}
-                        {/* <button className="login-continue">
-                            <img src={microsoft} alt="Microsoft" />
-                            <span>Continue with Microsoft</span>
-                        </button>
-                        
-                        <button className="login-continue">
-                            <img src={google} alt="Google" />
-                            <span>Continue with Google</span>
-                        </button> */}
 
                     </form>
                 </div>
@@ -169,8 +156,6 @@ const ModalLogin = ({item, onClose}) => {
                     onClose={() => setShowSignUp(false)}
                 />
             )}
-
-            {error && <p className="error-text">{error}</p>}
         </>
     );
 };

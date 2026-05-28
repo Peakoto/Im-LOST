@@ -7,7 +7,16 @@ import Dropdown from "../../components/Dropdown";
 import DropdownRadio from "../../components/DropdownRadio";
 import DropdownCheckBox from "../../components/DropdownCheckBox";
 
-const PostLost = () => {
+
+const PostLost = ({isLoggedIn}) => {
+
+  const handlePostClick = ()=>{
+    if(!isLoggedIn){
+      alert("Please log in first!")
+      return;
+    }
+  }
+  
   return <h2 style={{ color: "black" }}>Post lost</h2>;
 };
 
