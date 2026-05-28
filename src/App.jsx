@@ -4,8 +4,8 @@ import React from 'react'
 
 // Import pages
 import Home from "./pages/Home/Home.jsx";
-import PostLost from "./pages/Post_lost/PostLost.jsx";
-import PostFound from "./pages/Post_found/PostFound.jsx";
+import PostLost from "./pages/Post_lost_found/PostLost.jsx";
+import PostFound from "./pages/Post_lost_found/PostFound.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 
 // Import MainLayout

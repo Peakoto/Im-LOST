@@ -41,10 +41,12 @@ const Home = () => {
       console.error("Error fetching items:", error);
       return;
     }
-  // transform database columns from supabase to the react column names '../../utils/mapItem.js'
-  const formattedItems = data.map(mapItem);
+    // transform database columns from supabase to the react column names '../../utils/mapItem.js'
+    const formattedItems = data.map(mapItem);
 
-  setItems(formattedItems);
+    setItems(formattedItems);
+
+    console.log("Formatted items:", formattedItems);
   };
 
   useEffect(() => {
@@ -80,7 +82,14 @@ const Home = () => {
     .filter((item) => {
 
     // campus filter
-    const matchesCampus = item.campus === campus;
+    const matchesCampus =
+      item.campus?.trim().toLowerCase() === campus.trim().toLowerCase();
+
+    console.log({
+      dbCampus: item.campus,
+      selectedCampus: campus,
+      equal: item.campus?.trim().toLowerCase() === campus.trim().toLowerCase()
+    });
 
     // convert item date
     const itemDate = new Date(item.date);
@@ -102,11 +111,22 @@ const Home = () => {
 
     // color
     const matchesColor =
-      appliedColor.length === 0 || item.color.some((color) => appliedColor.includes(color));
+      appliedColor.length === 0 || (Array.isArray(item.color) && item.color.some((color) => appliedColor.includes(color)));
 
     // search bar
     const matchesSearchTitle =
-      !searchTitle || item.title.toLowerCase().includes(searchTitle.toLowerCase());
+      !searchTitle || (item.title || "").toLowerCase().includes(searchTitle.toLowerCase());
+
+    console.log({
+      title: item.title,
+      matchesCampus,
+      matchesStart,
+      matchesEnd,
+      matchesCategory,
+      matchesLocation,
+      matchesColor,
+      matchesSearchTitle,
+    });
     
     return (
         matchesLocation &&
