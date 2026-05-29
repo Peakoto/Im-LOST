@@ -20,7 +20,8 @@
 */
 
 import "./Profile.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchHistoryByUserId, getCurrentUser, fetchProfileByUserId } from "../../api/profileApi.js";
 import Button from "../../components/Button.jsx";
 import ModalPassChange from "../../features/auth/ModalPassChange.jsx";
 import ModalHistory from "../../features/history/ModalHistory.jsx";
@@ -30,13 +31,16 @@ function Profile() {
 
     const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-    const userData = {
-        name: "John Jeans",
-        email: "john@gmail.com",
-        phone: "0811111111",
-    };
+    // placeholder data
+    const [userData, setUserData] = useState({
+        name: "Getting username...",
+        email: "Getting email...",
+        phone: "Getting phone number...",
+    });
 
-    const historyData = [
+    // can also just make useState(null) after done wiring up
+
+    const placeholderHistory = [
       {
         id: 1,
         status: "Found",
@@ -46,6 +50,57 @@ function Profile() {
         location: "B0501",
       },
     ];
+
+    /*
+    once everything is wired up, remove the const placeholderHistory and useState placeholder History into this: 
+    const [historyData, setHistoryData] = useState([])
+    */
+
+    const [historyData, setHistoryData] = useState(placeholderHistory);
+    const [loadingHistory, setLoadingHistory] = useState(false);
+    const [historyError, setHistoryError] = useState(null);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        async function load() {
+            setLoadingHistory(true);
+            setHistoryError(null);
+
+            try {
+                const { user } = await getCurrentUser();
+
+                // Keep placeholder history if auth isn't ready / no user.
+                if (!user?.id) return;
+                // feel free to remove after wiring
+
+                const history = await fetchHistoryByUserId(user.id);
+                if (!isMounted) return;
+                setHistoryData(history);
+
+                // Load profile fields once available in your DB schema.
+                const profile = await fetchProfileByUserId(user.id);
+                if (!isMounted) return;
+                setUserData(profile);
+            } catch (e) {
+                if (!isMounted) return;
+                setHistoryError(e?.message || "Failed to load history");
+            } finally {
+                if (isMounted) setLoadingHistory(false);
+            }
+        }
+
+        load();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+
+    /*
+
+    */
 
     return (
         <div className="profile">
@@ -101,25 +156,23 @@ function Profile() {
 
                 {/* BUTTON SECTION */}
                 <div className="profile-buttons">
-
                     <Button
-                        type="secondary"
+                        type="profile"
                         label="Change Password"
                         onClick={() => setShowPasswordModal(true)}
                     />
-
-                    <Button
-                        type="primary"
-                        label="Save"
-                        // the hell does this do again???
-                    />
-
                 </div>
 
             </div>
 
             {/* HISTORY */}
-            <ModalHistory historyData={historyData} />
+            {loadingHistory ? (
+                <div className="history-loading">Loading history...</div>
+            ) : historyError ? (
+                <div className="history-error">{historyError}</div>
+            ) : (
+                <ModalHistory historyData={historyData} />
+            )}
 
             {/* PASSWORD MODAL */}
             {

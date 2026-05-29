@@ -7,6 +7,7 @@
 }
 
 .btn-login {
+    font-size: 18px;
     background-color: #fff;
     color:black
 }
@@ -46,10 +47,6 @@
     border-color: #2289E6;
 }
 
-.btn-login {
-    font-size: 18px;
-}
-
 .btn-login:hover {
     background-color: #dddddd;
     /* color: #fff; */
@@ -62,14 +59,16 @@
     display: block;
 }
 
+.btn-header {
+    width: 40px;
+    height: 40px;
+}
 
 .btn-icon-only {
     background: transparent;
     border: none;
     padding: 0;
     margin: 0;
-    width: 40px;
-    height: 40px;
     box-shadow: none;
     cursor: pointer;
     display: flex;
@@ -84,4 +83,12 @@
     background: transparent;
 }
 
+.btn-tableEdit {
+    width: 20px;
+    height: 20px;
+}
 
+.btn-tableView {
+    width: 25px;
+    height: 25px;
+}

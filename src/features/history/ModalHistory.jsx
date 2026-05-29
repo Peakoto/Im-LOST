@@ -22,12 +22,14 @@ import "./ModalHistory.css";
 import Button from "../../components/Button.jsx";
 import infoIcon from "../../assets/info_icon.png"
 import editIcon from "../../assets/edit_icon.png"
-import StudentViewModal from "../../features/items/ModalItemDetailsStudentView.jsx"
-import { useState } from "react"
+import StudentViewModal from "../../features/items/ModalItemDetailsStudentView.jsx";
+// import StudentEditModal from "../../features/items/ModalItemDetailsStudentEdit.jsx";
+import { useState } from "react";
 
 function ModalHistory({ historyData = [] }) {
 
     const [showStudentViewModal, setShowStudentViewModal] = useState(false);
+    const [showStudentEditModal, setShowStudentEditModal] = useState(false);
 
     return (
         <div className="history">
@@ -75,12 +77,16 @@ function ModalHistory({ historyData = [] }) {
 
                                         <td className="action-buttons">
                                             <Button 
+                                                type="tableView"
                                                 icon={infoIcon}
+                                                iconOnly={true}
                                                 onClick={() => setShowStudentViewModal(true)}
-                                                
                                             />
                                             <Button
+                                                type="tableEdit"
                                                 icon={editIcon}
+                                                iconOnly={true}
+                                                // onClick={() => setShowStudentEditModal(true)}
                                             />
                                         </td>
 
@@ -88,6 +94,7 @@ function ModalHistory({ historyData = [] }) {
                                 ))
                             ) : (
                                 <tr>
+                                    { /* If there is no history */ }
                                     <td colSpan="7" className="empty-message">
                                         No history available.
                                     </td>
@@ -103,6 +110,23 @@ function ModalHistory({ historyData = [] }) {
                 <ModalItemDetailsStudentView
                     onclose={() => setShowStudentViewModal(false)}
                 />
+            }
+            {/* STUDENT EDIT MODAL */}
+            
+            {
+                /*
+                showStudentEditModal &&
+                <ModalItemDetailsStudentEdit
+                    onclose={() => setShowStudentEditModal(false)}
+                />
+                */
+            }
+
+            {
+            /* Note: 
+                ModalItemDetailsStudentView expects an `item` prop.
+                Once history is wired to Supabase, pass the selected row's item data or an item id. 
+            */
             }
         </div>
     );

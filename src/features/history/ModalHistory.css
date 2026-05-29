@@ -1,12 +1,8 @@
 .history {
     background: white;
-
     border-radius: 16px;
-
     padding: 24px;
-
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-
     margin-top: 24px;
 }
 
@@ -61,35 +57,4 @@
     display: flex;
     gap: 8px;
     align-items: center;
-}
-
-/* ModalHistory action buttons: keep them square but sized to the table text height
-   (so header icons from the shared Button.css won't be affected) */
-.history-table .action-buttons .btn.btn-icon-only {
-    width: 1.2em;
-    height: 1.2em;
-}
-
-.history-table .action-buttons .btn.btn-icon-only .button-icon {
-    height: 60%;
-    width: auto;
-    object-fit: contain;
-}
-
-
-
-
-
-
-
-
-
-
-.empty-message {
-    text-align: center;
-
-
-    padding: 20px;
-
-    color: #777;
 }
