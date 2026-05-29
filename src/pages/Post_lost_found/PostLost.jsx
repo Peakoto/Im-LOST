@@ -12,7 +12,7 @@ import homeIcon from "../../assets/home_icon.png";
 import { supabase } from "../../data/supabase";
 
 
-const PostLost = () => {
+const PostLost = ({ isLoggedIn }) => {
   const [campus, setCampus] = useState("Alam Sutera");
   const [location, setLocation] = useState("Canteen");
   const [category, setCategory] = useState("Category");
@@ -24,6 +24,7 @@ const PostLost = () => {
   const [imgInfo, setImgInfo] = useState(null)
   const [imgSize, setImgSize] = useState(null)
   const [imgReady, setimgReady] = useState(false)
+  const [imgFile, setImgFile] = useState(null)
   //got from https://www.youtube.com/watch?v=SMim5-ox0K4
   // ideally this portion would be in the components folder but imgSrc is required to pass on and I have no idea how to pass on these variables
   
@@ -54,6 +55,8 @@ const PostLost = () => {
     const handleFiles = files => {
       if (!files) return
       const file = files[0]
+
+      setImgFile(file)
 
       if (file.size < 10000000 && (file.type.includes("image/png") || file.type.includes("image/jpg") || file.type.includes("image/jpeg"))) {
         setimgReady(true);
@@ -111,6 +114,12 @@ const PostLost = () => {
   //submit button
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (!isLoggedIn) {
+      setError("Please log in to post a lost item report.");
+      return;
+    }
+
     let { itemName, personName, descitems, descloc, floor, lostDate } = inputs;
 
     const itemtry = {
@@ -161,13 +170,31 @@ const PostLost = () => {
       setLoading(true);
 
       // get logged in user
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
+      const {data:{user},error: userError} = await supabase.auth.getUser();
 
       if (userError || !user) {
         throw new Error("User not logged in.");
+      }
+
+      //Get image URL and upload to storage
+      let imageUrl=null;
+      if (imgFile){
+        const fileExt= imgFile.name.split('.').pop()
+        const fileName= `${Date.now()}.${fileExt}`
+
+        const{error:uploadImgError}= await supabase.storage
+          .from('images_LostandFound')
+          .upload(fileName,imgFile)
+        
+        if(uploadImgError) {
+          throw uploadImgError
+        }
+
+        const{data:urlData}= supabase.storage
+          .from('images_LostandFound')
+          .getPublicUrl(fileName)
+        
+        imageUrl= urlData.publicUrl
       }
 
       // insert into Item table
@@ -180,10 +207,11 @@ const PostLost = () => {
             item_name: itemName,
             campus_location: campus,
             location: location,
-            item_color: colour.toString(),
+            location_description: descloc,
+            item_color: colour,
             floor: floor,
-          },
-        ])
+            imageURL : imageUrl,
+          },])
         .select();
 
       if (itemError) throw itemError;
@@ -198,7 +226,7 @@ const PostLost = () => {
           {
             user_id: user.id,
             item_id: item_id,
-            date_found: lostDate,
+            date_lost: lostDate,
           },
         ]);
 
@@ -209,6 +237,7 @@ const PostLost = () => {
       // optional reset form
       setInputs({});
       setImgSrc(null);
+      setImgFile(null);
 
     } catch (err) {
       console.error(err);
@@ -325,7 +354,7 @@ const PostLost = () => {
                         "Lobby",
                         "Parking Lot",
                         "Toilet",
-                        "Others"
+                        "Other"
                       ]}
                       selected={location}
                       setSelected={setLocation}
@@ -351,7 +380,8 @@ const PostLost = () => {
                         "Documents",
                         "Electronics",
                         "ID Card",
-                        "Stationery"
+                        "Stationery",
+                        "Others"
                       ]}
                       selected={category}
                       setSelected={setCategory}
@@ -378,7 +408,8 @@ const PostLost = () => {
                         "Brown",
                         "Black",
                         "White",
-                        "Grey"
+                        "Grey",
+                        "Others"
                       ]}
                       selected={colour}
                       setSelected={setColour}

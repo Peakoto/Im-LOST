@@ -5,8 +5,9 @@
 // - confirm new password
 // - save button
 
-import React, {useState} from 'react'
-import './ModalPassChange.css'
+import React, {useState} from 'react';
+import './ModalPassChange.css';
+import {supabase} from "../../data/supabase";
 
 const ModalPassChange = ({onClose}) => {
     const [oldPassword, setOldPassword] = useState("");
@@ -20,33 +21,46 @@ const ModalPassChange = ({onClose}) => {
     const handlePasswordChange = async (e) => {
         e.preventDefault();
 
-        if (
-            !oldPassword ||
-            !newPassword ||
-            !confirmNewPassword
-        ) {
+        if (!oldPassword ||!newPassword ||!confirmNewPassword) {
+            setError("Please fill all fields!");
             return;
         }
 
         if (newPassword !== confirmNewPassword) {
+            setError("Passwords do not match.")
             return;
         }
 
+        if (newPassword.length<6){
+            setError("New Password has to be at least 6 characters.");
+            return;
+        }
         try {
-
             setLoading(true);
 
-            // BACKEND API LATER
-            // await axios.put("/api/change-password", {
-            //     oldPassword,
-            //     newPassword
-            // });
+            //authenticate old password
+            const{data: {user}}= await supabase.auth.getUser()
 
-            console.log({
-                oldPassword,
-                newPassword
-            });
+            const{error:signInError} = await supabase.auth.signInWithPassword({
+                email: user.email,
+                password: oldPassword,
+            })
+            
+            if (signInError){
+                setError("Old Password is incorrect.");
+                return;
+            }
 
+            //update new password
+            const{error:updateError}= await supabase.auth.updateUser({
+                password:newPassword
+            })
+
+            if (updateError){
+                setError("Failed to update password.");
+                console.log("Error:",updateError);
+                return;
+            }
             setSuccess("Password changed successfully.");
 
         } catch (err) {
