@@ -27,7 +27,7 @@ const App = () => {
     }
     getSession()
   },[])
-
+  console.log(isLoggedIn)
   return (
     <Router>
       <Routes>

@@ -238,6 +238,10 @@ const PostLost = ({ isLoggedIn }) => {
       setInputs({});
       setImgSrc(null);
       setImgFile(null);
+      setCampus("Alam Sutera");
+      setLocation("Canteen");  
+      setCategory("Category");    
+      setColour(""); 
 
     } catch (err) {
       console.error(err);
@@ -375,7 +379,6 @@ const PostLost = ({ isLoggedIn }) => {
                       name="category"
                       options={[
                         "Accessories",
-                        "Bottle",
                         "Clothing",
                         "Documents",
                         "Electronics",
