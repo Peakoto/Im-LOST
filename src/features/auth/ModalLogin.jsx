@@ -59,6 +59,18 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
         try {            
             setLoading(true);
 
+            // Check if user exists in User table
+            const { data: Userdata, error: userError } = await supabase
+                .from("User")
+                .select("*")
+                .eq("email", email)
+                .single()
+
+            if (userError || !Userdata) {
+                setError("Account does not exist");
+                return;
+            }
+
             const { data, error: authError } = await supabase.auth.signInWithPassword({
                 email, password,
             });
@@ -80,17 +92,6 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
                 localStorage.removeItem("email")
             }
 
-            // Check if user exists in User table
-            const { data: Userdata, error: userError } = await supabase
-                .from("User")
-                .select("*")
-                .eq("user_id", data.user.id)
-                .single()
-
-            if (userError || !Userdata) {
-                setError("Account does not exist");
-                return;
-            }
             console.log("Logged in user:", Userdata);
             setIsLoggedIn(true)
             setCurrentUser(Userdata)
@@ -158,7 +159,7 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
                                     <span className="text">Remember me</span>
                                 </label>
 
-                                <button type="button" className="forgot-password" onClick={() => setShowForgotPassword(true)}>Forgot Your Password?</button>
+                                <button type="button" className="forgot-password" onClick={() => setShowForgotPassword(true)}>Change Your Password?</button>
                             </div>
                             
                             {error && <p className="error-text">{error}</p>}
