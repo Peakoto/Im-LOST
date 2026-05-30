@@ -31,7 +31,7 @@ function MainLayout({isLoggedIn, setIsLoggedIn, setCurrentUser, children, pageTi
 
                     <Button
                         type="login"
-                        label="Log In"
+                        label={isLoggedIn?"Logged In":"Log in"}
                         onClick={() => setShowLogin(true)}
                     />
 
@@ -76,7 +76,8 @@ function MainLayout({isLoggedIn, setIsLoggedIn, setCurrentUser, children, pageTi
             </footer>
             
             {showLogin && (
-                <Login onClose={() => setShowLogin(false)} 
+                <Login onClose={() => setShowLogin(false)}
+                    isLoggedIn={isLoggedIn} 
                     setIsLoggedIn={setIsLoggedIn}
                     setCurrentUser={setCurrentUser}
                 />

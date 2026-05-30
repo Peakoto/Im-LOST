@@ -15,7 +15,7 @@ import ModalPassChange from "./ModalPassChange.jsx";
 import ModalSignUp from "./ModalSignUp.jsx";
 import {supabase} from "../../data/supabase";
 
-const ModalLogin = ({item, onClose,setIsLoggedIn, setCurrentUser}) => {
+const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) => {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
 
@@ -35,6 +35,18 @@ const ModalLogin = ({item, onClose,setIsLoggedIn, setCurrentUser}) => {
             setRememberMe(true)
         }
     },[])
+
+    const handleLogout = async(e)=>{
+        await supabase.auth.signOut();
+
+        localStorage.removeItem("rememberMe");
+        localStorage.removeItem("email");
+
+        setIsLoggedIn(false);
+        setCurrentUser(null);
+        setRememberMe(false);
+        onClose();
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -72,7 +84,7 @@ const ModalLogin = ({item, onClose,setIsLoggedIn, setCurrentUser}) => {
             const { data: Userdata, error: userError } = await supabase
                 .from("User")
                 .select("*")
-                .eq("email", email)
+                .eq("user_id", data.user.id)
                 .single()
 
             if (userError || !Userdata) {
@@ -90,6 +102,9 @@ const ModalLogin = ({item, onClose,setIsLoggedIn, setCurrentUser}) => {
         }
     };
 
+    if(isLoggedIn){
+
+    }
     return (
         <>
             <div className="modal-overlay" onClick={onClose}>
@@ -103,58 +118,64 @@ const ModalLogin = ({item, onClose,setIsLoggedIn, setCurrentUser}) => {
                         <h2>Log In</h2>
                     </div>
                     
-                    <form className="modal-content" onSubmit={handleLogin}>
-                        <h3>Email</h3>
-                        <input
-                            className="input-field"
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+                    {/* if user is logged in  */}
+                    {isLoggedIn && !loading? (
+                        <div className="modal-content">
+                            <p>You are currently logged in.</p>
 
-                        <h3>Password</h3>
-                        <input
-                            className="input-field"
-                            type="password"
-                            placeholder="Enter your password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-
-                        <div className="remember-forgot">
-                            <label className="remember-me">
-                                <input
-                                    type="checkbox"
-                                    checked={rememberMe}
-                                    onChange={(e) => setRememberMe(e.target.checked)}
-                                />
-                                <span className="text">Remember me</span>
-                            </label>
-
-                            <button className="forgot-password" onClick={() => setShowForgotPassword(true)}>Forgot Your Password?</button>
+                            {error && <p className="error-text">{error}</p>}
+                            <button type="submit" className="logout-button" onClick={handleLogout}>
+                                {loading ? "Logging out..." : "Log out"}
+                            </button>
+                            
                         </div>
-                        
-                        {error && <p className="error-text">{error}</p>}
-                        <button type="submit" className="login-button">
-                            {loading ? "Logging in..." : "Log In"}
-                        </button>
-                        
+                    ):(
+                       <form className="modal-content" onSubmit={handleLogin}>
+                            <h3>Email</h3>
+                            <input
+                                className="input-field"
+                                type="email"
+                                placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <h3>Password</h3>
+                            <input
+                                className="input-field"
+                                type="password"
+                                placeholder="Enter your password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
 
-                        <h4>Don't have an account? <a href="#" className="sign-up-link" onClick={() => setShowSignUp(true)}>Sign Up</a></h4> 
+                            <div className="remember-forgot">
+                                <label className="remember-me">
+                                    <input
+                                        type="checkbox"
+                                        checked={rememberMe}
+                                        onChange={(e) => setRememberMe(e.target.checked)}
+                                    />
+                                    <span className="text">Remember me</span>
+                                </label>
 
-                    </form>
+                                <button type="button" className="forgot-password" onClick={() => setShowForgotPassword(true)}>Forgot Your Password?</button>
+                            </div>
+                            
+                            {error && <p className="error-text">{error}</p>}
+                            <button type="submit" className="login-button">
+                                {loading ? "Logging in..." : "Log In"}
+                            </button>
+                            
+                            <h4>Don't have an account? <a href="#" className="sign-up-link" onClick={() => setShowSignUp(true)}>Sign Up</a></h4> 
+                        </form> 
+                    )}
                 </div>
             </div>
             {showForgotPassword && (
-                <ModalPassChange
-                    onClose={() => setShowForgotPassword(false)}
-                />
+                <ModalPassChange onClose={() => setShowForgotPassword(false)}/>
             )}
             {showSignUp && (
-                <ModalSignUp
-                    onClose={() => setShowSignUp(false)}
-                />
+                <ModalSignUp onClose={() => setShowSignUp(false)}/>
             )}
         </>
     );
