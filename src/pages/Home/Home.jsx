@@ -12,13 +12,6 @@ import filterIcon from "../../assets/filter_icon.png";
 import { supabase } from "../../data/supabase";
 import { mapItem } from "../../data/mapItem";
 
-
-// later when backend is done
-// import { getItems } from "../../api/itemApi"; 
-
-// later on, to implement the backend, use the url
-// ex -> image: "http://localhost:5000/uploads/image.jpg"
-
 console.log(import.meta.env);
 
 const Home = () => {
