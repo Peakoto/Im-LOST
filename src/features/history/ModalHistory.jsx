@@ -22,14 +22,19 @@ import "./ModalHistory.css";
 import Button from "../../components/Button.jsx";
 import infoIcon from "../../assets/info_icon.png"
 import editIcon from "../../assets/edit_icon.png"
-import StudentViewModal from "../../features/items/ModalItemDetailsStudentView.jsx";
-// import StudentEditModal from "../../features/items/ModalItemDetailsStudentEdit.jsx";
+import ModalItemDetailsStudentView from "../../features/items/ModalItemDetailsStudentView.jsx";
+import ModalItemDetailsStudentEdit from "../../features/items/ModalItemDetailsStudentEdit.jsx";
 import { useState } from "react";
+
+
+
 
 function ModalHistory({ historyData = [] }) {
 
     const [showStudentViewModal, setShowStudentViewModal] = useState(false);
     const [showStudentEditModal, setShowStudentEditModal] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
 
     return (
         <div className="history">
@@ -80,14 +85,22 @@ function ModalHistory({ historyData = [] }) {
                                                 type="tableView"
                                                 icon={infoIcon}
                                                 iconOnly={true}
-                                                onClick={() => setShowStudentViewModal(true)}
+                                                onClick={() => {
+                                                    setSelectedItem(item);
+                                                    setShowStudentViewModal(true);
+                                                }}
                                             />
+
                                             <Button
                                                 type="tableEdit"
                                                 icon={editIcon}
                                                 iconOnly={true}
-                                                // onClick={() => setShowStudentEditModal(true)}
+                                                onClick={() => {
+                                                    setSelectedItem(item);
+                                                    setShowStudentEditModal(true);
+                                                }}
                                             />
+
                                         </td>
 
                                     </tr>
@@ -106,20 +119,22 @@ function ModalHistory({ historyData = [] }) {
             </div>
             {/* STUDENT VIEW MODAL */}
             {
-                showStudentViewModal &&
-                <ModalItemDetailsStudentView
-                    onclose={() => setShowStudentViewModal(false)}
-                />
+                showStudentViewModal && selectedItem && (
+                    <ModalItemDetailsStudentView
+                        item={selectedItem}
+                        onClose={() => setShowStudentViewModal(false)}
+                    />
+                )
             }
+
             {/* STUDENT EDIT MODAL */}
-            
             {
-                /*
-                showStudentEditModal &&
-                <ModalItemDetailsStudentEdit
-                    onclose={() => setShowStudentEditModal(false)}
-                />
-                */
+                showStudentEditModal && selectedItem && (
+                    <ModalItemDetailsStudentEdit
+                        item={selectedItem}
+                        onClose={() => setShowStudentEditModal(false)}
+                    />
+                )
             }
 
             {

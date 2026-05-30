@@ -45,9 +45,16 @@ function Profile() {
         id: 1,
         status: "Found",
         dateLost: "10/01/2014",
-        itemName: "Notebook A4",
+        itemName: "Notebook A5",
         campus: "Alam Sutera",
-        location: "B0501",
+        location: "LKC",
+        image: "",
+        founder: "Anonymous",
+        category: "Documents",
+        color: ["White"],
+        description: "A notebook that was turned in in good condition.",
+        locationDescription: "Found in the LKC room (Binus Alam Sutera).",
+
       },
     ];
 
@@ -63,7 +70,7 @@ function Profile() {
     useEffect(() => {
         let isMounted = true;
 
-        async function load() {
+        async function loadHistory() {
             setLoadingHistory(true);
             setHistoryError(null);
 
@@ -90,7 +97,7 @@ function Profile() {
             }
         }
 
-        load();
+        loadHistory();
 
         return () => {
             isMounted = false;
