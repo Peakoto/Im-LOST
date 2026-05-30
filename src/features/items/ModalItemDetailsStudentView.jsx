@@ -113,7 +113,7 @@ const ModalItemDetailsStudentView = ({ item, onClose }) => {
 
                     <div className="detail-box">
 
-                        <label>Description</label>
+                        <label>Item Description</label>
 
                         <p>{item.description}</p>
 
@@ -121,7 +121,7 @@ const ModalItemDetailsStudentView = ({ item, onClose }) => {
 
                     <div className="detail-box">
 
-                        <label>Location Details</label>
+                        <label>Location Description</label>
 
                         <p>{item.locationDescription}</p>
 

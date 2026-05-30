@@ -256,7 +256,7 @@ const ModalItemDetailsStudentEdit = ({ item, onClose }) => {
 
         <div className="item-edit-bottom">
           <div className="detail-edit-box">
-            <label>Description</label>
+            <label>Item Description</label>
             <textarea value={form.description} onChange={handleText("description")} />
           </div>
 
