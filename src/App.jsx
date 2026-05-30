@@ -26,6 +26,17 @@ const App = () => {
       }
     }
     getSession()
+
+    const{data:{subscription},}= supabase.auth.onAuthStateChange((event,session)=>{
+      if (session){
+        setIsLoggedIn(true);
+        setCurrentUser(session.user);
+      }else{
+        setIsLoggedIn(false);
+        setCurrentUser(null);
+      }
+    });
+    return()=> subscription.unsubscribe();
   },[])
   console.log(isLoggedIn)
   return (
