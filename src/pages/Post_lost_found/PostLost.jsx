@@ -159,14 +159,6 @@ const PostLost = ({ isLoggedIn }) => {
     if (itemtry.floor < 0 || itemtry.floor > 25) {
       console.log("Floor Not Correct");
     }
-    //check floor
-
-    // if (imgReady) {
-    //   // console.log(imgReady)
-    //   console.log(itemtry)
-    // } else {
-    //   console.log("Cannot go!")
-    // }
 
     try {
       setLoading(true);
