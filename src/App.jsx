@@ -15,25 +15,42 @@ import MainLayout from './layout/MainLayout.jsx';
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  //check if user is admin or not
+  const checkAdmin= async(userId) =>{
+    const{data} = await supabase
+      .from("User")
+      .select("admin")
+      .eq("user_id",userId)
+      .single()
+
+    setIsAdmin(data?.admin==true)//sets isAdmin true ot false
+  }
 
   // check session on page load
   useEffect(() => {
+    //checks on initial load
     const getSession = async () => {
       const { data } = await supabase.auth.getSession()
       if (data.session) {
         setIsLoggedIn(true)
         setCurrentUser(data.session.user)
+        await checkAdmin(data.session.user.id)
       }
     }
     getSession()
 
     const{data:{subscription},}= supabase.auth.onAuthStateChange((event,session)=>{
+      //checks in real time
       if (session){
         setIsLoggedIn(true);
         setCurrentUser(session.user);
+        await checkAdmin(session.user.id)
       }else{
         setIsLoggedIn(false);
         setCurrentUser(null);
+        setIsAdmin(false)
       }
     });
     return()=> subscription.unsubscribe();
@@ -49,7 +66,7 @@ const App = () => {
               isLoggedIn={isLoggedIn}
               setIsLoggedIn={setIsLoggedIn}
               setCurrentUser={setCurrentUser}>
-              <Home />
+              <Home isAdmin={isAdmin}/>
             </MainLayout>
           }
         />
@@ -74,7 +91,7 @@ const App = () => {
               isLoggedIn={isLoggedIn}
               setIsLoggedIn={setIsLoggedIn}
               setCurrentUser={setCurrentUser}>
-              <PostFound />
+              <PostFound isLoggedIn= {isLoggedIn} isAdmin={isAdmin}/>
             </MainLayout>
           }
         />
