@@ -11,9 +11,10 @@ import CalendarFilter from "../../features/filters/CalendarFilter";
 import homeIcon from "../../assets/home_icon.png";
 import { supabase } from "../../data/supabase";
 import useDebounce from "../../hooks/useDebounce";
+import React from "react";
 
 
-const PostFound = () => {
+const PostFound = ({isAdmin,isLoggedIn}) => {
   const [campus, setCampus] = useState("Alam Sutera");
   const [location, setLocation] = useState("Canteen");
   const [category, setCategory] = useState("Category");
@@ -36,13 +37,13 @@ const PostFound = () => {
 
   const [imgFile, setImgFile] = useState(null);
   
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (!debouncedSearch) return;
+  //   if (!debouncedSearch) return;
 
-    console.log("Searching:", debouncedSearch);
+  //   console.log("Searching:", debouncedSearch);
 
-  }, [debouncedSearch]);
+  // }, [debouncedSearch]);
 
   const ImgUpload = () => {
 
@@ -69,11 +70,6 @@ const PostFound = () => {
       const file = files[0]
 
       setImgFile(file);
-
-      console.log("File object:", file);
-      console.log("File name:", file.name);
-      console.log("File size:", file.size);
-      console.log("File type:", file.type);
 
       if (file.size < 10000000 && (file.type.includes("image/png") || file.type.includes("image/jpg") || file.type.includes("image/jpeg"))) {
         setimgReady(true);
@@ -125,13 +121,22 @@ const PostFound = () => {
     const name = e.target.name;
     const value = e.target.value;
     setInputs(values => ({ ...values, [name]: value }))
-    // console.log(inputs)
   }
 
   //submit button
   const handleSubmit = async (e) => {
     e.preventDefault()
-    let { itemName, personName, descitems, descloc, floor, lostDate } = inputs;
+
+    if(!isLoggedIn){
+      setError("Please log in to post a lost item report.");
+      return;
+    }
+
+    if (!isAdmin){
+      setError("Only Admins are allowed to make a found report! Please go to basement and give item to admin if you found an item");
+      return;
+    }
+    let { itemName, personName, descitems, descloc, floor, foundDate } = inputs;
 
     const itemtry = {
       itemName,
@@ -143,13 +148,12 @@ const PostFound = () => {
       location,
       category,
       colour,
-      lostDate,
+      foundDate,
     }
 
     let thereIsNull = 0;
 
     Object.entries(itemtry).forEach(([key, value]) => {
-      // console.log(`${key}: ${value}`);
       if (
         value === undefined ||
         value === null ||
@@ -170,24 +174,36 @@ const PostFound = () => {
     }
     //check floor
 
-    // if (imgReady) {
-    //   // console.log(imgReady)
-    //   console.log(itemtry)
-    // } else {
-    //   console.log("Cannot go!")
-    // }
-
     try {
       setLoading(true);
 
       // get logged in user
       const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
+        data: {user},error: userError} = await supabase.auth.getUser();
 
       if (userError || !user) {
         throw new Error("User not logged in.");
+      }
+
+      //Get image URL and upload to storage
+      let imageUrl=null;
+      if (imgFile){
+        const fileExt= imgFile.name.split('.').pop()
+        const fileName= `${Date.now()}.${fileExt}`
+
+        const{error:uploadImgError}= await supabase.storage
+          .from('images_LostandFound')
+          .upload(fileName,imgFile)
+        
+        if(uploadImgError) {
+          throw uploadImgError
+        }
+
+        const{data:urlData}= supabase.storage
+          .from('images_LostandFound')
+          .getPublicUrl(fileName)
+        
+        imageUrl= urlData.publicUrl
       }
 
       // insert into Item table
@@ -200,7 +216,7 @@ const PostFound = () => {
             item_name: itemName,
             campus_location: campus,
             location: location,
-            item_color: colour.toString(),
+            item_color: colour,
             floor: floor,
           },
         ])
@@ -218,7 +234,7 @@ const PostFound = () => {
           {
             user_id: user.id,
             item_id: item_id,
-            date_found: lostDate,
+            date_found: foundDate,
           },
         ]);
 
@@ -229,6 +245,7 @@ const PostFound = () => {
       // optional reset form
       setInputs({});
       setImgSrc(null);
+      setImgFile(null);
 
     } catch (err) {
       console.error(err);

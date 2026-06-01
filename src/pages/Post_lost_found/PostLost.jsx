@@ -36,7 +36,6 @@ const PostLost = ({ isLoggedIn }) => {
 
     const handleDragOver = e => {
       e.preventDefault()
-      // console.log(e.dataTransfer.files)
     }
 
     const handleDrop = e => {
@@ -108,7 +107,6 @@ const PostLost = ({ isLoggedIn }) => {
     const name = e.target.name;
     const value = e.target.value;
     setInputs(values => ({ ...values, [name]: value }))
-    // console.log(inputs)
   }
 
   //submit button
@@ -158,14 +156,6 @@ const PostLost = ({ isLoggedIn }) => {
       console.log("Floor Not Correct");
     }
     //check floor
-
-    // if (imgReady) {
-    //   // console.log(imgReady)
-    //   console.log(itemtry)
-    // } else {
-    //   console.log("Cannot go!")
-    // }
-
     try {
       setLoading(true);
 
