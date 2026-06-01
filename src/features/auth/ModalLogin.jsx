@@ -41,6 +41,7 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
 
         setIsLoggedIn(false);
         setCurrentUser(null);
+
         onClose();
     };
 

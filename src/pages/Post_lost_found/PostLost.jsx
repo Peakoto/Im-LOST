@@ -113,10 +113,12 @@ const PostLost = ({ isLoggedIn }) => {
 
   //submit button
   const handleSubmit = async (e) => {
+    setError("")
+    setSuccess("")
     e.preventDefault()
 
     if (!isLoggedIn) {
-      setError("Please log in to post a lost item report.");
+      setError("Please Log In Before Posting a Lost Item Report.");
       return;
     }
 
@@ -233,11 +235,16 @@ const PostLost = ({ isLoggedIn }) => {
       if (foundError) throw foundError;
 
       setSuccess("Lost report submitted successfully!");
+      setError("")
 
       // optional reset form
       setInputs({});
       setImgSrc(null);
       setImgFile(null);
+      setCampus("Alam Sutera");
+      setLocation("Canteen");  
+      setCategory("Category");    
+      setColour(""); 
 
     } catch (err) {
       console.error(err);
@@ -275,7 +282,7 @@ const PostLost = ({ isLoggedIn }) => {
                       <input
                         type="text"
                         name="itemName"
-                        value={inputs.itemName}
+                        value={inputs.itemName || ""}
                         onChange={handleChange}
                       />
                     </label>
@@ -292,7 +299,7 @@ const PostLost = ({ isLoggedIn }) => {
                       <input
                         type="text"
                         name="personName"
-                        value={inputs.personName}
+                        value={inputs.personName || ""}
                         onChange={handleChange}
                       />
                     </label>
@@ -309,7 +316,7 @@ const PostLost = ({ isLoggedIn }) => {
                   <p>Date Lost:</p>
                   <form>
                     <label htmlFor="">
-                      <input type="date" name="lostDate" value={inputs.lostDate} onChange={handleChange}></input>
+                      <input type="date" name="lostDate" value={inputs.lostDate||""} onChange={handleChange}></input>
                     </label>
                   </form>
                 </div>
@@ -375,7 +382,6 @@ const PostLost = ({ isLoggedIn }) => {
                       name="category"
                       options={[
                         "Accessories",
-                        "Bottle",
                         "Clothing",
                         "Documents",
                         "Electronics",
@@ -422,7 +428,21 @@ const PostLost = ({ isLoggedIn }) => {
                   <p>Floor</p>
                   <form>
                     <label htmlFor="">
-                      <input type="number" name="floor" min="0" max="25" value={inputs.floor} onChange={handleChange} />
+                      <input type="number" name="floor" min="0" max="25" value={inputs.floor||""} 
+                        onChange={(e)=>{
+                          //so that val HAS to be between 0 to 25
+                          const val = parseInt(e.target.value)
+                          if(e.target.value == "" || (val>=0 && val<=25)){
+                            handleChange(e)
+                          }
+                        }}
+                        // allows only nums to be typed and allow arrows up n down
+                        onKeyDown={(e) => {
+                          if (!/[0-9]/.test(e.key) && !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)) {
+                            e.preventDefault()
+                          }
+                        }}
+                      />
                     </label>
                   </form>
                 </div>
@@ -440,7 +460,7 @@ const PostLost = ({ isLoggedIn }) => {
                     <span>Item</span>
                     <textarea
                       name="descitems"
-                      value={inputs.descitems}
+                      value={inputs.descitems||""}
                       onChange={handleChange}
                     ></textarea>
                   </label>
@@ -452,7 +472,7 @@ const PostLost = ({ isLoggedIn }) => {
                     <span>Location</span>
                     <textarea
                       name="descloc"
-                      value={inputs.descloc}
+                      value={inputs.descloc||""}
                       onChange={handleChange}
                     ></textarea>
                   </label>
