@@ -53,6 +53,10 @@
     background-color: #ffe0e0;
 }
 
+.status.claimed {
+    background-color: #b7c1db;
+}
+
 .action-buttons {
     display: flex;
     gap: 8px;

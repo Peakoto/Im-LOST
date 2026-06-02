@@ -43,7 +43,7 @@ function Profile() {
     const placeholderHistory = [
       {
         id: 1,
-        status: "Found",
+        status: "Lost",
         dateLost: "10/01/2014",
         itemName: "Notebook A5",
         campus: "Alam Sutera",

@@ -91,15 +91,17 @@ function ModalHistory({ historyData = [] }) {
                                                 }}
                                             />
 
-                                            <Button
-                                                type="tableEdit"
-                                                icon={editIcon}
-                                                iconOnly={true}
-                                                onClick={() => {
-                                                    setSelectedItem(item);
-                                                    setShowStudentEditModal(true);
-                                                }}
-                                            />
+                                            {item.status === "Lost" && (
+                                                <Button
+                                                    type="tableEdit"
+                                                    icon={editIcon}
+                                                    iconOnly={true}
+                                                    onClick={() => {
+                                                        setSelectedItem(item);
+                                                        setShowStudentEditModal(true);
+                                                    }}
+                                                />
+                                            )}
 
                                         </td>
 
