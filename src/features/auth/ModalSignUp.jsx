@@ -1,5 +1,6 @@
 import "./ModalSignUp.css";
 import React, {useState} from "react";
+import {supabase} from "../../data/supabase";
 
 const ModalSignUp = ({onClose}) => {
     const [email, setEmail] = useState("");
@@ -16,7 +17,10 @@ const ModalSignUp = ({onClose}) => {
 
         setError("");
         setSuccess("");
-
+        if (password.length < 6) {
+            setError("Password must be at least 6 characters.")
+        return;
+  }
         if (!email || !password || !confirmPassword) {
             setError("Please fill all fields.");
             return;
@@ -28,20 +32,26 @@ const ModalSignUp = ({onClose}) => {
         }
 
         try {
-
             setLoading(true);
 
-            // BACKEND API LATER
-            // await axios.post("/api/register", {
-            //     email,
-            //     password
-            // });
+            //create auth user
+            const{data,error}= await supabase.auth.signUp({
+                email,password
+            })
+            if (error) throw error;
+            console.log("Logged in: ",data.user);
+            
+            //insert to supabase
+            const{error:insertError}= await supabase.from("User")
+                .insert([{
+                    user_id:data.user.id,//so user id matches with the one created by auth
+                    email:email,
+                    admin:false,
+                    name:null,
+                    phone:null
+                }])
 
-            console.log({
-                email,
-                password
-            });
-
+            if (insertError) throw insertError;
             setSuccess("Account created successfully.");
 
         } catch (err) {

@@ -7,21 +7,15 @@ import DropdownRadio from "../../components/DropdownRadio";
 import ModalFilter from "../../features/items/ModalFilter";
 import SearchBar from "../../components/SearchBar";
 import ModalItemDetailsStudentView from "../../features/items/ModalItemDetailsStudentView";
+//import ModalItemDetailsAdmin from "../../features/items/ModalItemDetailsAdmin";
 // import mockItems from "../../data/mockItems.js";
 import filterIcon from "../../assets/filter_icon.png";
 import { supabase } from "../../data/supabase";
 import { mapItem } from "../../data/mapItem";
 
-
-// later when backend is done
-// import { getItems } from "../../api/itemApi"; 
-
-// later on, to implement the backend, use the url
-// ex -> image: "http://localhost:5000/uploads/image.jpg"
-
 console.log(import.meta.env);
 
-const Home = () => {
+const Home = ({isAdmin}) => {
   // mock items or dummies 
   // const items = mockItems;
   // later replace mockItems with
@@ -31,7 +25,7 @@ const Home = () => {
 
   const fetchItems = async () => {
     const { data, error } = await supabase
-      .from("items")
+      .from("Item")
       .select("*");
 
     console.log(data);
@@ -41,10 +35,12 @@ const Home = () => {
       console.error("Error fetching items:", error);
       return;
     }
-  // transform database columns from supabase to the react column names '../../utils/mapItem.js'
-  const formattedItems = data.map(mapItem);
+    // transform database columns from supabase to the react column names '../../utils/mapItem.js'
+    const formattedItems = data.map(mapItem);
 
-  setItems(formattedItems);
+    setItems(formattedItems);
+
+    console.log("Formatted items:", formattedItems);
   };
 
   useEffect(() => {
@@ -80,7 +76,14 @@ const Home = () => {
     .filter((item) => {
 
     // campus filter
-    const matchesCampus = item.campus === campus;
+    const matchesCampus =
+      item.campus?.trim().toLowerCase() === campus.trim().toLowerCase();
+
+    console.log({
+      dbCampus: item.campus,
+      selectedCampus: campus,
+      equal: item.campus?.trim().toLowerCase() === campus.trim().toLowerCase()
+    });
 
     // convert item date
     const itemDate = new Date(item.date);
@@ -102,11 +105,22 @@ const Home = () => {
 
     // color
     const matchesColor =
-      appliedColor.length === 0 || item.color.some((color) => appliedColor.includes(color));
+      appliedColor.length === 0 || (Array.isArray(item.color) && item.color.some((color) => appliedColor.includes(color)));
 
     // search bar
     const matchesSearchTitle =
-      !searchTitle || item.title.toLowerCase().includes(searchTitle.toLowerCase());
+      !searchTitle || (item.title || "").toLowerCase().includes(searchTitle.toLowerCase());
+
+    console.log({
+      title: item.title,
+      matchesCampus,
+      matchesStart,
+      matchesEnd,
+      matchesCategory,
+      matchesLocation,
+      matchesColor,
+      matchesSearchTitle,
+    });
     
     return (
         matchesLocation &&
@@ -200,11 +214,20 @@ const Home = () => {
         )}
 
         {/* Item Details Rendering */}
+
         {showItemDetails && selectedItem && (
-          <ModalItemDetailsStudentView
+          isAdmin?(
+            // PLS MAKE THE MODAL FIRST BLM ADA SOALNYA T^T
+            <ModalItemDetailsAdmin
             item={selectedItem}
             onClose={() => setShowItemDetails(false)}
-          />
+            />
+          ):(
+            <ModalItemDetailsStudentView
+            item={selectedItem}
+            onClose={() => setShowItemDetails(false)}
+            />
+          )
         )}
 
         {/* Nav Post Lost Item Page Button */}

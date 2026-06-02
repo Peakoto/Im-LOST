@@ -1,25 +1,72 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import React from 'react'
+import React from 'react';
+import { supabase } from './data/supabase';
 
 // Import pages
 import Home from "./pages/Home/Home.jsx";
-import PostLost from "./pages/Post_lost/PostLost.jsx";
-import PostFound from "./pages/Post_found/PostFound.jsx";
+import PostLost from "./pages/Post_lost_found/PostLost.jsx";
+import PostFound from "./pages/Post_lost_found/PostFound.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 
 // Import MainLayout
 import MainLayout from './layout/MainLayout.jsx';
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  //check if user is admin or not
+  const checkAdmin= async(userId) =>{
+    const{data} = await supabase
+      .from("User")
+      .select("admin")
+      .eq("user_id",userId)
+      .single()
+
+    setIsAdmin(data?.admin==true)//sets isAdmin true ot false
+  }
+
+  // check session on page load
+  useEffect(() => {
+    //checks on initial load
+    const getSession = async () => {
+      const { data } = await supabase.auth.getSession()
+      if (data.session) {
+        setIsLoggedIn(true)
+        setCurrentUser(data.session.user)
+        await checkAdmin(data.session.user.id)
+      }
+    }
+    getSession()
+
+    const{data:{subscription},}= supabase.auth.onAuthStateChange(async(event,session)=>{
+      //checks in real time
+      if (session){
+        setIsLoggedIn(true);
+        setCurrentUser(session.user);
+        await checkAdmin(session.user.id)
+      }else{
+        setIsLoggedIn(false);
+        setCurrentUser(null);
+        setIsAdmin(false)
+      }
+    });
+    return()=> subscription.unsubscribe();
+  },[])
+
   return (
     <Router>
       <Routes>
         <Route
           path="/"
           element={
-            <MainLayout pageTitle={<>LIST OF <span className="title-bold">LOST</span> ITEMS</>}>
-              <Home />
+            <MainLayout pageTitle={<>LIST OF <span className="title-bold">LOST</span> ITEMS</>}
+              isLoggedIn={isLoggedIn}
+              setIsLoggedIn={setIsLoggedIn}
+              setCurrentUser={setCurrentUser}>
+              <Home isAdmin={isAdmin}/>
             </MainLayout>
           }
         />
@@ -27,8 +74,12 @@ const App = () => {
         <Route
           path="/post-lost"
           element={
-            <MainLayout pageTitle={<>POST <span className="title-bold">LOST</span> ITEM</>}>
-              <PostLost />
+            <MainLayout pageTitle={<>POST <span className="title-bold">LOST</span> ITEM</>}
+              isLoggedIn={isLoggedIn}
+              setIsLoggedIn={setIsLoggedIn}
+              setCurrentUser={setCurrentUser}>
+
+              <PostLost isLoggedIn={isLoggedIn}/>
             </MainLayout>
           }
         />
@@ -36,8 +87,11 @@ const App = () => {
         <Route
           path="/post-found"
           element={
-            <MainLayout pageTitle={<>POST <span className="title-bold">FOUND</span> ITEM</>}>
-              <PostFound />
+            <MainLayout pageTitle={<>POST <span className="title-bold">FOUND</span> ITEM</>}
+              isLoggedIn={isLoggedIn}
+              setIsLoggedIn={setIsLoggedIn}
+              setCurrentUser={setCurrentUser}>
+              <PostFound isLoggedIn= {isLoggedIn} isAdmin={isAdmin}/>
             </MainLayout>
           }
         />
@@ -45,7 +99,10 @@ const App = () => {
         <Route
           path="/profile"
           element={
-            <MainLayout pageTitle={<>USER <span className="title-bold">PROFILE</span></>}>
+            <MainLayout pageTitle={<>USER <span className="title-bold">PROFILE</span></>}
+              isLoggedIn={isLoggedIn}
+              setIsLoggedIn={setIsLoggedIn}
+              setCurrentUser={setCurrentUser}>
               <Profile />
             </MainLayout>
           }

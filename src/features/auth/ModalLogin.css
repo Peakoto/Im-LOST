@@ -86,6 +86,19 @@
     height: 40px;
 }
 
+.logout-button{
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #ff5151;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    height: 40px;
+}
+
 .login-button:hover{
     background: #0056b3;
 }

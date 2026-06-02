@@ -4,13 +4,13 @@ import profile_icon from "../assets/profile_icon.png"; // button that navigates 
 import history_icon from "../assets/history_icon.png"; // button that shows the popup of HistoryModal
 import Button from "../components/Button";
 import Login from "../features/auth/ModalLogin.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "../data/supabase.js";
 // import History from "../features/history/ModalHistory.jsx";
 
-function MainLayout({children, pageTitle = "LOST AND FOUND"}) {
+function MainLayout({isLoggedIn, setIsLoggedIn, setCurrentUser, children, pageTitle = "LOST AND FOUND"}) {
     const [showLogin, setShowLogin] = useState(false);
     // const [showHistory, setShowHistory] = useState(false);
-
     return (
         <div className="layout">
             {/* HEADER */}
@@ -31,7 +31,7 @@ function MainLayout({children, pageTitle = "LOST AND FOUND"}) {
 
                     <Button
                         type="login"
-                        label="Log In"
+                        label={isLoggedIn?"Logged In":"Log in"}
                         onClick={() => setShowLogin(true)}
                     />
 
@@ -76,7 +76,11 @@ function MainLayout({children, pageTitle = "LOST AND FOUND"}) {
             </footer>
             
             {showLogin && (
-                <Login onClose={() => setShowLogin(false)} />
+                <Login onClose={() => setShowLogin(false)}
+                    isLoggedIn={isLoggedIn} 
+                    setIsLoggedIn={setIsLoggedIn}
+                    setCurrentUser={setCurrentUser}
+                />
             )}
             
             {/* {showHistory && (
