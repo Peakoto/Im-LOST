@@ -1,0 +1,4 @@
+- [ ] Create a ModalHistory-specific CSS rule for action buttons so icon buttons match table text height without affecting header icons
+- [ ] Revert icon-size changes in src/components/Button.css (or scope them) to avoid shrinking header icons
+- [ ] Update src/features/history/ModalHistory.css with a dedicated selector that targets the buttons inside .action-buttons
+- [ ] Verify via lint/build (optional)
