@@ -7,6 +7,7 @@ import DropdownRadio from "../../components/DropdownRadio";
 import ModalFilter from "../../features/items/ModalFilter";
 import SearchBar from "../../components/SearchBar";
 import ModalItemDetailsStudentView from "../../features/items/ModalItemDetailsStudentView";
+//import ModalItemDetailsAdmin from "../../features/items/ModalItemDetailsAdmin";
 // import mockItems from "../../data/mockItems.js";
 import filterIcon from "../../assets/filter_icon.png";
 import { supabase } from "../../data/supabase";
@@ -14,7 +15,7 @@ import { mapItem } from "../../data/mapItem";
 
 console.log(import.meta.env);
 
-const Home = () => {
+const Home = ({isAdmin}) => {
   // mock items or dummies 
   // const items = mockItems;
   // later replace mockItems with
@@ -213,11 +214,20 @@ const Home = () => {
         )}
 
         {/* Item Details Rendering */}
+
         {showItemDetails && selectedItem && (
-          <ModalItemDetailsStudentView
+          isAdmin?(
+            // PLS MAKE THE MODAL FIRST BLM ADA SOALNYA T^T
+            <ModalItemDetailsAdmin
             item={selectedItem}
             onClose={() => setShowItemDetails(false)}
-          />
+            />
+          ):(
+            <ModalItemDetailsStudentView
+            item={selectedItem}
+            onClose={() => setShowItemDetails(false)}
+            />
+          )
         )}
 
         {/* Nav Post Lost Item Page Button */}
