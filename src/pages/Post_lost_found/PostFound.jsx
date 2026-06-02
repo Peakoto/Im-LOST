@@ -10,6 +10,9 @@ import plus from "../../assets/plus_icon.png";
 import CalendarFilter from "../../features/filters/CalendarFilter";
 import homeIcon from "../../assets/home_icon.png";
 import { supabase } from "../../data/supabase";
+
+
+const PostFound = ({isLoggedIn,isAdmin}) => {
 import useDebounce from "../../hooks/useDebounce";
 import React from "react";
 
@@ -20,12 +23,13 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
   const [category, setCategory] = useState("Category");
   const [colour, setColour] = useState("");
   const [inputs, setInputs] = useState({});
-  const [lostDate, setlostDate] = useState("");
+  const [foundDate, setfoundDate] = useState("");
 
   const [imgSrc, setImgSrc] = useState(null)
   const [imgInfo, setImgInfo] = useState(null)
   const [imgSize, setImgSize] = useState(null)
   const [imgReady, setimgReady] = useState(false)
+  const[imgFile,setImgFile]= useState(null)
   //got from https://www.youtube.com/watch?v=SMim5-ox0K4
   // ideally this portion would be in the components folder but imgSrc is required to pass on and I have no idea how to pass on these variables
   
@@ -69,6 +73,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
       if (!files) return
       const file = files[0]
 
+      setImgFile(file)
       setImgFile(file);
 
       if (file.size < 10000000 && (file.type.includes("image/png") || file.type.includes("image/jpg") || file.type.includes("image/jpeg"))) {
@@ -125,7 +130,19 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
 
   //submit button
   const handleSubmit = async (e) => {
+    setError("")
+    setSuccess("")
     e.preventDefault()
+
+    if (!isLoggedIn) {
+      setError("Please Log In Before Posting a Lost Item Report.");
+      return;
+    }
+
+    if(!isAdmin){
+      setError("Only Admins can post a Found Item report, Please go to basement if you found a lost item");
+      return;
+    }
 
     if(!isLoggedIn){
       setError("Please log in to post a lost item report.");
@@ -178,6 +195,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
       setLoading(true);
 
       // get logged in user
+      const {data: { user },error: userError} = await supabase.auth.getUser();
       const {
         data: {user},error: userError} = await supabase.auth.getUser();
 
@@ -218,6 +236,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
             location: location,
             item_color: colour,
             floor: floor,
+            imageURL: imageUrl,
           },
         ])
         .select();
@@ -241,11 +260,16 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
       if (foundError) throw foundError;
 
       setSuccess("Found report submitted successfully!");
+      setError("");
 
       // optional reset form
       setInputs({});
       setImgSrc(null);
       setImgFile(null);
+      setCampus("Alam Sutera");
+      setLocation("Canteen");  
+      setCategory("Category");    
+      setColour(""); 
 
     } catch (err) {
       console.error(err);
@@ -283,7 +307,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
                       <input
                         type="text"
                         name="itemName"
-                        value={inputs.itemName}
+                        value={inputs.itemName||""}
                         onChange={handleChange}
                       />
                     </label>
@@ -300,7 +324,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
                       <input
                         type="text"
                         name="personName"
-                        value={inputs.personName}
+                        value={inputs.personName || ""}
                         onChange={handleChange}
                       />
                     </label>
@@ -314,10 +338,10 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
             <tr>
               <td>
                 <div className="inputhere">
-                  <p>Date Lost:</p>
+                  <p>Date Found:</p>
                   <form>
                     <label htmlFor="">
-                      <input type="date" name="lostDate" value={inputs.lostDate} onChange={handleChange}></input>
+                      <input type="date" name="foundDate" value={inputs.foundDate||""} onChange={handleChange}></input>
                     </label>
                   </form>
                 </div>
@@ -362,7 +386,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
                         "Lobby",
                         "Parking Lot",
                         "Toilet",
-                        "Others"
+                        "Other"
                       ]}
                       selected={location}
                       setSelected={setLocation}
@@ -383,12 +407,12 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
                       name="category"
                       options={[
                         "Accessories",
-                        "Bottle",
                         "Clothing",
                         "Documents",
                         "Electronics",
                         "ID Card",
-                        "Stationery"
+                        "Stationery",
+                        "Others"
                       ]}
                       selected={category}
                       setSelected={setCategory}
@@ -415,7 +439,8 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
                         "Brown",
                         "Black",
                         "White",
-                        "Grey"
+                        "Grey",
+                        "Others"
                       ]}
                       selected={colour}
                       setSelected={setColour}
@@ -428,7 +453,21 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
                   <p>Floor</p>
                   <form>
                     <label htmlFor="">
-                      <input type="number" name="floor" min="0" max="25" value={inputs.floor} onChange={handleChange} />
+                      <input type="number" name="floor" min="0" max="25" value={inputs.floor||""} 
+                        onChange={(e)=>{
+                          //so that val HAS to be between 0 to 25
+                          const val = parseInt(e.target.value)
+                          if(e.target.value == "" || (val>=0 && val<=25)){
+                            handleChange(e)
+                          }
+                        }}
+                        // allows only nums to be typed and allow arrows up n down
+                        onKeyDown={(e) => {
+                          if (!/[0-9]/.test(e.key) && !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)) {
+                            e.preventDefault()
+                          }
+                        }}
+                      />
                     </label>
                   </form>
                 </div>
@@ -446,7 +485,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
                     <span>Item</span>
                     <textarea
                       name="descitems"
-                      value={inputs.descitems}
+                      value={inputs.descitems || ""}
                       onChange={handleChange}
                     ></textarea>
                   </label>
@@ -458,7 +497,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
                     <span>Location</span>
                     <textarea
                       name="descloc"
-                      value={inputs.descloc}
+                      value={inputs.descloc ||""}
                       onChange={handleChange}
                     ></textarea>
                   </label>
