@@ -37,8 +37,11 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
     },[])
 
     const handleLogout = async(e)=>{
+        e.stopPropagation()
         await supabase.auth.signOut();
 
+        localStorage.removeItem("rememberMe")
+        localStorage.removeItem("email")
         setIsLoggedIn(false);
         setCurrentUser(null);
         onClose();
