@@ -55,7 +55,8 @@ const App = () => {
     });
     return()=> subscription.unsubscribe();
   },[])
-  console.log(isLoggedIn)
+  console.log("App state - isLoggedIn:", isLoggedIn)
+  console.log("App state - isAdmin:", isAdmin)
   return (
     <Router>
       <Routes>
@@ -84,6 +85,7 @@ const App = () => {
           }
         />
 
+        
         <Route
           path="/post-found"
           element={
@@ -91,7 +93,7 @@ const App = () => {
               isLoggedIn={isLoggedIn}
               setIsLoggedIn={setIsLoggedIn}
               setCurrentUser={setCurrentUser}>
-              <PostFound isLoggedIn= {isLoggedIn} isAdmin={isAdmin}/>
+              <PostFound isLoggedIn={isLoggedIn} isAdmin={isAdmin}/>
             </MainLayout>
           }
         />

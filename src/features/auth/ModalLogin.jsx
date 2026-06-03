@@ -41,7 +41,6 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
 
         setIsLoggedIn(false);
         setCurrentUser(null);
-
         onClose();
     };
 
@@ -122,7 +121,7 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
                             <p>You are currently logged in.</p>
 
                             {error && <p className="error-text">{error}</p>}
-                            <button type="submit" className="logout-button" onClick={handleLogout}>
+                            <button type="button" className="logout-button" onClick={handleLogout}>
                                 {loading ? "Logging out..." : "Log out"}
                             </button>
                             

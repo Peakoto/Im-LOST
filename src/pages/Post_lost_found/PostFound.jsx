@@ -32,6 +32,11 @@ const PostFound = ({isLoggedIn,isAdmin}) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  useEffect(() => {
+    console.log("PostFound received - isLoggedIn:", isLoggedIn)
+    console.log("PostFound received - isAdmin:", isAdmin)
+  }, [isLoggedIn, isAdmin])
+
   const ImgUpload = () => {
 
     const handleDragOver = e => {
@@ -113,12 +118,14 @@ const PostFound = ({isLoggedIn,isAdmin}) => {
 
   //submit button
   const handleSubmit = async (e) => {
+    e.preventDefault()
+    console.log("Status of login:", isLoggedIn)
+    console.log("status if admin: ",isAdmin)
     setError("")
     setSuccess("")
-    e.preventDefault()
 
     if (!isLoggedIn) {
-      setError("Please Log In Before Posting a Lost Item Report.");
+      setError("Please Log In Before Posting a Found Item Report.");
       return;
     }
 
@@ -206,6 +213,7 @@ const PostFound = ({isLoggedIn,isAdmin}) => {
             item_name: itemName,
             campus_location: campus,
             location: location,
+            location_description: descloc,
             item_color: colour,
             floor: floor,
             imageURL: imageUrl,
