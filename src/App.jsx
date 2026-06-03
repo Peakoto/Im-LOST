@@ -8,6 +8,7 @@ import Home from "./pages/Home/Home.jsx";
 import PostLost from "./pages/Post_lost_found/PostLost.jsx";
 import PostFound from "./pages/Post_lost_found/PostFound.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
+import Match from "./pages/Match/Match.jsx";
 
 // Import MainLayout
 import MainLayout from './layout/MainLayout.jsx';
@@ -67,6 +68,18 @@ const App = () => {
               setIsLoggedIn={setIsLoggedIn}
               setCurrentUser={setCurrentUser}>
               <Home isAdmin={isAdmin}/>
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/match/:id"
+          element={
+            <MainLayout pageTitle={<>CLOSEST <span className="title-bold">MATCH</span></>}
+              isLoggedIn={isLoggedIn}
+              setIsLoggedIn={setIsLoggedIn}
+              setCurrentUser={setCurrentUser}>
+              <Match />
             </MainLayout>
           }
         />

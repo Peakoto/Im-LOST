@@ -19,8 +19,8 @@
 }
 
 .home-btn-wrap img {
-    width: 42px;
-    height: 42px;
+    width: 28px;
+    height: 28px;
     cursor: pointer;
 }
 
@@ -162,8 +162,6 @@ input[type=date] {
     border: 1px solid #2289E6;
     border-radius: 4px;
     box-sizing: border-box;
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 14px;
 }
 
 .textarea-label {

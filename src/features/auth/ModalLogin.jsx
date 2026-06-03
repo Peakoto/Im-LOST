@@ -112,11 +112,12 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn,setCurrentUser}) => 
                 <div className="modal-container" onClick={(e) => e.stopPropagation()}>
 
                     <div className="modal-header">
+                        <h2>Log In</h2>
+                        
                         <button className="modal-close" onClick={onClose}>
                             ⨉
                         </button>
-
-                        <h2>Log In</h2>
+                      
                     </div>
                     
                     {/* if user is logged in  */}

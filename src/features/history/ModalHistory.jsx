@@ -22,9 +22,11 @@ import "./ModalHistory.css";
 import Button from "../../components/Button.jsx";
 import infoIcon from "../../assets/info_icon.png"
 import editIcon from "../../assets/edit_icon.png"
+import matchIcon from "../../assets/match_icon.png"
 import ModalItemDetailsStudentView from "../../features/items/ModalItemDetailsStudentView.jsx";
 import ModalItemDetailsStudentEdit from "../../features/items/ModalItemDetailsStudentEdit.jsx";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -34,7 +36,7 @@ function ModalHistory({ historyData = [] }) {
     const [showStudentViewModal, setShowStudentViewModal] = useState(false);
     const [showStudentEditModal, setShowStudentEditModal] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
-
+    const navigate = useNavigate();
 
     return (
         <div className="history">
@@ -54,7 +56,7 @@ function ModalHistory({ historyData = [] }) {
                             <th>Item Name</th>
                             <th>Campus</th>
                             <th>Location</th>
-                            <th></th>
+                            <th className="action-column">Actions</th>
                         </tr>
                     </thead>
 
@@ -79,30 +81,46 @@ function ModalHistory({ historyData = [] }) {
                                         <td>{item.campus}</td>
 
                                         <td>{item.location}</td>
-
-                                        <td className="action-buttons">
-                                            <Button 
-                                                type="tableView"
-                                                icon={infoIcon}
-                                                iconOnly={true}
-                                                onClick={() => {
-                                                    setSelectedItem(item);
-                                                    setShowStudentViewModal(true);
-                                                }}
-                                            />
-
-                                            {item.status === "Lost" && (
-                                                <Button
-                                                    type="tableEdit"
-                                                    icon={editIcon}
+                                        
+                                        <td className="action-column"> 
+                                            <div className="action-buttons">
+                                                <Button 
+                                                    type="tableView"
+                                                    icon={infoIcon}
                                                     iconOnly={true}
                                                     onClick={() => {
                                                         setSelectedItem(item);
-                                                        setShowStudentEditModal(true);
+                                                        setShowStudentViewModal(true);
                                                     }}
                                                 />
-                                            )}
 
+                                                {item.status === "Lost" && (
+                                                    <Button
+                                                        type="tableEdit"
+                                                        icon={editIcon}
+                                                        iconOnly={true}
+                                                        onClick={() => {
+                                                            setSelectedItem(item);
+                                                            setShowStudentEditModal(true);
+                                                        }}
+                                                    />
+                                                )}
+
+                                                {item.status === "Lost" && (
+                                                    <Button
+                                                        type="matchPage"
+                                                        icon={matchIcon}
+                                                        iconOnly={true}
+                                                        onClick={() => {
+                                                            navigate(`/match/${item.item_id}`, {
+                                                                state: {
+                                                                    item
+                                                                }
+                                                            });
+                                                        }}
+                                                    />
+                                                )}
+                                            </div>                                             
                                         </td>
 
                                     </tr>

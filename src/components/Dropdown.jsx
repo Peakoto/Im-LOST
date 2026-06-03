@@ -1,7 +1,7 @@
 // the main dropdown ui
 import React, { useEffect, useState, useRef } from "react";
 import "./Dropdown.css";
-import arrow from "../assets/arrow.png";
+import DropArrow from "../assets/arrow.png";
 
 
 const Dropdown = ({ label, children, type="default" }) => {
@@ -18,7 +18,7 @@ const Dropdown = ({ label, children, type="default" }) => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-
+    
     return (
         <div className="dropdown" ref={ref}>
             <button 
@@ -28,10 +28,11 @@ const Dropdown = ({ label, children, type="default" }) => {
                 {label}
 
                 <img 
-                    src={arrow} 
-                    alt="arrow"
-                    className={`arrow ${open ? "open" : ""}`} 
+                    src={DropArrow} 
+                    alt="dropdown arrow"
+                    className={`dropdown-arrow ${open ? "open" : ""}`} 
                 />
+                
             </button>
 
             {open && (

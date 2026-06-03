@@ -7,8 +7,6 @@ import DropdownRadio from "../../components/DropdownRadio";
 import ModalFilter from "../../features/items/ModalFilter";
 import SearchBar from "../../components/SearchBar";
 import ModalItemDetailsStudentView from "../../features/items/ModalItemDetailsStudentView";
-//import ModalItemDetailsAdmin from "../../features/items/ModalItemDetailsAdmin";
-// import mockItems from "../../data/mockItems.js";
 import filterIcon from "../../assets/filter_icon.png";
 import { supabase } from "../../data/supabase";
 import { mapItem } from "../../data/mapItem";
@@ -16,10 +14,6 @@ import { mapItem } from "../../data/mapItem";
 console.log(import.meta.env);
 
 const Home = ({isAdmin}) => {
-  // mock items or dummies 
-  // const items = mockItems;
-  // later replace mockItems with
-  // const [items, setItems] = useState([]);
 
   const [items, setItems] = useState([]);
 
@@ -154,7 +148,6 @@ const Home = ({isAdmin}) => {
     if (appliedSortBy === "Z-A") {
       return b.title.localeCompare(a.title);
     }
-
     // default
     return 0;
   });

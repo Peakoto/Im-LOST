@@ -10,11 +10,7 @@ import plus from "../../assets/plus_icon.png";
 import CalendarFilter from "../../features/filters/CalendarFilter";
 import homeIcon from "../../assets/home_icon.png";
 import { supabase } from "../../data/supabase";
-
-
-const PostFound = ({isLoggedIn,isAdmin}) => {
 import useDebounce from "../../hooks/useDebounce";
-import React from "react";
 
 
 const PostFound = ({isAdmin,isLoggedIn}) => {
@@ -36,6 +32,16 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const debouncedSearch = useDebounce(inputs.itemName, 500);
+
+  // useEffect(() => {
+
+  //   if (!debouncedSearch) return;
+
+  //   console.log("Searching:", debouncedSearch);
+
+  // }, [debouncedSearch]);
 
   const ImgUpload = () => {
 
@@ -184,8 +190,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
 
       // get logged in user
       const {data: { user },error: userError} = await supabase.auth.getUser();
-      const {
-        data: {user},error: userError} = await supabase.auth.getUser();
+      // const {data: { user },error: userError} = await supabase.auth.getUser();
 
       if (userError || !user) {
         throw new Error("User not logged in.");

@@ -42,12 +42,12 @@ function MainLayout({isLoggedIn, setIsLoggedIn, setCurrentUser,children, pageTit
                         to="profile"
                     />
 
-                    <Button
+                    {/* <Button
                         type="header"
                         icon={history_icon}
                         iconOnly={true}
                         // onClick={() => setShowHistory(true)}
-                    />
+                    /> */}
 
                 </div>
 

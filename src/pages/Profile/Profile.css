@@ -2,7 +2,7 @@
     padding: 30px;
 }
 
-.top {
+.profile .top {
     display: flex;
     justify-content: flex-start;
     gap: 10px;
@@ -10,8 +10,8 @@
     margin-bottom: 10px;
 }
 
-.top img {
-    width: 28px;
+.profile .home-btn-wrap img {
+    width: 50px;
     height: 28px;
 }
 
@@ -33,11 +33,16 @@
     grid-template-columns: 1fr 1fr;
 
     gap: 20px;
+    align-items: start;
 }
+
+
 
 .input-group {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    /* border: 1px solid red; */
 }
 
 .input-group label {

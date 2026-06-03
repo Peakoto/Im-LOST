@@ -25,7 +25,7 @@ import { fetchHistoryByUserId, getCurrentUser, fetchProfileByUserId } from "../.
 import Button from "../../components/Button.jsx";
 import ModalPassChange from "../../features/auth/ModalPassChange.jsx";
 import ModalHistory from "../../features/history/ModalHistory.jsx";
-import profileIcon from "../../assets/home_button.png";
+import homeIcon from "../../assets/home_icon.png";
 
 function Profile() {
 
@@ -114,12 +114,20 @@ function Profile() {
 
             {/* TITLE */}
             <div className="top">
-                <img src={profileIcon} alt="profile icon" /> 
-                <h1>Profile</h1>
+                <div className="home-btn-wrap">
+                    <Button
+                    type="home"
+                    icon={homeIcon}
+                    to="/"
+                    iconOnly={true}
+                    />
+                </div>
+                
             </div>
 
             {/* PROFILE CARD */}
             <div className="profile-card">
+                <h1>Profile</h1>
 
                 <div className="profile-grid">
 

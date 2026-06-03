@@ -34,9 +34,10 @@ const ModalItemDetailsStudentView = ({ item, onClose }) => {
     // if the expected field name isnt present, try the alternate one
 
     return (
-        <div className="item-modal-overlay">
+        <div className="item-modal-overlay" onClick={onClose}>
 
-            <div className="item-modal">
+            <div className="item-modal" onClick={(e) => e.stopPropagation()}>
+
 
                 {/* HEADER */}
                 <div className="item-modal-header">

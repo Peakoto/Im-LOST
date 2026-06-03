@@ -35,7 +35,7 @@ const SearchBar = ({onSearch}) => {
         <div className="searchbar">
             <input 
                 type="text"
-                placeholder="Search la item title..."
+                placeholder="Search item title..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}

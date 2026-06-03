@@ -5,6 +5,9 @@
 }
 
 .dropdown-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 10px 16px;
     border: 1px solid #2289E6;
     background: white;
@@ -44,19 +47,23 @@
     height: 50px;
 }
 
-.arrow {
-    width: 12px;
-    height: 12px;
+.dropdown-arrow {
+    /* width: 50px !important;
+    height: 50px !important; */
+    display: block;
+    object-fit: contain;
+    flex-shrink: 0;
     transition: transform 0.4s ease;
     margin-left: 5px;
 }
 
-/* default point right */
-.arrow {
+
+/* default point down */
+.dropdown-arrow {
     transform: rotate(0deg);
 }
 
-.arrow.open {
+.dropdown-arrow.open {
     transform: rotate(-180deg);
 }
 
