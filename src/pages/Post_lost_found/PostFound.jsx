@@ -13,6 +13,11 @@ import { supabase } from "../../data/supabase";
 
 
 const PostFound = ({isLoggedIn,isAdmin}) => {
+import useDebounce from "../../hooks/useDebounce";
+import React from "react";
+
+
+const PostFound = ({isAdmin,isLoggedIn}) => {
   const [campus, setCampus] = useState("Alam Sutera");
   const [location, setLocation] = useState("Canteen");
   const [category, setCategory] = useState("Category");
@@ -31,11 +36,6 @@ const PostFound = ({isLoggedIn,isAdmin}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  useEffect(() => {
-    console.log("PostFound received - isLoggedIn:", isLoggedIn)
-    console.log("PostFound received - isAdmin:", isAdmin)
-  }, [isLoggedIn, isAdmin])
 
   const ImgUpload = () => {
 
@@ -62,6 +62,7 @@ const PostFound = ({isLoggedIn,isAdmin}) => {
       const file = files[0]
 
       setImgFile(file)
+      setImgFile(file);
 
       if (file.size < 10000000 && (file.type.includes("image/png") || file.type.includes("image/jpg") || file.type.includes("image/jpeg"))) {
         setimgReady(true);
@@ -113,7 +114,6 @@ const PostFound = ({isLoggedIn,isAdmin}) => {
     const name = e.target.name;
     const value = e.target.value;
     setInputs(values => ({ ...values, [name]: value }))
-    // console.log(inputs)
   }
 
   //submit button
@@ -132,6 +132,15 @@ const PostFound = ({isLoggedIn,isAdmin}) => {
       return;
     }
 
+    if(!isLoggedIn){
+      setError("Please log in to post a lost item report.");
+      return;
+    }
+
+    if (!isAdmin){
+      setError("Only Admins are allowed to make a found report! Please go to basement and give item to admin if you found an item");
+      return;
+    }
     let { itemName, personName, descitems, descloc, floor, foundDate } = inputs;
 
     const itemtry = {
@@ -150,7 +159,6 @@ const PostFound = ({isLoggedIn,isAdmin}) => {
     let thereIsNull = 0;
 
     Object.entries(itemtry).forEach(([key, value]) => {
-      // console.log(`${key}: ${value}`);
       if (
         value === undefined ||
         value === null ||
@@ -169,12 +177,15 @@ const PostFound = ({isLoggedIn,isAdmin}) => {
     if (itemtry.floor < 0 || itemtry.floor > 25) {
       console.log("Floor Not Correct");
     }
+    //check floor
 
     try {
       setLoading(true);
 
       // get logged in user
       const {data: { user },error: userError} = await supabase.auth.getUser();
+      const {
+        data: {user},error: userError} = await supabase.auth.getUser();
 
       if (userError || !user) {
         throw new Error("User not logged in.");
