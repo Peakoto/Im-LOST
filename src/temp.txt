@@ -1,0 +1,51 @@
+import Match from "./pages/Match/Match.jsx";
+
+        <Route
+          path="/match"
+          element={
+            <MainLayout pageTitle={<>CLOSEST <span className="title-bold">MATCH</span></>}
+              isLoggedIn={isLoggedIn}
+              setIsLoggedIn={setIsLoggedIn}
+              setCurrentUser={setCurrentUser}>
+              <Match />
+            </MainLayout>
+          }
+        />
+
+
+
+-=-=-=-=-=-=-=-
+import LostItemDetailBox from "../../features/items/LostItemDetailBox";
+import bottle from "../../assets/water_bottle.jpeg";
+import { useNavigate } from "react-router-dom";
+
+  const navigate = useNavigate();
+
+  // temp lost mock lostItem
+  const lostItem = {
+    id: 1,
+    title: "Black Wallet",
+    image: bottle,
+    date: "2026-05-30",
+    location: "Library",
+    campus: "Alam Sutera",
+    category: "Wallet",
+    color: ["Black"],
+    description: "Contains student card and cash.",
+    locationDescription: "Near the entrance",
+    floor: 1,
+    founder: "Unknown"
+  };
+
+        {/* temporary match button */}
+        <Button
+          type="post"
+          label="Match"
+          onClick={() => {
+            navigate("/match", {
+              state: {
+                item: lostItem
+              }
+            });
+          }}
+        />
