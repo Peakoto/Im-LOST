@@ -119,8 +119,6 @@ const PostFound = ({isLoggedIn,isAdmin}) => {
   //submit button
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("Status of login:", isLoggedIn)
-    console.log("status if admin: ",isAdmin)
     setError("")
     setSuccess("")
 

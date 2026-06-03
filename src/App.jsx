@@ -55,8 +55,7 @@ const App = () => {
     });
     return()=> subscription.unsubscribe();
   },[])
-  console.log("App state - isLoggedIn:", isLoggedIn)
-  console.log("App state - isAdmin:", isAdmin)
+  
   return (
     <Router>
       <Routes>
