@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../data/supabase.js";
 // import History from "../features/history/ModalHistory.jsx";
 
-function MainLayout({isLoggedIn, setIsLoggedIn, setCurrentUser, children, pageTitle = "LOST AND FOUND"}) {
+function MainLayout({isLoggedIn, setIsLoggedIn, setCurrentUser,children, pageTitle = "LOST AND FOUND"}) {
     const [showLogin, setShowLogin] = useState(false);
     // const [showHistory, setShowHistory] = useState(false);
     return (

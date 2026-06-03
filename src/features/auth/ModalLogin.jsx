@@ -15,7 +15,7 @@ import ModalPassChange from "./ModalPassChange.jsx";
 import ModalSignUp from "./ModalSignUp.jsx";
 import {supabase} from "../../data/supabase";
 
-const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) => {
+const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn,setCurrentUser}) => {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
 
@@ -42,6 +42,7 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
 
         localStorage.removeItem("rememberMe")
         localStorage.removeItem("email")
+        
         setIsLoggedIn(false);
         setCurrentUser(null);
         onClose();

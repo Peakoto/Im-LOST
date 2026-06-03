@@ -216,14 +216,13 @@ const Home = ({isAdmin}) => {
         {/* Item Details Rendering */}
 
         {showItemDetails && selectedItem && (
-          isAdmin?(
-            // PLS MAKE THE MODAL FIRST BLM ADA SOALNYA T^T
-            <ModalItemDetailsAdmin
+          !isAdmin?(
+          <ModalItemDetailsStudentView
             item={selectedItem}
             onClose={() => setShowItemDetails(false)}
             />
           ):(
-            <ModalItemDetailsStudentView
+            <ModalItemDetailsAdmin
             item={selectedItem}
             onClose={() => setShowItemDetails(false)}
             />

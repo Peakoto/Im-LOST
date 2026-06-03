@@ -43,11 +43,11 @@ const App = () => {
 
     const{data:{subscription},}= supabase.auth.onAuthStateChange(async(event,session)=>{
       //checks in real time
-      if (session){
+      if (event === "SIGNED_IN"){
         setIsLoggedIn(true);
         setCurrentUser(session.user);
         await checkAdmin(session.user.id)
-      }else{
+      }else if (event === "SIGNED_OUT"){
         setIsLoggedIn(false);
         setCurrentUser(null);
         setIsAdmin(false)
