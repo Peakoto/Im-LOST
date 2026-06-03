@@ -15,7 +15,7 @@ import ModalPassChange from "./ModalPassChange.jsx";
 import ModalSignUp from "./ModalSignUp.jsx";
 import {supabase} from "../../data/supabase";
 
-const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) => {
+const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn,setCurrentUser}) => {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
 
@@ -37,11 +37,14 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
     },[])
 
     const handleLogout = async(e)=>{
+        e.stopPropagation()
         await supabase.auth.signOut();
 
+        localStorage.removeItem("rememberMe")
+        localStorage.removeItem("email")
+        
         setIsLoggedIn(false);
         setCurrentUser(null);
-
         onClose();
     };
 
@@ -122,7 +125,7 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
                             <p>You are currently logged in.</p>
 
                             {error && <p className="error-text">{error}</p>}
-                            <button type="submit" className="logout-button" onClick={handleLogout}>
+                            <button type="button" className="logout-button" onClick={handleLogout}>
                                 {loading ? "Logging out..." : "Log out"}
                             </button>
                             

@@ -43,11 +43,11 @@ const App = () => {
 
     const{data:{subscription},}= supabase.auth.onAuthStateChange(async(event,session)=>{
       //checks in real time
-      if (session){
+      if (event === "SIGNED_IN"){
         setIsLoggedIn(true);
         setCurrentUser(session.user);
         await checkAdmin(session.user.id)
-      }else{
+      }else if (event === "SIGNED_OUT"){
         setIsLoggedIn(false);
         setCurrentUser(null);
         setIsAdmin(false)
@@ -55,7 +55,7 @@ const App = () => {
     });
     return()=> subscription.unsubscribe();
   },[])
-  console.log(isLoggedIn)
+  
   return (
     <Router>
       <Routes>
@@ -84,6 +84,7 @@ const App = () => {
           }
         />
 
+        
         <Route
           path="/post-found"
           element={
@@ -91,7 +92,7 @@ const App = () => {
               isLoggedIn={isLoggedIn}
               setIsLoggedIn={setIsLoggedIn}
               setCurrentUser={setCurrentUser}>
-              <PostFound isLoggedIn= {isLoggedIn} isAdmin={isAdmin}/>
+              <PostFound isLoggedIn={isLoggedIn} isAdmin={isAdmin}/>
             </MainLayout>
           }
         />

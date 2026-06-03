@@ -37,18 +37,6 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const debouncedSearch = useDebounce(inputs.itemName, 500);
-
-  const [imgFile, setImgFile] = useState(null);
-  
-  // useEffect(() => {
-
-  //   if (!debouncedSearch) return;
-
-  //   console.log("Searching:", debouncedSearch);
-
-  // }, [debouncedSearch]);
-
   const ImgUpload = () => {
 
     const handleDragOver = e => {
@@ -130,12 +118,12 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
 
   //submit button
   const handleSubmit = async (e) => {
+    e.preventDefault()
     setError("")
     setSuccess("")
-    e.preventDefault()
 
     if (!isLoggedIn) {
-      setError("Please Log In Before Posting a Lost Item Report.");
+      setError("Please Log In Before Posting a Found Item Report.");
       return;
     }
 
@@ -234,6 +222,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
             item_name: itemName,
             campus_location: campus,
             location: location,
+            location_description: descloc,
             item_color: colour,
             floor: floor,
             imageURL: imageUrl,
