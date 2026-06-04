@@ -1,13 +1,19 @@
 import React, {useEffect, useMemo, useState} from "react";
+import "../../pages/Match/Match.css";
 import LostItemDetailBox from "../../features/items/LostItemDetailBox";
 import Button from "../../components/Button";
 import ItemCard from "../../components/ItemCard"
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../../data/supabase";
 import { mapItem } from "../../data/mapItem";
+import ModalItemDetailsStudentView from "../../features/items/ModalItemDetailsStudentView";
+import ModalItemDetailsAdmin from "../../features/items/ModalItemDetailsAdmin";
 
 // later the lost item will be send in the form of an index to ensure data not lost when reloading
 const Match = () => {
+  const [showItemDetails, setShowItemDetails] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  
   const location = useLocation();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -42,10 +48,14 @@ const Match = () => {
       } 
 
       // Fetch all found item
-      const {data: foundReports, error: foundError} = 
+      const {data: foundReports, error: foundError} =
         await supabase
           .from("FoundReport")
-          .select('found_id, Item(*)');
+          .select(`
+            found_id,
+            created_at,
+            Item (*)
+          `);
       
       if (foundError) {
         console.error("Error fetching found reports:", foundError);
@@ -53,7 +63,15 @@ const Match = () => {
       }
 
       const mappedFoundItems = foundReports
-        .map(report => mapItem(report.Item));
+        .map(report => ({
+          ...mapItem(report.Item),
+
+          // preserve FoundReport data
+          foundId: report.found_id,
+
+          // use report submission date instead of item creation date
+          date: report.created_at?.split("T")[0]
+        }));
 
       setFoundItems(mappedFoundItems);
 
@@ -153,10 +171,30 @@ const Match = () => {
 
         {/* for the matching item card  */}
         <div className="match-grid">
-            {matchedItems.map(item => (
-                <ItemCard key={item.id} item={item} />
-            ))}
-        </div>
+          {matchedItems.length > 0 ? (
+              matchedItems.map(item => (
+                  <ItemCard
+                    key={item.id}
+                    item={item}
+                    onClick={(clickedItem) => {
+                      setSelectedItem(clickedItem);
+                      setShowItemDetails(true);
+                    }}
+                  />
+              ))
+          ) : (
+              <div className="empty-state">
+                  No matching items found.
+              </div>
+          )}
+      </div>
+
+      {showItemDetails && selectedItem && (
+        <ModalItemDetailsStudentView
+          item={selectedItem}
+          onClose={() => setShowItemDetails(false)}
+        />
+      )}
     </div>
   );
 };

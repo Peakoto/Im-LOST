@@ -1,0 +1,19 @@
+.match-page {
+    padding: 20px;
+}
+
+.match-grid {
+    padding-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 270px);
+    gap: 40px;
+    justify-content: center;
+}
+
+.empty-state {
+    width: 100%;
+    text-align: center;
+    padding: 40px 0;
+    font-size: 18px;
+    color: #777;
+}

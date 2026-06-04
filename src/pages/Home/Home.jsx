@@ -19,8 +19,12 @@ const Home = ({isAdmin}) => {
 
   const fetchItems = async () => {
     const { data, error } = await supabase
-      .from("Item")
-      .select("*");
+      .from("FoundReport")
+      .select(`
+        found_id,
+        created_at,
+        Item (*)
+      `);
 
     console.log(data);
     console.log(error);
@@ -30,7 +34,18 @@ const Home = ({isAdmin}) => {
       return;
     }
     // transform database columns from supabase to the react column names '../../utils/mapItem.js'
-    const formattedItems = data.map(mapItem);
+    const formattedItems = data.map((report) => {
+      const item = mapItem(report.Item);
+
+      return {
+        ...item,
+
+        // preserve FoundReport information
+        foundId: report.found_id,
+        reportCreatedAt: report.created_at,
+        dateLost: report.date_lost,
+      };
+    });
 
     setItems(formattedItems);
 
