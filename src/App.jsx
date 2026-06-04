@@ -20,11 +20,21 @@ const App = () => {
 
   //check if user is admin or not
   const checkAdmin= async(userId) =>{
+    console.log("checkAdmin start", userId);
+
     const{data} = await supabase
       .from("User")
       .select("admin")
       .eq("user_id",userId)
       .single()
+
+    console.log("checkAdmin data:", data);
+    console.log("checkAdmin error:", error);
+
+    if (error) {
+      setIsAdmin(false);
+      return;
+    }
 
     setIsAdmin(data?.admin==true)//sets isAdmin true ot false
   }
@@ -33,27 +43,45 @@ const App = () => {
   useEffect(() => {
     //checks on initial load
     const getSession = async () => {
+      console.log("getSession start");
+
       const { data } = await supabase.auth.getSession()
+
+      console.log("getSession result", data);
+      console.log("getSession error", error);
+
       if (data.session) {
         setIsLoggedIn(true)
         setCurrentUser(data.session.user)
-        await checkAdmin(data.session.user.id)
+
+        // removed await
+        checkAdmin(data.session.user.id)
       }
     }
     getSession()
 
-    const{data:{subscription},}= supabase.auth.onAuthStateChange(async(event,session)=>{
-      //checks in real time
-      if (event === "SIGNED_IN"){
+    // change callback since
+    // Supabase specifically recommends not doing long async operations directly inside onAuthStateChange
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+
+      console.log("AUTH EVENT:", event);
+
+      if (event === "SIGNED_IN" && session) {
         setIsLoggedIn(true);
         setCurrentUser(session.user);
-        await checkAdmin(session.user.id)
-      }else if (event === "SIGNED_OUT"){
+        // await removed
+        checkAdmin(session.user.id);
+      }
+
+      if (event === "SIGNED_OUT") {
         setIsLoggedIn(false);
         setCurrentUser(null);
-        setIsAdmin(false)
+        setIsAdmin(false);
       }
     });
+
     return()=> subscription.unsubscribe();
   },[])
   

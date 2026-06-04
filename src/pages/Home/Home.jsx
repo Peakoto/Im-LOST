@@ -15,42 +15,67 @@ console.log(import.meta.env);
 
 const Home = ({isAdmin}) => {
 
+  // loading state
   const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchItems = async () => {
-    const { data, error } = await supabase
-      .from("FoundReport")
-      .select(`
-        found_id,
-        created_at,
-        Item (*)
-      `);
+    try {
+      setLoading(true);
 
-    console.log(data);
-    console.log(error);
+      const { data, error } = await supabase
+        .from("FoundReport")
+        .select(`
+          found_id,
+          created_at,
+          Item (*)
+        `);
 
-    if (error) {
-      console.error("Error fetching items:", error);
-      return;
+      console.log("Query finished");
+      console.log("Data:", data);
+      console.log("Error:", error);
+
+      if (error) throw error;
+
+      const formattedItems = data.map((report) => {
+        const item = mapItem(report.Item);
+
+        return {
+          ...item,
+          foundId: report.found_id,
+          reportCreatedAt: report.created_at,
+          dateLost: report.date_lost,
+        };
+      });
+
+      setItems(formattedItems);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-    // transform database columns from supabase to the react column names '../../utils/mapItem.js'
-    const formattedItems = data.map((report) => {
-      const item = mapItem(report.Item);
-
-      return {
-        ...item,
-
-        // preserve FoundReport information
-        foundId: report.found_id,
-        reportCreatedAt: report.created_at,
-        dateLost: report.date_lost,
-      };
-    });
-
-    setItems(formattedItems);
-
-    console.log("Formatted items:", formattedItems);
   };
+
+  useEffect(() => {
+    const test = async () => {
+      console.log("Testing auth");
+
+      try {
+        const result = await Promise.race([
+          supabase.auth.getSession(),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Timeout after 5 seconds")), 5000)
+          ),
+        ]);
+
+        console.log("Session result:", result);
+      } catch (err) {
+        console.error("Session test failed:", err);
+      }
+    };
+
+    test();
+  }, []);
 
   useEffect(() => {
     fetchItems();
@@ -255,7 +280,11 @@ const Home = ({isAdmin}) => {
       {/* The Grid for those items */}
       <div className="grid">
 
-      {filteredItems.length > 0 ? (
+      {loading ? (
+        <div className="empty-state">
+          Fetching items...
+        </div>
+      ) : filteredItems.length > 0 ? (
 
         filteredItems.map((item) => (
           <ItemCard

@@ -7,7 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../../data/supabase";
 import { mapItem } from "../../data/mapItem";
 import ModalItemDetailsStudentView from "../../features/items/ModalItemDetailsStudentView";
-import ModalItemDetailsAdmin from "../../features/items/ModalItemDetailsAdmin";
+// import ModalItemDetailsAdmin from "../../features/items/ModalItemDetailsAdmin";
 
 // later the lost item will be send in the form of an index to ensure data not lost when reloading
 const Match = () => {

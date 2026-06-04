@@ -38,14 +38,44 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn,setCurrentUser}) => 
 
     const handleLogout = async(e)=>{
         e.stopPropagation()
-        await supabase.auth.signOut();
 
-        localStorage.removeItem("rememberMe")
-        localStorage.removeItem("email")
+        console.log("Logout button clicked");
+
+        try {
+            console.log("Before signOut");
+
+            const { error } = await supabase.auth.signOut();
+
+            console.log("After signOut");
+            console.log("signOut error:", error);
+
+            if (error) throw error;
+
+            localStorage.removeItem("rememberMe");
+            localStorage.removeItem("email");
+
+            console.log("Cleared localStorage");
+
+            setIsLoggedIn(false);
+            setCurrentUser(null);
+
+            console.log("State updated");
+
+            onClose();
+
+            console.log("Modal closed");
+        } catch (err) {
+            console.error("Logout failed:", err);
+        }
+
+        // await supabase.auth.signOut();
+
+        // localStorage.removeItem("rememberMe")
+        // localStorage.removeItem("email")
         
-        setIsLoggedIn(false);
-        setCurrentUser(null);
-        onClose();
+        // setIsLoggedIn(false);
+        // setCurrentUser(null);
+        // onClose();
     };
 
     const handleLogin = async (e) => {
@@ -94,7 +124,10 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn,setCurrentUser}) => 
 
             console.log("Logged in user:", Userdata);
             setIsLoggedIn(true)
-            setCurrentUser(Userdata)
+
+            // also changed here to try to fix supabase problem
+            // setCurrentUser(Userdata)
+            
             onClose();
         } catch (err) {
             setError("Login failed.");
