@@ -69,7 +69,7 @@ function ModalHistory({ historyData = [] }) {
                                         <td>{index + 1}</td>
 
                                         <td>
-                                            <span className={`status ${item.status.toLowerCase()}`}>
+                                            <span className={`status ${item.status}`}>
                                                 {item.status}
                                             </span>
                                         </td>
