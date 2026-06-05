@@ -28,35 +28,38 @@ import ModalHistory from "../../features/history/ModalHistory.jsx";
 import homeIcon from "../../assets/home_icon.png";
 
 function Profile() {
-
     const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [loading,setLoading] = useState(false);
+    const[saving, setSaving] = useState(false);
+    const[error,setError]= useState("");
+    const [success,setSuccess] =useState("");
 
     // placeholder data
     const [userData, setUserData] = useState({
-        name: "Getting username...",
-        email: "Getting email...",
-        phone: "Getting phone number...",
+        name: "Name",
+        email: "Email",
+        phone: "Phone",
     });
 
     // can also just make useState(null) after done wiring up
 
-    const placeholderHistory = [
-      {
-        id: 1,
-        status: "Lost",
-        dateLost: "10/01/2014",
-        itemName: "Notebook A5",
-        campus: "Alam Sutera",
-        location: "LKC",
-        image: "",
-        founder: "Anonymous",
-        category: "Documents",
-        color: ["White"],
-        description: "A notebook that was turned in in good condition.",
-        locationDescription: "Found in the LKC room (Binus Alam Sutera).",
+    // const placeholderHistory = [
+    //   {
+    //     id: 1,
+    //     status: "Lost",
+    //     dateLost: "10/01/2014",
+    //     itemName: "Notebook A5",
+    //     campus: "Alam Sutera",
+    //     location: "LKC",
+    //     image: "",
+    //     founder: "Anonymous",
+    //     category: "Documents",
+    //     color: ["White"],
+    //     description: "A notebook that was turned in in good condition.",
+    //     locationDescription: "Found in the LKC room (Binus Alam Sutera).",
 
-      },
-    ];
+    //   },
+    // ];
 
     /*
     once everything is wired up, remove the const placeholderHistory and useState placeholder History into this: 
@@ -67,6 +70,21 @@ function Profile() {
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [historyError, setHistoryError] = useState(null);
 
+    useEffect(()=>{
+        const LoadProfile = async()=>{
+            setLoading(true)
+            setError("")
+
+            try{
+
+            }catch (e){
+
+            }finally{
+                setLoading(false)
+                setLoadingHistory(f)
+            }
+        }
+    })
     useEffect(() => {
         let isMounted = true;
 
@@ -105,9 +123,6 @@ function Profile() {
     }, []);
 
 
-    /*
-
-    */
 
     return (
         <div className="profile">
