@@ -113,7 +113,28 @@ function Profile() {
                 if (historyError){
                     setError("Failed to load History")
                 }else{
-                    setHistoryData(historyItems)
+                    // map the items to the ModalHistory.jsx
+                    setHistoryData((historyItems || []).map(report => ({
+                        id: report.lost_id,
+
+                        lost_id: report.lost_id,
+                        item_id: report.item_id,
+
+                        // temp since further connection with the match table is needed (ModalItemDetailsAdmin.jsx)
+                        status: "Lost",
+                        
+                        dateLost: report.date_lost,
+                        itemName: report.Item?.item_name || "",
+                        campus: report.Item?.campus_location || "",
+                        location: report.Item?.location || "",
+                        floor: report.Item?.floor || "",
+                        color: report.Item?.item_color || "",
+                        locationDescription: report.Item?.location_description || "",
+                        itemDescription: report.Item?.item_description || "",
+                        category: report.Item?.item_category || "",
+                        imageURL: report.Item?.imageURL || "",
+                        created_at: report.Item?.created_at || ""
+                        })));
                 }
 
             }catch (e){
