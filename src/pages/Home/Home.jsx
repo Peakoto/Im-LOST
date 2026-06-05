@@ -251,7 +251,7 @@ const Home = ({isAdmin}) => {
         {/* Item Details Rendering */}
         
         {showItemDetails && selectedItem && (
-          !isAdmin?(
+          isAdmin?(
           <ModalItemDetailsStudentView
             item={selectedItem}
             onClose={() => setShowItemDetails(false)}

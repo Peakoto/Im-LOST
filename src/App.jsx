@@ -9,6 +9,7 @@ import PostLost from "./pages/Post_lost_found/PostLost.jsx";
 import PostFound from "./pages/Post_lost_found/PostFound.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 import Match from "./pages/Match/Match.jsx";
+import Button from "./components/Button";
 
 // Import MainLayout
 import MainLayout from './layout/MainLayout.jsx';
@@ -19,13 +20,13 @@ const App = () => {
   const [isAdmin, setIsAdmin] = useState(false)
 
   //check if user is admin or not
-  const checkAdmin= async(userId) =>{
+  const checkAdmin = async (userId) => {
     console.log("checkAdmin start", userId);
 
-    const{data} = await supabase
+    const { data } = await supabase
       .from("User")
       .select("admin")
-      .eq("user_id",userId)
+      .eq("user_id", userId)
       .single()
 
     console.log("checkAdmin data:", data);
@@ -36,7 +37,7 @@ const App = () => {
       return;
     }
 
-    setIsAdmin(data?.admin==true)//sets isAdmin true ot false
+    setIsAdmin(data?.admin == true)//sets isAdmin true ot false
   }
 
   // check session on page load
@@ -62,13 +63,20 @@ const App = () => {
 
     // change callback since
     // Supabase specifically recommends not doing long async operations directly inside onAuthStateChange
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+//from main
+    // const {
+    //   data: { subscription },
+    // } = supabase.auth.onAuthStateChange((event, session) => {
 
-      console.log("AUTH EVENT:", event);
+    //   console.log("AUTH EVENT:", event);
 
-      if (event === "SIGNED_IN" && session) {
+    //   if (event === "SIGNED_IN" && session) {
+// =======
+//from Add_isAdmin2
+    const{data:{subscription},}= supabase.auth.onAuthStateChange(async(event,session)=>{
+      //checks in real time
+      if (session){
+// =======
         setIsLoggedIn(true);
         setCurrentUser(session.user);
         // await removed
@@ -82,9 +90,9 @@ const App = () => {
       }
     });
 
-    return()=> subscription.unsubscribe();
-  },[])
-  
+    return () => subscription.unsubscribe();
+  }, [])
+
   return (
     <Router>
       <Routes>
@@ -95,7 +103,7 @@ const App = () => {
               isLoggedIn={isLoggedIn}
               setIsLoggedIn={setIsLoggedIn}
               setCurrentUser={setCurrentUser}>
-              <Home isAdmin={isAdmin}/>
+              <Home isAdmin={isAdmin} />
             </MainLayout>
           }
         />
@@ -120,12 +128,12 @@ const App = () => {
               setIsLoggedIn={setIsLoggedIn}
               setCurrentUser={setCurrentUser}>
 
-              <PostLost isLoggedIn={isLoggedIn}/>
+              <PostLost isLoggedIn={isLoggedIn} />
             </MainLayout>
           }
         />
 
-        
+
         <Route
           path="/post-found"
           element={
@@ -133,7 +141,7 @@ const App = () => {
               isLoggedIn={isLoggedIn}
               setIsLoggedIn={setIsLoggedIn}
               setCurrentUser={setCurrentUser}>
-              <PostFound isLoggedIn={isLoggedIn} isAdmin={isAdmin}/>
+              <PostFound isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
             </MainLayout>
           }
         />
