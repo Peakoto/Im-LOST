@@ -82,6 +82,7 @@ const Match = () => {
     }
   }
   
+  console.log("lostItem", lostItem)
 
   // calculate match score
   function calculateMatchScore(lostItem, foundItem) {

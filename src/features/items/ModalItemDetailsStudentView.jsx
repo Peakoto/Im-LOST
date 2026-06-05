@@ -105,6 +105,11 @@ const ModalItemDetailsStudentView = ({ item, onClose }) => {
                             <p>{item.color}</p>
                         </div>
 
+                        <div>
+                            <label>Floor</label>
+                            <p>{item.floor}</p>
+                        </div>
+
                     </div>
 
                 </div>

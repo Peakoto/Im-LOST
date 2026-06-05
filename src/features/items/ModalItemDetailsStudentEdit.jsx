@@ -1,20 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import "./ModalItemDetailsStudentEdit.css";
 import Button from "../../components/Button.jsx";
 import uploadIcon from "../../assets/upload_icon.png";
-
-const locationOptions = [
-  "Canteens",
-  "LKC",
-  "Gym",
-  "Hallway",
-  "Parking Lot",
-  "Lobby",
-  "Lift Area",
-  "Toilet",
-  "Other",
-];
-
+import { supabase } from "../../data/supabase.js";
+import { updateItem, updateLostReport } from "../../api/itemApi.js";
 
 // Edit modal (normalized field names to match ModalItemDetailsStudentView)
 // Expected `item` shape:
@@ -48,6 +37,7 @@ const ModalItemDetailsStudentEdit = ({ item, onClose }) => {
       color: colorArray,
       description: item?.description ?? "",
       locationDescription: item?.locationDescription ?? "",
+      floor: item?.floor ?? "",
     };
   }, [item]);
 
@@ -60,6 +50,98 @@ const ModalItemDetailsStudentEdit = ({ item, onClose }) => {
   }, [initial]);
 
   if (!item) return null;
+
+  const handleSave = async () => {
+    console.log("Selected Item: ", item);
+
+    if (!validateForm()) return;
+
+    // img size limiter
+    if (imgFile && (imgFile.size > 10_000_000 || !["image/png", "image/jpeg", "image/jpg"].includes(imgFile.type))) {
+      alert("Iamge must be JPG/PNG and less than 10MB.")
+      return;
+    }
+
+
+    try{
+      let imageURL = form.image;
+
+      // UPload image if user selected a new file
+      if(imgFile){
+        const fileExt = imgFile.name.split('.').pop();
+        const fileName = `${Date.now()}.${fileExt}`;
+
+        const {error: uploadError} = await supabase.storage
+          .from("images_LostandFound")
+          .upload(fileName, imgFile);
+
+          if(uploadError) throw uploadError;
+
+          const{data: urlData} = supabase.storage
+            .from("images_LostandFound")
+            .getPublicUrl(fileName);
+
+          imageURL = urlData.publicUrl;
+      }
+
+      // map data to match supabase Item table
+      const mapDataSupabase = {
+        item_name: form.title,
+        campus_location: form.campus,
+        location: form.location,
+        item_category: form.category,
+        item_color: form.color,
+        floor: form.floor ?? "",
+        location_description: form.locationDescription,
+        item_description: form.description,
+        imageURL: imageURL, // assuming you store base64 or URL
+      };
+
+      console.log("mapDataSupabase", mapDataSupabase);
+
+      await updateItem(item.item_id, mapDataSupabase);
+
+      console.log("Updating lost report", item.lost_id);
+
+      await updateLostReport(item.lost_id, {
+        date_lost: form.date,
+      })
+
+      setOriginal(form);
+      alert("Item saved successfully!");
+      onClose?.();
+    } catch (err){
+      console.log(err);
+      alert("Failed to save item: " + err.message);
+    }
+  };
+
+  // validate if all form is filled
+  const validateForm = () => {
+    const requiredFields = ["title", "date", "campus", "location", "category", "floor"];
+
+    for (const field of requiredFields){
+      const value = form[field];
+
+      if (
+        value === null ||
+        value === undefined ||
+        String(value).trim() === ""
+      ) {
+        alert(`Field ${field} is required`);
+        return false;
+      }
+
+      if (form.color.length === 0) {
+        alert("Please select at least one color");
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  
 
   const campusOptions = [
     "Alam Sutera",
@@ -129,24 +211,34 @@ const ModalItemDetailsStudentEdit = ({ item, onClose }) => {
   };
 
   // Temporary/local-only save (until Supabase wiring)
-  const handleSave = () => {
-    // In the future:
-    // - call update API using item.id
-    // - upload image if changed
-    // - maybe show success toast
-    setOriginal(form);
-    onClose?.();
-  };
+  // const handleSave = () => {
+  //   // In the future:
+  //   // - call update API using item.id
+  //   // - upload image if changed
+  //   // - maybe show success toast
+  //   setOriginal(form);
+  //   onClose?.();
+  // };
+
+  const [imgFile, setImgFile] = useState(null);
 
   const onImageSelected = (e) => {
     const file = e.target.files?.[0];
+
+    console.log("Selected file:", file);
     if (!file) return;
+
+    // added setImgFile to save the public URL like in the Profile.jsx
+    setImgFile(file);
+
     const reader = new FileReader();
     reader.onloadend = () => {
       setForm((prev) => ({ ...prev, image: reader.result }));
     };
     reader.readAsDataURL(file);
   };
+
+  const fileInputRef = useRef(null);
 
   return (
     <div className="item-modal-overlay" onClick={onClose}>
@@ -163,20 +255,20 @@ const ModalItemDetailsStudentEdit = ({ item, onClose }) => {
             <div className="item-image-box">
               <img src={form.image || ""} alt={form.title || "item"} className="item-image" />
 
-              <label className="upload-label" aria-label="Upload image">
                 <Button
                   type="uploadImage"
-                  iconOnly={true}
+                  iconOnly
                   icon={uploadIcon}
-                  onClick={() => {}}
+                  onClick={() => fileInputRef.current?.click()}
                 />
+
                 <input
+                  ref={fileInputRef}
                   type="file"
                   accept="image/*"
                   onChange={onImageSelected}
                   className="upload-input"
                 />
-              </label>
             </div>
           </div>
 
@@ -187,10 +279,11 @@ const ModalItemDetailsStudentEdit = ({ item, onClose }) => {
               <input value={form.title} onChange={handleText("title")} type="text" />
             </div>
 
-            <div className="edit-field">
-              <label>Founder</label>
-              <input value={form.founder} onChange={handleText("founder")} type="text" />
-            </div>
+            {/* currently there is no personName column inside the supabase */}
+            {/* <div className="edit-field">
+              <label>Owner Name</label>
+              <input value={form.owner} onChange={handleText("founder")} type="text" />
+            </div> */}
 
             <div className="edit-field">
               <label>Date Lost</label>
@@ -222,6 +315,16 @@ const ModalItemDetailsStudentEdit = ({ item, onClose }) => {
             </div>
 
             <div className="edit-field">
+              <label>Floor</label>
+                <input
+                  value={form.floor}
+                  onChange={handleText("floor")}
+                  type="text"
+                  placeholder="Example: 2"
+                />
+            </div>
+
+            <div className="edit-field">
               <label>Category</label>
               <select value={form.category} onChange={handleText("category")}>
                 <option value="">Select category</option>
@@ -235,20 +338,20 @@ const ModalItemDetailsStudentEdit = ({ item, onClose }) => {
 
             <div className="edit-field" style={{ gridColumn: "1 / -1" }}>
               <label>Color</label>
-              <select
-                value={form.color[0] ?? ""}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  setForm((prev) => ({ ...prev, color: v ? [v] : [] }));
-                }}
-              >
-                <option value="">Select color</option>
-                {colorOptions.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
+
+              <div className="color-checkbox-group">
+                {colorOptions.map((color) => (
+                  <label key={color} className="color-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={form.color.includes(color)}
+                      onChange={() => handleColorToggle(color)}
+                    />
+                    {color}
+                  </label>
                 ))}
-              </select>
+              </div>
+
             </div>
 
           </div>

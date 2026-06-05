@@ -12,7 +12,7 @@ const LostItemDetailBox = ({ item }) => {
             
         <div className="lost-item-top">
             <img
-            src={item.image}
+            src={item.imageURL}
             alt={item.title}
             className="lost-item-img"
             />
@@ -20,17 +20,17 @@ const LostItemDetailBox = ({ item }) => {
             <div className="lost-item-details">
             <div>
                 <label>Item Name</label>
-                <p>{item.title}</p>
+                <p>{item.itemName}</p>
             </div>
 
-            <div>
+            {/* <div>
                 <label>Founder's Name</label>
                 <p>{item.founder || "Anonymous"}</p>
-            </div>
+            </div> */}
 
             <div>
                 <label>Date Lost</label>
-                <p>{item.date}</p>
+                <p>{item.dateLost}</p>
             </div>
 
             <div>
@@ -63,7 +63,7 @@ const LostItemDetailBox = ({ item }) => {
         <div className="lost-item-description">
             <div>
                 <label>Item Description</label>
-                <p>{item.description}</p>
+                <p>{item.itemDescription}</p>
             </div>
 
             <div>
