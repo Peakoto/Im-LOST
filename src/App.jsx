@@ -8,7 +8,7 @@ import Home from "./pages/Home/Home.jsx";
 import PostLost from "./pages/Post_lost_found/PostLost.jsx";
 import PostFound from "./pages/Post_lost_found/PostFound.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
-import Button from "../../components/Button";
+import Button from "./components/Button";
 
 // Import MainLayout
 import MainLayout from './layout/MainLayout.jsx';
