@@ -8,6 +8,7 @@ import Home from "./pages/Home/Home.jsx";
 import PostLost from "./pages/Post_lost_found/PostLost.jsx";
 import PostFound from "./pages/Post_lost_found/PostFound.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
+import Button from "../../components/Button";
 
 // Import MainLayout
 import MainLayout from './layout/MainLayout.jsx';
@@ -41,7 +42,7 @@ const App = () => {
     }
     getSession()
 
-    const{data:{subscription},}= supabase.auth.onAuthStateChange((event,session)=>{
+    const{data:{subscription},}= supabase.auth.onAuthStateChange(async(event,session)=>{
       //checks in real time
       if (session){
         setIsLoggedIn(true);

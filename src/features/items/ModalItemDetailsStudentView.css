@@ -16,6 +16,8 @@
     padding: 20px;
     position: relative;
     display: flex;
+    flex-direction: column;
+
     gap: 24px;
     max-height: 80vh;
     overflow-y: auto;
@@ -52,3 +54,33 @@
     margin-bottom: 12px;
     color: black;
 }
+
+.modal-admin-editbox{
+    background-color: #0D99FF;
+}
+
+table {
+    width: 100%;
+    /* border-collapse: collapse; */
+    /* border: aqua; */
+}
+
+td {
+    vertical-align: top;
+    padding: 8px 10px;
+}
+
+table,tr, th, td{
+    border: 1px solid red;
+}
+
+
+/* 
+td:first-child {
+    width: 320px;
+    padding-right: 10px;
+}
+
+td:not(:first-child) {
+    width: 33%;
+} */
