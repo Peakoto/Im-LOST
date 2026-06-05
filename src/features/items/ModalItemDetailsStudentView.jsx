@@ -27,7 +27,7 @@ const ModalItemDetailsStudentView = ({ item, onClose }) => {
 
     const title = item?.title ?? item?.itemName ?? "";
     const founder = item?.founder ?? item?.founderName ?? "";
-    const date = item?.date ?? item?.dateLost ?? "";
+    const date = item?.date ?? item?.dateFound ?? "";
     const location = item?.location ?? item?.locationFound ?? item?.locationDetails ?? "";
     const locationDescription = item?.locationDescription ?? item?.locationDetails ?? "";
 
@@ -72,17 +72,17 @@ const ModalItemDetailsStudentView = ({ item, onClose }) => {
 
                         <div>
                             <label>Item Name</label>
-                            <p>{item.itemName}</p>
+                            <p>{item.title}</p>
                         </div>
 
-                        <div>
+                        {/* <div>
                             <label>Founder's Name</label>
-                            <p>{item.founderName}</p>
-                        </div>
+                            <p>{item.founder}</p>
+                        </div> */}
 
                         <div>
-                            <label>Date Lost</label>
-                            <p>{item.dateLost}</p>
+                            <label>Date Found</label>
+                            <p>{item.date}</p>
                         </div>
 
                         <div>
