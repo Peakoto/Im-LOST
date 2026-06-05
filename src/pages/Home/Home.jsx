@@ -7,6 +7,7 @@ import DropdownRadio from "../../components/DropdownRadio";
 import ModalFilter from "../../features/items/ModalFilter";
 import SearchBar from "../../components/SearchBar";
 import ModalItemDetailsStudentView from "../../features/items/ModalItemDetailsStudentView";
+import ModalItemDetailsAdmin from "../../features/items/ModalItemDetailsAdmin";
 import filterIcon from "../../assets/filter_icon.png";
 import { supabase } from "../../data/supabase";
 import { mapItem } from "../../data/mapItem";
@@ -18,7 +19,8 @@ const Home = ({isAdmin}) => {
   // loading state
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  console.log("isAdmin tate is:")
+  console.log(isAdmin)
   const fetchItems = async () => {
     try {
       setLoading(true);
@@ -247,7 +249,7 @@ const Home = ({isAdmin}) => {
         )}
 
         {/* Item Details Rendering */}
-
+        
         {showItemDetails && selectedItem && (
           !isAdmin?(
           <ModalItemDetailsStudentView
