@@ -26,88 +26,132 @@ import Button from "../../components/Button.jsx";
 import ModalPassChange from "../../features/auth/ModalPassChange.jsx";
 import ModalHistory from "../../features/history/ModalHistory.jsx";
 import homeIcon from "../../assets/home_icon.png";
+import { supabase } from "../../data/supabase.js";
 
 function Profile() {
-
     const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [loading,setLoading] = useState(false);
+    const[saving, setSaving] = useState(false);
+    const[error,setError]= useState("");
+    const [success,setSuccess] =useState("");
 
     // placeholder data
     const [userData, setUserData] = useState({
-        name: "Getting username...",
-        email: "Getting email...",
-        phone: "Getting phone number...",
+        name: "Name",
+        email: "Email",
+        phone: "Phone",
     });
 
     // can also just make useState(null) after done wiring up
 
-    const placeholderHistory = [
-      {
-        id: 1,
-        status: "Lost",
-        dateLost: "10/01/2014",
-        itemName: "Notebook A5",
-        campus: "Alam Sutera",
-        location: "LKC",
-        image: "",
-        founder: "Anonymous",
-        category: "Documents",
-        color: ["White"],
-        description: "A notebook that was turned in in good condition.",
-        locationDescription: "Found in the LKC room (Binus Alam Sutera).",
+    // const placeholderHistory = [
+    //   {
+    //     id: 1,
+    //     status: "Lost",
+    //     dateLost: "10/01/2014",
+    //     itemName: "Notebook A5",
+    //     campus: "Alam Sutera",
+    //     location: "LKC",
+    //     image: "",
+    //     founder: "Anonymous",
+    //     category: "Documents",
+    //     color: ["White"],
+    //     description: "A notebook that was turned in in good condition.",
+    //     locationDescription: "Found in the LKC room (Binus Alam Sutera).",
 
-      },
-    ];
+    //   },
+    // ];
 
     /*
     once everything is wired up, remove the const placeholderHistory and useState placeholder History into this: 
     const [historyData, setHistoryData] = useState([])
     */
 
-    const [historyData, setHistoryData] = useState(placeholderHistory);
+    const [historyData, setHistoryData] = useState([]);
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [historyError, setHistoryError] = useState(null);
 
-    useEffect(() => {
-        let isMounted = true;
+    useEffect(()=>{
+        const loadProfile = async()=>{
+            setLoading(true)
+            setError("")
 
-        async function loadHistory() {
-            setLoadingHistory(true);
-            setHistoryError(null);
+            try{
+                // get logged in suser form auth
+                const {data: {user},error:authError} = await supabase.auth.getUser()
 
-            try {
-                const { user } = await getCurrentUser();
+                if (authError ||!user){
+                    setError("User is not Logged in, Please Log in First")
+                    return
+                }
 
-                // Keep placeholder history if auth isn't ready / no user.
-                if (!user?.id) return;
-                // feel free to remove after wiring
+                //get user data from supabase
+                const {data, error:profileError} = await supabase
+                    .from("User")
+                    .select ("*")
+                    .eq("user_id",user.id)
+                    .single()
+                
+                if (profileError){
+                    setError("Failed to load profile, after supabase")
+                    return
+                }
 
-                const history = await fetchHistoryByUserId(user.id);
-                if (!isMounted) return;
-                setHistoryData(history);
+                setUserData({
+                    name: data.name || "",
+                    email: data.email || "",
+                    phone: data.phone || "",
+                })
 
-                // Load profile fields once available in your DB schema.
-                const profile = await fetchProfileByUserId(user.id);
-                if (!isMounted) return;
-                setUserData(profile);
-            } catch (e) {
-                if (!isMounted) return;
-                setHistoryError(e?.message || "Failed to load history");
-            } finally {
-                if (isMounted) setLoadingHistory(false);
+                //GET lost report history 
+                setLoadingHistory(true)
+                const {data: historyItems, error:historyError} = await supabase
+                    .from ("LostReport")
+                    .select("*,Item(*)")
+                    .eq("user_id",user.id)
+                
+                if (historyError){
+                    setError("Failed to load History")
+                }else{
+                    setHistoryData(historyItems)
+                }
+
+            }catch (e){
+                setError(e.message|| "Failed to load Profile")
+            }finally{
+                setLoading(false)
+                setLoadingHistory(false)
             }
         }
 
-        loadHistory();
+        loadProfile()
+    },[])
 
-        return () => {
-            isMounted = false;
-        };
-    }, []);
+    const handleSave = async ()=>{
+        setSaving(true)
+        setError("")
+        setSuccess("")
 
+        try{
+            const {data:{user}}= await supabase.auth.getUser()
+            const {error:updateError} = await supabase
+                .from("User")
+                .update({
+                    name: userData.name,
+                    phone : userData.phone,
+                })
+                .eq("user_id",user.id)
+        
+            if (updateError) throw updateError
+            setSuccess("Profile saved successfully!")
+        }catch(e){
+            setError(e.message || "Failed to save profile.")
+        }finally{
+            setSaving(false)
+        }
+    }
 
-    /*
-
-    */
+    if(loading) return <div>Loading Profile ...</div>
 
     return (
         <div className="profile">
@@ -136,7 +180,7 @@ function Profile() {
                         <input
                             type="text"
                             value={userData.name}
-                            readOnly
+                            onChange={(e) => setUserData({ ...userData, name: e.target.value })}
                         />
                     </div>
 
@@ -154,7 +198,7 @@ function Profile() {
                         <input
                             type="text"
                             value={userData.phone}
-                            readOnly
+                            onChange={(e) => setUserData({ ...userData, phone: e.target.value })}
                         />
                     </div>
 
@@ -169,13 +213,26 @@ function Profile() {
 
                 </div>
 
+                {error && <p className="error-text">{error}</p>}
+                {success && <p className="success-text">{success}</p>}
+
                 {/* BUTTON SECTION */}
                 <div className="profile-buttons">
-                    <Button
-                        type="profile"
-                        label="Change Password"
-                        onClick={() => setShowPasswordModal(true)}
-                    />
+                    <div className="ChangePass-btn">
+                        <Button
+                            type="profile"
+                            label="Change Password"
+                            onClick={() => setShowPasswordModal(true)}
+                        />  
+                    </div>
+                    <div className="save-btn">
+                        <Button
+                            type="profile"
+                            label={saving? "Saving":"Save"}
+                            onClick={handleSave}
+                        />
+                        
+                    </div>
                 </div>
 
             </div>

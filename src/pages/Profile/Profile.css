@@ -61,10 +61,30 @@
 
 .profile-buttons {
     margin-top: 24px;
-
     display: flex;
-
     justify-content: flex-end;
-
     gap: 12px;
+}
+
+.ChangePass-btn button{
+    background: white;
+    border: 2px solid #2289e6;
+    color: #000000;
+    transition: all 0.2s ease
+}
+
+.ChangePass-btn button:hover {
+    background: #e6f1ff;
+}
+
+.save-btn button{
+    background: #2289e6;
+    border: 2px solid #2289e6;
+    color: white;
+    font-weight: 600;
+    transition: all 0.2s ease
+}
+.save-btn button:hover{
+    background: #77abe3;
+    border: 2px solid #77abe3;
 }
