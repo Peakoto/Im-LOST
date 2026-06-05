@@ -44,7 +44,7 @@ const Home = ({isAdmin}) => {
           ...item,
           foundId: report.found_id,
           reportCreatedAt: report.created_at,
-          dateLost: report.date_lost,
+          dateFound: report.date_found,
         };
       });
 
