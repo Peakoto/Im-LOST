@@ -152,10 +152,10 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
                     </div>
 
                 </div>
-                {/* ADMIN SECTION */}
-                
-                <div className="modal-admin-editbox">
-                    <p>Status</p>
+                <div className="item-admin-top">
+                    <div><p>Status</p></div>
+                    
+                    <div>
                     <Dropdown label={isClaimed} type="isClaimed">
                         <DropdownRadio
                             name="isClaimed"
@@ -166,18 +166,28 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
                             selected={isClaimed}
                             setSelected={setClaimed}
                         />
-                    </Dropdown>
+                    </Dropdown>                        
+                    </div>
 
-                    <form>
-                        <label>
-                            Name
-                            <input
-                                type="text"
-                                name="claimerName"
-                                value={dave.claimerName}
-                                onChange={handleChange}
-                            />
-                        </label>
+                </div>
+                {/* BOTTOM SECTION */}
+
+                <div className="item-admin-contents">
+
+                    <div>
+                        <form>
+                            <label>
+                                Name
+                                <input
+                                    type="text"
+                                    name="claimerName"
+                                    value={dave.claimerName}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </form>
+                    </div>
+                    <div>
                         <label>
                             Phone
                             <input
@@ -187,6 +197,8 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
                                 onChange={handleChange}
                             />
                         </label>
+                    </div>
+                    <div>
                         <label>
                             NIM
                             <input
@@ -196,6 +208,8 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
                                 onChange={handleChange}
                             />
                         </label>
+                    </div>
+                    <div>
                         <label>
                             Date
                             <input
@@ -205,9 +219,13 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
                                 onChange={handleChange}
                             />
                         </label>
-                    </form>
-                    <button className="btn btn-post" onClick={handleSubmit}>Submit</button>
+                    </div>
                 </div>
+                <div className="item-admin-bottom">
+                    <div><button className="btn btn-post" onClick={handleSubmit}>Submit</button></div>
+                    
+                </div>
+
 
             </div>
 
