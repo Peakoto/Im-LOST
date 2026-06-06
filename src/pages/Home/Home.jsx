@@ -32,14 +32,20 @@ const Home = ({isAdmin}) => {
           created_at,
           Item (*)
         `);
-
-      console.log("Query finished");
-      console.log("Data:", data);
-      console.log("Error:", error);
-
+      
       if (error) throw error;
 
-      const formattedItems = data.map((report) => {
+      //gett all found_id from 
+      const{data:claimedData,error:claimError} = await supabase
+        .from("Claim")
+        .select("found_id")
+
+      if (claimError) throw claimError;
+      //make ids into a set
+      const claimedFoundIds = new Set(claimedData.map(c=>c.found_id))
+      const unclaimedItems = data.filter(i=>!claimedFoundIds.has(i.found_id))
+
+      const formattedItems = unclaimedItems.map((report) => {
         const item = mapItem(report.Item);
 
         return {

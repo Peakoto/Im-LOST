@@ -82,6 +82,10 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
         setError("")
         setSuccess("")
         
+        if (isClaimed !== "Claimed"){
+            setError("Please change status to 'Claimed' before saving.")
+            return
+        }
         if (!owner.claimerName||!owner.phone||!owner.nim||!owner.dateClaimed){
             setError("Please fill all fields!")
             return
