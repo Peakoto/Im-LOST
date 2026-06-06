@@ -26,7 +26,7 @@ import Dropdown from "../../components/Dropdown";
 import DropdownRadio from "../../components/DropdownRadio";
 import {supabase} from "../../data/supabase";
 
-const ModalItemDetailsAdmin = ({ item, onClose }) => {
+const ModalItemDetailsAdmin = ({ item, onClose,viewLostReports }) => {
 
     const [owner, setOwner] = useState({});
     const [isClaimed, setClaimed] = useState("Unclaimed");
@@ -201,7 +201,7 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
 
                         <div>
                             <label>Item Color</label>
-                            <p>{item.color}</p>
+                            <p>{item.color.join(", ")}</p>
                         </div>
 
                     </div>
@@ -228,84 +228,89 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
                     </div>
 
                 </div>
-                <div className="item-admin-top">
-                    <div><p>Status</p></div>
-                    
-                    <div>
-                    <Dropdown label={isClaimed} type="isClaimed">
-                        <DropdownRadio
-                            name="isClaimed"
-                            options={[
-                                "Unclaimed",
-                                "Claimed"
-                            ]}
-                            selected={isClaimed}
-                            setSelected={setClaimed}
-                        />
-                    </Dropdown>                        
+                
+                {viewLostReports === "Lost Reports"?null:(
+                    <>
+                    <div className="item-admin-top">
+                        <div><p>Status</p></div>
+                        <div>
+                            <Dropdown label={isClaimed} type="isClaimed">
+                                <DropdownRadio
+                                    name="isClaimed"
+                                    options={[
+                                        "Unclaimed",
+                                        "Claimed"
+                                    ]}
+                                    selected={isClaimed}
+                                    setSelected={setClaimed}
+                                />
+                            </Dropdown>                        
+                        </div>
                     </div>
-
-                </div>
                 {/* BOTTOM SECTION */}
 
-                <div className="item-admin-contents">
+                    <div className="item-admin-contents">
 
-                    <div>
-                        <form>
-                            <label>Name
+                        <div>
+                            <form>
+                                <label>Name
+                                    <input
+                                        type="text"
+                                        name="claimerName"
+                                        value={owner.claimerName||""}
+                                        onChange={handleChange}
+                                    />
+                                </label>
+                            </form>
+                        </div>
+                        <div>
+                            <label>
+                                Phone
                                 <input
                                     type="text"
-                                    name="claimerName"
-                                    value={owner.claimerName||""}
+                                    name="phone"
+                                    value={owner.phone||""}
                                     onChange={handleChange}
                                 />
                             </label>
-                        </form>
+                        </div>
+                        <div>
+                            <label>
+                                NIM
+                                <input
+                                    type="text"
+                                    name="nim"
+                                    value={owner.nim||""}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Date
+                                <input type="date" name="dateClaimed" value={owner.dateClaimed||""} onChange={handleChange}/>
+                            </label>
+                        </div>
                     </div>
-                    <div>
-                        <label>
-                            Phone
-                            <input
-                                type="text"
-                                name="phone"
-                                value={owner.phone||""}
-                                onChange={handleChange}
-                            />
-                        </label>
+                    <div className="item-admin-bottom">
+                        <div>
+                            {error && <p className="error-text">{error}</p>}
+                            {success && <p className="success-text">{success}</p>}  
+                        </div>
+                        
+                        <button 
+                            className="btn btn-post" 
+                            onClick={handleSubmit}
+                            disabled={loading}
+                        >
+                            {loading?"Saving..":"Save"}
+                        </button>
+                        
                     </div>
-                    <div>
-                        <label>
-                            NIM
-                            <input
-                                type="text"
-                                name="nim"
-                                value={owner.nim||""}
-                                onChange={handleChange}
-                            />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            Date
-                            <input type="date" name="dateClaimed" value={owner.dateClaimed||""} onChange={handleChange}/>
-                        </label>
-                    </div>
-                </div>
-                <div className="item-admin-bottom">
-                    <div>
-                        {error && <p className="error-text">{error}</p>}
-                        {success && <p className="success-text">{success}</p>}  
-                    </div>
-                    
-                    <button 
-                        className="btn btn-post" 
-                        onClick={handleSubmit}
-                        disabled={loading}
-                    >
-                        {loading?"Saving..":"Save"}
-                    </button>
-                    
-                </div>
+                </>
+                )}
+
+                
 
 
             </div>

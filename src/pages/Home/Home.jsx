@@ -17,43 +17,94 @@ const Home = ({isAdmin}) => {
   // loading state
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+    // defaulting the campus dropdown
+  const [campus, setCampus] = useState("Alam Sutera");
+  const [viewLostReports,setViewLostReports] = useState("Items");
+  const [showFilter, setShowFilter] = useState(false);
+  // for the calender filter
+  const [appliedStartDate, setAppliedStartDate] = useState("");
+  const [appliedEndDate, setAppliedEndDate] = useState("");
+  // for those filters that uses dropdown radio
+  const [appliedCategory, setAppliedCategory] = useState("");
+  const [appliedLocation, setAppliedLocation] = useState("");
+  const [appliedSortBy, setAppliedSortBy] = useState("");
+  // for those filters that uses dropdown checkbox
+  const [appliedColor, setAppliedColor] = useState([]);
+  // for tat search bar
+  const [searchTitle, setSearchTitle] = useState("");
+  // popup states for the item card
+  const [showItemDetails, setShowItemDetails] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null); 
   console.log("isAdmin state is:",isAdmin)
+
+  const lostReportItems = async()=>{
+    const { data, error } = await supabase
+      .from("LostReport")
+      .select(`
+        lost_id,
+        created_at,
+        date_lost,
+        Item (*)
+      `);
+        
+    if (error) throw error;
+
+    return data.map((report) => {
+      const item = mapItem(report.Item);
+      return {
+        ...item,
+        lostId: report.lost_id,
+        reportCreatedAt: report.created_at,
+        dateLost: report.date_lost,
+      };
+    }); 
+  }
+  const foundReportItems= async ()=>{
+    //function to get found report items taht are unclaimed
+
+    const { data, error } = await supabase
+      .from("FoundReport")
+      .select(`
+        found_id,
+        created_at,
+        date_found,
+        Item (*)
+      `);
+        
+    if (error) throw error;
+
+    //gett all found_id from 
+    const{data:claimedData,error:claimError} = await supabase
+      .from("Claim")
+      .select("found_id")
+    if (claimError) throw claimError;
+    //make ids into a set
+    const claimedFoundIds = new Set(claimedData.map(c=>c.found_id))
+    const unclaimedItems = data.filter(i=>!claimedFoundIds.has(i.found_id))
+
+    return unclaimedItems.map((report) => {
+      const item = mapItem(report.Item);
+      return {
+        ...item,
+        foundId: report.found_id,
+        reportCreatedAt: report.created_at,
+        dateFound: report.date_found,
+      };
+    }); 
+  }
+
   const fetchItems = async () => {
     try {
       setLoading(true);
 
-      const { data, error } = await supabase
-        .from("FoundReport")
-        .select(`
-          found_id,
-          created_at,
-          date_found,
-          Item (*)
-        `);
+      let formattedItems;
+
+      if (viewLostReports ==="Items"){
+        formattedItems= await foundReportItems();
+      }else{
+        formattedItems = await lostReportItems();
+      }
       
-      if (error) throw error;
-
-      //gett all found_id from 
-      const{data:claimedData,error:claimError} = await supabase
-        .from("Claim")
-        .select("found_id")
-
-      if (claimError) throw claimError;
-      //make ids into a set
-      const claimedFoundIds = new Set(claimedData.map(c=>c.found_id))
-      const unclaimedItems = data.filter(i=>!claimedFoundIds.has(i.found_id))
-
-      const formattedItems = unclaimedItems.map((report) => {
-        const item = mapItem(report.Item);
-
-        return {
-          ...item,
-          foundId: report.found_id,
-          reportCreatedAt: report.created_at,
-          dateFound: report.date_found,
-        };
-      });
-
       setItems(formattedItems);
     } catch (err) {
       console.error(err);
@@ -85,31 +136,7 @@ const Home = ({isAdmin}) => {
 
   useEffect(() => {
     fetchItems();
-  }, []);
-
-  // defaulting the campus dropdown
-  const [campus, setCampus] = useState("Alam Sutera");
-
-  const [showFilter, setShowFilter] = useState(false);
-
-  // for the calender filter
-  const [appliedStartDate, setAppliedStartDate] = useState("");
-  const [appliedEndDate, setAppliedEndDate] = useState("");
-
-  // for those filters that uses dropdown radio
-  const [appliedCategory, setAppliedCategory] = useState("");
-  const [appliedLocation, setAppliedLocation] = useState("");
-  const [appliedSortBy, setAppliedSortBy] = useState("");
-
-  // for those filters that uses dropdown checkbox
-  const [appliedColor, setAppliedColor] = useState([]);
-
-  // for tat search bar
-  const [searchTitle, setSearchTitle] = useState("");
-
-  // popup states for the item card
-  const [showItemDetails, setShowItemDetails] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);  
+  }, [viewLostReports]); 
 
   // filtering the item based on the applied filters
   const filteredItems = items
@@ -210,6 +237,20 @@ const Home = ({isAdmin}) => {
           onClick={() => setShowFilter(true)}
         />
 
+        {isAdmin?(
+          <Dropdown label={viewLostReports} type="viewLostReports">
+          <DropdownRadio
+            name="viewLostReports"
+            options={["Lost Reports","Items"]}
+            selected={viewLostReports}
+            setSelected={setViewLostReports}
+          />
+          </Dropdown>
+        ):(
+          null
+        )}
+        
+
         {/* Campus Dropdown */}
         <Dropdown label={campus} type="campus">
           <DropdownRadio
@@ -259,6 +300,7 @@ const Home = ({isAdmin}) => {
             <ModalItemDetailsAdmin
               item={selectedItem}
               onClose={() => setShowItemDetails(false)}
+              viewLostReports={viewLostReports}
             />
           ):(
             <ModalItemDetailsStudentView

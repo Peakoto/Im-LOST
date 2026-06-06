@@ -187,7 +187,8 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn,setCurrentUser}) => 
                 <ModalPassChange onClose={() => setShowForgotPassword(false)}/>
             )}
             {showSignUp && (
-                <ModalSignUp onClose={() => setShowSignUp(false)}/>
+                <ModalSignUp onClose={() => setShowSignUp(false)}
+                setIsLoggedIn={setIsLoggedIn}/>
             )}
         </>
     );
