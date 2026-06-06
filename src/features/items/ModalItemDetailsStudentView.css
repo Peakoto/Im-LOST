@@ -1,54 +1,94 @@
-.modal-overlay {
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.5);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:1000;
-}
+.item-modal-overlay {
+    position: fixed;
+    inset: 0;
 
-.modal-item-details {
-    background-color: #fff;
-    width: 700px;
-    max-width: 90%;
-    border-radius: 10px;
-    padding: 20px;
-    position: relative;
+    background: rgba(0,0,0,0.5);
+
     display: flex;
-    gap: 24px;
-    max-height: 80vh;
-    overflow-y: auto;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
 }
 
-.modal-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
+.item-modal {
+    position: relative;
+    background: white;
+    width: 900px;
+    max-width: 95vw;
+    border-radius: 10px;
+    padding: 24px;
+}
+
+.item-modal-header {
+    position: relative;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.close-btn {
     border: none;
-    font-size: 24px;
+    background: none;
+
+    font-size: 20px;
     cursor: pointer;
 }
 
-.modal-item-img{
-    width: 250px;
+.item-detail-top {
+    display: flex;
+    gap: 24px;
+
+    margin-bottom: 24px;
+}
+
+.item-image-container {
+    width: 180px;
+    flex-shrink: 0;
+}
+
+.item-image {
+    width: 100%;
     height: auto;
-    object-fit: cover;
-    border-radius: 10px;
+
+    border-radius: 4px;
 }
 
-.modal-item-content {
+.item-info-grid {
     flex: 1;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 16px;
 }
 
-.modal-item-content h2{
-    margin-bottom: 14px;
-    font-size: 28px;
-    color: black;
+.item-info-grid label {
+    display: block;
+
+    font-weight: 600;
+
+    margin-bottom: 4px;
 }
 
-.modal-item-content p{
-    margin-bottom: 12px;
-    color: black;
+.item-detail-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+}
+
+.detail-box {
+    border: 1px solid #d0d0d0;
+
+    min-height: 150px;
+
+    padding: 12px;
+}
+
+.detail-box label {
+    display: block;
+
+    font-weight: 600;
+
+    margin-bottom: 8px;
 }

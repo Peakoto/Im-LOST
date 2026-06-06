@@ -15,7 +15,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Button.css";
 
-const Button = ({ type, label, to, onClick, icon, iconOnly }) => {
+const Button = ({ type, label, to, onClick, icon, iconOnly, className="" }) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -29,6 +29,7 @@ const Button = ({ type, label, to, onClick, icon, iconOnly }) => {
                 btn 
                 btn-${type} 
                 ${iconOnly ? "btn-icon-only" : ""}
+                ${className}
             `}
             onClick={handleClick}
         >

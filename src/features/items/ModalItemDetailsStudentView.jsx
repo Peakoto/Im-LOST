@@ -16,57 +16,129 @@
 import React from "react";
 import "./ModalItemDetailsStudentView.css";
 
-const ModalItemDetailsStudentView = ({item, onClose}) => {
+const ModalItemDetailsStudentView = ({ item, onClose }) => {
+    const safeColor = Array.isArray(item?.color)
+        ? item.color
+        : item?.color
+            ? [item.color]
+            : [];
+    // to prevent the modal from crashing when item.color is not exactly the type the jsx assumes.
+    // guarantees safeColor is always either an array of colors, array with color strings, or empty array. (so join is always safe)
+
+    const title = item?.title ?? item?.itemName ?? "";
+    const founder = item?.founder ?? item?.founderName ?? "";
+    const date = item?.date ?? item?.dateFound ?? "";
+    const location = item?.location ?? item?.locationFound ?? item?.locationDetails ?? "";
+    const locationDescription = item?.locationDescription ?? item?.locationDetails ?? "";
+
+    // if the expected field name isnt present, try the alternate one
+
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-item-details" onClick={(e) => e.stopPropagation()}>
+        <div className="item-modal-overlay" onClick={onClose}>
 
-                {/* ⨉ Close Button */}
-                <button className="modal-close" onClick={onClose}>
-                    ⨉
-                </button>
+            <div className="item-modal" onClick={(e) => e.stopPropagation()}>
 
-                {/* Image */}
-                <img 
-                    src={item.image} 
-                    alt={item.title}
-                    className="modal-item-img" 
-                />
 
-                {/* Content */}
-                <div className="modal-item-content">
-                    <h2>{item.title}</h2>
+                {/* HEADER */}
+                <div className="item-modal-header">
 
-                    <p><strong>Founder: </strong> {item.founder}</p>
-                    <p><strong>Date Found: </strong> {item.date}</p>
-                    <p><strong>Location: </strong> {item.location}</p>
-                    <p><strong>Campus: </strong> {item.campus}</p>
-                    <p><strong>Category: </strong> {item.category}</p>
+                    <h1>Item Details</h1>
 
-                    <p>
-                        <strong>Color:</strong>{" "}
-                        {item.color.join(", ")}
-                    </p>
-
-                    <p>
-                        <strong>Floor:</strong>{" "}
-                        {item.floor}
-                    </p>
-
-                    <p>
-                        <strong>Item Description:</strong><br />
-                        {item.description}
-                    </p>
-                    <p>
-                        <strong>Location Description:</strong><br />
-                        {item.locationDescription}
-                    </p>
+                    <button
+                        className="close-btn"
+                        onClick={onClose}
+                    >
+                        ✕
+                    </button>
 
                 </div>
+
+                {/* TOP SECTION */}
+                <div className="item-detail-top">
+
+                    {/* IMAGE */}
+                    <div className="item-image-container">
+
+                        <img
+                            src={item.image}
+                            alt={item.itemName}
+                            className="item-image"
+                        />
+
+                    </div>
+
+                    {/* INFORMATION */}
+                    <div className="item-info-grid">
+
+                        <div>
+                            <label>Item Name</label>
+                            <p>{item.title}</p>
+                        </div>
+
+                        {/* <div>
+                            <label>Founder's Name</label>
+                            <p>{item.founder}</p>
+                        </div> */}
+
+                        <div>
+                            <label>Date Found</label>
+                            <p>{item.date}</p>
+                        </div>
+
+                        <div>
+                            <label>Campus</label>
+                            <p>{item.campus}</p>
+                        </div>
+
+                        <div>
+                            <label>Location</label>
+                            <p>{item.location}</p>
+                        </div>
+
+                        <div>
+                            <label>Category</label>
+                            <p>{item.category}</p>
+                        </div>
+
+                        <div>
+                            <label>Item Color</label>
+                            <p>{item.color}</p>
+                        </div>
+
+                        <div>
+                            <label>Floor</label>
+                            <p>{item.floor}</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {/* BOTTOM SECTION */}
+                <div className="item-detail-bottom">
+
+                    <div className="detail-box">
+
+                        <label>Item Description</label>
+
+                        <p>{item.description}</p>
+
+                    </div>
+
+                    <div className="detail-box">
+
+                        <label>Location Description</label>
+
+                        <p>{item.locationDescription}</p>
+
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
-    )
+    );
 }
 
 export default ModalItemDetailsStudentView;

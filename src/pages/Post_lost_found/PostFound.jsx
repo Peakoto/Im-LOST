@@ -13,18 +13,19 @@ import { supabase } from "../../data/supabase";
 import useDebounce from "../../hooks/useDebounce";
 
 
-const PostFound = () => {
+const PostFound = ({isAdmin,isLoggedIn}) => {
   const [campus, setCampus] = useState("Alam Sutera");
   const [location, setLocation] = useState("Canteen");
   const [category, setCategory] = useState("Category");
   const [colour, setColour] = useState("");
   const [inputs, setInputs] = useState({});
-  const [lostDate, setlostDate] = useState("");
+  const [foundDate, setfoundDate] = useState("");
 
   const [imgSrc, setImgSrc] = useState(null)
   const [imgInfo, setImgInfo] = useState(null)
   const [imgSize, setImgSize] = useState(null)
   const [imgReady, setimgReady] = useState(false)
+  const[imgFile,setImgFile]= useState(null)
   //got from https://www.youtube.com/watch?v=SMim5-ox0K4
   // ideally this portion would be in the components folder but imgSrc is required to pass on and I have no idea how to pass on these variables
   
@@ -34,15 +35,13 @@ const PostFound = () => {
 
   const debouncedSearch = useDebounce(inputs.itemName, 500);
 
-  const [imgFile, setImgFile] = useState(null);
-  
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (!debouncedSearch) return;
+  //   if (!debouncedSearch) return;
 
-    console.log("Searching:", debouncedSearch);
+  //   console.log("Searching:", debouncedSearch);
 
-  }, [debouncedSearch]);
+  // }, [debouncedSearch]);
 
   const ImgUpload = () => {
 
@@ -68,12 +67,8 @@ const PostFound = () => {
       if (!files) return
       const file = files[0]
 
+      setImgFile(file)
       setImgFile(file);
-
-      console.log("File object:", file);
-      console.log("File name:", file.name);
-      console.log("File size:", file.size);
-      console.log("File type:", file.type);
 
       if (file.size < 10000000 && (file.type.includes("image/png") || file.type.includes("image/jpg") || file.type.includes("image/jpeg"))) {
         setimgReady(true);
@@ -125,13 +120,34 @@ const PostFound = () => {
     const name = e.target.name;
     const value = e.target.value;
     setInputs(values => ({ ...values, [name]: value }))
-    // console.log(inputs)
   }
 
   //submit button
   const handleSubmit = async (e) => {
     e.preventDefault()
-    let { itemName, personName, descitems, descloc, floor, lostDate } = inputs;
+    setError("")
+    setSuccess("")
+
+    if (!isLoggedIn) {
+      setError("Please Log In Before Posting a Found Item Report.");
+      return;
+    }
+
+    if(!isAdmin){
+      setError("Only Admins can post a Found Item report, Please go to basement if you found a lost item");
+      return;
+    }
+
+    if(!isLoggedIn){
+      setError("Please log in to post a lost item report.");
+      return;
+    }
+
+    if (!isAdmin){
+      setError("Only Admins are allowed to make a found report! Please go to basement and give item to admin if you found an item");
+      return;
+    }
+    let { itemName, personName, descitems, descloc, floor, foundDate } = inputs;
 
     const itemtry = {
       itemName,
@@ -143,13 +159,12 @@ const PostFound = () => {
       location,
       category,
       colour,
-      lostDate,
+      foundDate,
     }
 
     let thereIsNull = 0;
 
     Object.entries(itemtry).forEach(([key, value]) => {
-      // console.log(`${key}: ${value}`);
       if (
         value === undefined ||
         value === null ||
@@ -170,24 +185,36 @@ const PostFound = () => {
     }
     //check floor
 
-    // if (imgReady) {
-    //   // console.log(imgReady)
-    //   console.log(itemtry)
-    // } else {
-    //   console.log("Cannot go!")
-    // }
-
     try {
       setLoading(true);
 
       // get logged in user
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
+      const {data: { user },error: userError} = await supabase.auth.getUser();
+      // const {data: { user },error: userError} = await supabase.auth.getUser();
 
       if (userError || !user) {
         throw new Error("User not logged in.");
+      }
+
+      //Get image URL and upload to storage
+      let imageUrl=null;
+      if (imgFile){
+        const fileExt= imgFile.name.split('.').pop()
+        const fileName= `${Date.now()}.${fileExt}`
+
+        const{error:uploadImgError}= await supabase.storage
+          .from('images_LostandFound')
+          .upload(fileName,imgFile)
+        
+        if(uploadImgError) {
+          throw uploadImgError
+        }
+
+        const{data:urlData}= supabase.storage
+          .from('images_LostandFound')
+          .getPublicUrl(fileName)
+        
+        imageUrl= urlData.publicUrl
       }
 
       // insert into Item table
@@ -200,8 +227,10 @@ const PostFound = () => {
             item_name: itemName,
             campus_location: campus,
             location: location,
-            item_color: colour.toString(),
+            location_description: descloc,
+            item_color: colour,
             floor: floor,
+            imageURL: imageUrl,
           },
         ])
         .select();
@@ -218,17 +247,23 @@ const PostFound = () => {
           {
             user_id: user.id,
             item_id: item_id,
-            date_found: lostDate,
+            date_found: foundDate,
           },
         ]);
 
       if (foundError) throw foundError;
 
       setSuccess("Found report submitted successfully!");
+      setError("");
 
       // optional reset form
       setInputs({});
       setImgSrc(null);
+      setImgFile(null);
+      setCampus("Alam Sutera");
+      setLocation("Canteen");  
+      setCategory("Category");    
+      setColour(""); 
 
     } catch (err) {
       console.error(err);
@@ -266,7 +301,7 @@ const PostFound = () => {
                       <input
                         type="text"
                         name="itemName"
-                        value={inputs.itemName}
+                        value={inputs.itemName||""}
                         onChange={handleChange}
                       />
                     </label>
@@ -283,7 +318,7 @@ const PostFound = () => {
                       <input
                         type="text"
                         name="personName"
-                        value={inputs.personName}
+                        value={inputs.personName || ""}
                         onChange={handleChange}
                       />
                     </label>
@@ -297,10 +332,10 @@ const PostFound = () => {
             <tr>
               <td>
                 <div className="inputhere">
-                  <p>Date Lost:</p>
+                  <p>Date Found:</p>
                   <form>
                     <label htmlFor="">
-                      <input type="date" name="lostDate" value={inputs.lostDate} onChange={handleChange}></input>
+                      <input type="date" name="foundDate" value={inputs.foundDate||""} onChange={handleChange}></input>
                     </label>
                   </form>
                 </div>
@@ -345,7 +380,7 @@ const PostFound = () => {
                         "Lobby",
                         "Parking Lot",
                         "Toilet",
-                        "Others"
+                        "Other"
                       ]}
                       selected={location}
                       setSelected={setLocation}
@@ -366,12 +401,12 @@ const PostFound = () => {
                       name="category"
                       options={[
                         "Accessories",
-                        "Bottle",
                         "Clothing",
                         "Documents",
                         "Electronics",
                         "ID Card",
-                        "Stationery"
+                        "Stationery",
+                        "Others"
                       ]}
                       selected={category}
                       setSelected={setCategory}
@@ -398,7 +433,8 @@ const PostFound = () => {
                         "Brown",
                         "Black",
                         "White",
-                        "Grey"
+                        "Grey",
+                        "Others"
                       ]}
                       selected={colour}
                       setSelected={setColour}
@@ -411,7 +447,21 @@ const PostFound = () => {
                   <p>Floor</p>
                   <form>
                     <label htmlFor="">
-                      <input type="number" name="floor" min="0" max="25" value={inputs.floor} onChange={handleChange} />
+                      <input type="number" name="floor" min="0" max="25" value={inputs.floor||""} 
+                        onChange={(e)=>{
+                          //so that val HAS to be between 0 to 25
+                          const val = parseInt(e.target.value)
+                          if(e.target.value == "" || (val>=0 && val<=25)){
+                            handleChange(e)
+                          }
+                        }}
+                        // allows only nums to be typed and allow arrows up n down
+                        onKeyDown={(e) => {
+                          if (!/[0-9]/.test(e.key) && !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)) {
+                            e.preventDefault()
+                          }
+                        }}
+                      />
                     </label>
                   </form>
                 </div>
@@ -429,7 +479,7 @@ const PostFound = () => {
                     <span>Item</span>
                     <textarea
                       name="descitems"
-                      value={inputs.descitems}
+                      value={inputs.descitems || ""}
                       onChange={handleChange}
                     ></textarea>
                   </label>
@@ -441,7 +491,7 @@ const PostFound = () => {
                     <span>Location</span>
                     <textarea
                       name="descloc"
-                      value={inputs.descloc}
+                      value={inputs.descloc ||""}
                       onChange={handleChange}
                     ></textarea>
                   </label>

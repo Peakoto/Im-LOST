@@ -31,36 +31,78 @@ const ModalSignUp = ({onClose}) => {
             return;
         }
 
+        // testing for supabase hang problem (added multiple console.log)
         try {
             setLoading(true);
 
-            //create auth user
-            const{data,error}= await supabase.auth.signUp({
-                email,password
-            })
+            console.log("Starting signup");
+
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password
+            });
+
+            console.log("Signup result:", data);
+            console.log("Signup error:", error);
+
             if (error) throw error;
-            console.log("Logged in: ",data.user);
-            
-            //insert to supabase
-            const{error:insertError}= await supabase.from("User")
+
+            console.log("Auth user id:", data.user?.id);
+
+            const { error: insertError } = await supabase
+                .from("User")
                 .insert([{
-                    user_id:data.user.id,//so user id matches with the one created by auth
-                    email:email,
-                    admin:false,
-                    name:null,
-                    phone:null
-                }])
+                    user_id: data.user.id,
+                    email,
+                    admin: false,
+                    name: null,
+                    phone: null
+                }]);
+
+            console.log("Insert error:", insertError);
 
             if (insertError) throw insertError;
+
+            console.log("Signup complete");
+
             setSuccess("Account created successfully.");
-
         } catch (err) {
-            console.error(err);
+            console.error("Signup failed:", err);
             setError("Account creation failed.");
-
         } finally {
             setLoading(false);
         }
+
+        // try {
+        //     setLoading(true);
+
+        //     //create auth user
+        //     const{data,error}= await supabase.auth.signUp({
+        //         email,password
+        //     })
+        //     if (error) throw error;
+        //     console.log("Logged in: ",data.user);
+            
+        //     //insert to supabase
+        //     const{error:insertError}= await supabase.from("User")
+        //         .insert([{
+        //             user_id:data.user.id,//so user id matches with the one created by auth
+        //             email:email,
+        //             admin:false,
+        //             name:null,
+        //             phone:null
+        //         }])
+
+        //     if (insertError) throw insertError;
+        //     setSuccess("Account created successfully.");
+
+        // } catch (err) {
+        //     console.error(err);
+        //     setError("Account creation failed.");
+
+        // } finally {
+        //     setLoading(false);
+        // }
     };
     
     return (

@@ -15,7 +15,7 @@ import ModalPassChange from "./ModalPassChange.jsx";
 import ModalSignUp from "./ModalSignUp.jsx";
 import {supabase} from "../../data/supabase";
 
-const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) => {
+const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn,setCurrentUser}) => {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
 
@@ -37,11 +37,25 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
     },[])
 
     const handleLogout = async(e)=>{
-        await supabase.auth.signOut();
+        e.stopPropagation()
 
-        setIsLoggedIn(false);
-        setCurrentUser(null);
-        onClose();
+
+        try {
+
+            const { error } = await supabase.auth.signOut();
+
+            if (error) throw error;
+
+
+            setIsLoggedIn(false);
+            setCurrentUser(null);
+
+            onClose();
+
+            console.log("Modal closed");
+        } catch (err) {
+            console.error("Logout failed:", err);
+        }
     };
 
     const handleLogin = async (e) => {
@@ -90,7 +104,10 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
 
             console.log("Logged in user:", Userdata);
             setIsLoggedIn(true)
-            setCurrentUser(Userdata)
+
+            // also changed here to try to fix supabase problem
+            // setCurrentUser(Userdata)
+            
             onClose();
         } catch (err) {
             setError("Login failed.");
@@ -105,11 +122,12 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
                 <div className="modal-container" onClick={(e) => e.stopPropagation()}>
 
                     <div className="modal-header">
+                        <h2>Log In</h2>
+                        
                         <button className="modal-close" onClick={onClose}>
                             ⨉
                         </button>
-
-                        <h2>Log In</h2>
+                      
                     </div>
                     
                     {/* if user is logged in  */}
@@ -118,7 +136,7 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn, setCurrentUser}) =>
                             <p>You are currently logged in.</p>
 
                             {error && <p className="error-text">{error}</p>}
-                            <button type="submit" className="logout-button" onClick={handleLogout}>
+                            <button type="button" className="logout-button" onClick={handleLogout}>
                                 {loading ? "Logging out..." : "Log out"}
                             </button>
                             

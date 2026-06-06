@@ -1,0 +1,100 @@
+.profile {
+    padding: 30px;
+}
+
+.profile .top {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+.profile .home-btn-wrap img {
+    width: 50px;
+    height: 28px;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 16px;
+
+    padding: 24px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+    margin-bottom: 30px;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 30px;
+    row-gap: 20px;
+    align-items: stretch;
+}
+
+
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* border: 1px solid red; */
+}
+
+.input-group label {
+    margin-bottom: 6px;
+
+    font-weight: 600;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.input-group:has(input:read-only) label {
+    margin-bottom: 14px;
+}
+
+.input-group input:read-only {
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #dfdfdf;
+    border: 1px solid #dfdfdf;
+    pointer-events: none; 
+}
+
+.profile-buttons {
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.ChangePass-btn button{
+    background: white;
+    border: 2px solid #2289e6;
+    color: #000000;
+    transition: all 0.2s ease
+}
+
+.ChangePass-btn button:hover {
+    background: #e6f1ff;
+}
+
+.save-btn button{
+    background: #2289e6;
+    border: 2px solid #2289e6;
+    color: white;
+    font-weight: 600;
+    transition: all 0.2s ease
+}
+.save-btn button:hover{
+    background: #77abe3;
+    border: 2px solid #77abe3;
+}

@@ -7,40 +7,75 @@ import DropdownRadio from "../../components/DropdownRadio";
 import ModalFilter from "../../features/items/ModalFilter";
 import SearchBar from "../../components/SearchBar";
 import ModalItemDetailsStudentView from "../../features/items/ModalItemDetailsStudentView";
-// import mockItems from "../../data/mockItems.js";
 import filterIcon from "../../assets/filter_icon.png";
 import { supabase } from "../../data/supabase";
 import { mapItem } from "../../data/mapItem";
 
 console.log(import.meta.env);
 
-const Home = () => {
-  // mock items or dummies 
-  // const items = mockItems;
-  // later replace mockItems with
-  // const [items, setItems] = useState([]);
+const Home = ({isAdmin}) => {
 
+  // loading state
   const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchItems = async () => {
-    const { data, error } = await supabase
-      .from("Item")
-      .select("*");
+    try {
+      setLoading(true);
 
-    console.log(data);
-    console.log(error);
+      const { data, error } = await supabase
+        .from("FoundReport")
+        .select(`
+          found_id,
+          created_at,
+          Item (*)
+        `);
 
-    if (error) {
-      console.error("Error fetching items:", error);
-      return;
+      console.log("Query finished");
+      console.log("Data:", data);
+      console.log("Error:", error);
+
+      if (error) throw error;
+
+      const formattedItems = data.map((report) => {
+        const item = mapItem(report.Item);
+
+        return {
+          ...item,
+          foundId: report.found_id,
+          reportCreatedAt: report.created_at,
+          dateFound: report.date_found,
+        };
+      });
+
+      setItems(formattedItems);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-    // transform database columns from supabase to the react column names '../../utils/mapItem.js'
-    const formattedItems = data.map(mapItem);
-
-    setItems(formattedItems);
-
-    console.log("Formatted items:", formattedItems);
   };
+
+  useEffect(() => {
+    const test = async () => {
+      console.log("Testing auth");
+
+      try {
+        const result = await Promise.race([
+          supabase.auth.getSession(),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Timeout after 5 seconds")), 5000)
+          ),
+        ]);
+
+        console.log("Session result:", result);
+      } catch (err) {
+        console.error("Session test failed:", err);
+      }
+    };
+
+    test();
+  }, []);
 
   useEffect(() => {
     fetchItems();
@@ -153,7 +188,6 @@ const Home = () => {
     if (appliedSortBy === "Z-A") {
       return b.title.localeCompare(a.title);
     }
-
     // default
     return 0;
   });
@@ -213,11 +247,19 @@ const Home = () => {
         )}
 
         {/* Item Details Rendering */}
+
         {showItemDetails && selectedItem && (
+          !isAdmin?(
           <ModalItemDetailsStudentView
             item={selectedItem}
             onClose={() => setShowItemDetails(false)}
-          />
+            />
+          ):(
+            <ModalItemDetailsAdmin
+            item={selectedItem}
+            onClose={() => setShowItemDetails(false)}
+            />
+          )
         )}
 
         {/* Nav Post Lost Item Page Button */}
@@ -238,7 +280,11 @@ const Home = () => {
       {/* The Grid for those items */}
       <div className="grid">
 
-      {filteredItems.length > 0 ? (
+      {loading ? (
+        <div className="empty-state">
+          Fetching items...
+        </div>
+      ) : filteredItems.length > 0 ? (
 
         filteredItems.map((item) => (
           <ItemCard
