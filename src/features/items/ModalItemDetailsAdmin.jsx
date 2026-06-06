@@ -24,11 +24,37 @@ import React, { useEffect, useState } from "react";
 import "./ModalItemDetailsStudentView.css";
 import Dropdown from "../../components/Dropdown";
 import DropdownRadio from "../../components/DropdownRadio";
+import {supabase} from "../../data/supabase";
 
 const ModalItemDetailsAdmin = ({ item, onClose }) => {
 
-    const [dave, setDave] = useState({});
+    const [owner, setOwner] = useState({});
     const [isClaimed, setClaimed] = useState("Unclaimed");
+    const[foundId,setFoundId] = useState (null);
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
+    const [success, setSuccess] = useState("")
+
+    useEffect(()=>{
+        const getFoundId =  async()=>{
+            if (!item?.id) return
+
+            const {data,error}= await supabase
+                .from("FoundReport")
+                .select("found_id")
+                .eq("item_id", item.id)
+                .single()
+            
+            if (error){
+                console.error("Error getting found_id:", error)
+                return
+            }
+            console.log("Found ID:", data.found_id)
+            setFoundId(data.found_id)
+        }
+
+        getFoundId()
+    },[item])
 
     const safeColor = Array.isArray(item?.color)
         ? item.color
@@ -48,13 +74,59 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
         e.preventDefault()
         const name = e.target.name;
         const value = e.target.value;
-        setDave(values => ({ ...values, [name]: value }))
+        setOwner(values => ({ ...values, [name]: value }))
     }
 
     const handleSubmit = async (e) => {
-        console.log(dave, isClaimed)
+        e.preventDefault()
+        setError("")
+        setSuccess("")
+        
+        if (!owner.claimerName||!owner.phone||!owner.nim||!owner.dateClaimed){
+            setError("Please fill all fields!")
+            return
+        }
+        
+        if (!foundId) {
+            setError("Could not find the found report for this item.")
+            return
+        }
+
+        try{
+            setLoading(true)
+
+            //checks if the claim has been made before
+            const { data: claimExist, error: checkError } = await supabase
+            .from("Claim")
+            .select("found_id")
+            .eq("found_id", foundId)
+            .single()
+
+            if (claimExist) {
+                setError("This item has already been claimed.")
+                return
+            }
+            const{error:claimError}= await supabase
+                .from("Claim")
+                .insert([{
+                    found_id: foundId,
+                    name_claimed: owner.claimerName,
+                    phone_claimed: owner.phone,
+                    nim_claimed: owner.nim,
+                    date_claimed: owner.dateClaimed,
+                    status: isClaimed,
+                }])
+            
+            if (claimError) throw claimError
+
+            setSuccess("Claim submitted successfully!")
+        }catch(e){
+            console.error(error)
+            setError(err.message|| "Save failed")
+        }finally{
+            setLoading(false)
+        }
     }
-    // if the expected field name isnt present, try the alternate one
 
     return (
         <div className="item-modal-overlay" onClick={onClose}>
@@ -176,12 +248,11 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
 
                     <div>
                         <form>
-                            <label>
-                                Name
+                            <label>Name
                                 <input
                                     type="text"
                                     name="claimerName"
-                                    value={dave.claimerName}
+                                    value={owner.claimerName||""}
                                     onChange={handleChange}
                                 />
                             </label>
@@ -193,7 +264,7 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
                             <input
                                 type="text"
                                 name="phone"
-                                value={dave.phone}
+                                value={owner.phone||""}
                                 onChange={handleChange}
                             />
                         </label>
@@ -204,7 +275,7 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
                             <input
                                 type="text"
                                 name="nim"
-                                value={dave.nim}
+                                value={owner.nim||""}
                                 onChange={handleChange}
                             />
                         </label>
@@ -212,17 +283,23 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
                     <div>
                         <label>
                             Date
-                            <input
-                                type="text"
-                                name="founddate"
-                                value={dave.founddate}
-                                onChange={handleChange}
-                            />
+                            <input type="date" name="dateClaimed" value={owner.dateClaimed||""} onChange={handleChange}/>
                         </label>
                     </div>
                 </div>
                 <div className="item-admin-bottom">
-                    <div><button className="btn btn-post" onClick={handleSubmit}>Submit</button></div>
+                    <div>
+                        {error && <p className="error-text">{error}</p>}
+                        {success && <p className="success-text">{success}</p>}  
+                    </div>
+                    
+                    <button 
+                        className="btn btn-post" 
+                        onClick={handleSubmit}
+                        disabled={loading}
+                    >
+                        {loading?"Saving..":"Save"}
+                    </button>
                     
                 </div>
 
@@ -234,175 +311,3 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
 }
 
 export default ModalItemDetailsAdmin;
-
-// import Dropdown from "../../components/Dropdown";
-// import DropdownRadio from "../../components/DropdownRadio";
-
-// const ModalItemDetailsAdmin = ({ item, onClose }) => {
-//     const [items, setItems] = useState({});
-//     const [isClaimed, setClaimed] = useState("Unclaimed");
-
-
-//     const handleChange = (e) => {
-//         e.preventDefault()
-//         const name = e.target.name;
-//         const value = e.target.value;
-//         setItems(values => ({ ...values, [name]: value }))
-//     }
-
-//     const handleSubmit = async (e) => {
-//         console.log(items, isClaimed)
-//     }
-//     return (
-//         <div className="modal-overlay" onClick={onClose}>
-//             <div className="modal-item-details" onClick={(e) => e.stopPropagation()}>
-
-//                 {/* ⨉ Close Button */}
-//                 <button className="modal-close" onClick={onClose}>
-//                     ⨉
-//                 </button>
-
-//                 <table>
-//                     <tbody>
-//                         <tr>
-//                             <td rowSpan={3}>
-//                                 {/* Image */}
-//                                 <img
-//                                     src={item.image}
-//                                     alt={item.title}
-//                                     className="modal-item-img"
-//                                 />
-
-//                             </td>
-//                             <td>
-//                                 <strong>Item Name</strong>
-//                                 <p>{item.title}</p>
-//                             </td>
-//                             <td colSpan={2}>
-//                                 <strong>Founder's Name</strong>
-//                                 <p>{item.founder}</p>
-//                             </td>
-
-//                         </tr>
-//                         <tr>
-//                             <td>
-//                                 <strong>Date Lost </strong>
-//                                 <p>{item.date.slice(0, 10)}</p>
-//                             </td>
-
-//                             <td>
-//                                 <strong>Campus</strong>
-//                                 <p>{item.campus}</p>
-//                             </td>
-//                             <td>
-//                                 <strong>Location</strong>
-//                                 <p>{item.location}</p>
-//                             </td>
-//                         </tr>
-//                         <tr>
-//                             <td>
-//                                 <strong>Category</strong>
-//                                 <p>{item.category}</p>
-//                             </td>
-
-//                             <td>
-//                                 <strong>Color:</strong>{" "}
-//                                 <p>{item.color.join(", ")}</p>
-
-//                             </td>
-//                             <td>
-//                                 <strong>Floor</strong>
-//                                 <p>{item.floor}</p>
-//                             </td>
-//                         </tr>
-//                         <tr>
-//                             <td colSpan={4}>
-//                                 <strong>
-//                                     Description
-//                                 </strong>
-//                             </td>
-//                         </tr>
-//                         <tr>
-//                             <td colSpan={2}>
-//                                 <strong>Item Description</strong>
-//                                 <p>{item.description}</p>
-//                             </td>
-
-//                             <td colSpan={2}>
-//                                 <strong>Location Description:</strong><br />
-//                                 <p>{item.locationDescription}</p>
-//                             </td>
-//                         </tr>
-//                     </tbody>
-//                 </table>
-
-
-
-
-//                 {/* Content */}
-//                 <div className="modal-item-content">
-
-
-//                     <div className="modal-admin-editbox">
-//                         <p>Status</p>
-//                         <Dropdown label={isClaimed} type="isClaimed">
-//                             <DropdownRadio
-//                                 name="isClaimed"
-//                                 options={[
-//                                     "Unclaimed",
-//                                     "Claimed"
-//                                 ]}
-//                                 selected={isClaimed}
-//                                 setSelected={setClaimed}
-//                             />
-//                         </Dropdown>
-
-//                         <form>
-//                             <label>
-//                                 Name
-//                                 <input
-//                                     type="text"
-//                                     name="claimerName"
-//                                     value={items.claimerName}
-//                                     onChange={handleChange}
-//                                 />
-//                             </label>
-//                             <label>
-//                                 Phone
-//                                 <input
-//                                     type="text"
-//                                     name="phone"
-//                                     value={items.phone}
-//                                     onChange={handleChange}
-//                                 />
-//                             </label>
-//                             <label>
-//                                 NIM
-//                                 <input
-//                                     type="text"
-//                                     name="nim"
-//                                     value={items.nim}
-//                                     onChange={handleChange}
-//                                 />
-//                             </label>
-//                             <label>
-//                                 Date
-//                                 <input
-//                                     type="text"
-//                                     name="founddate"
-//                                     value={items.founddate}
-//                                     onChange={handleChange}
-//                                 />
-//                             </label>
-//                         </form>
-//                         <button className="btn btn-post" onClick={handleSubmit}>Submit</button>
-//                     </div>
-
-//                 </div>
-//             </div>
-
-//         </div>
-//     )
-// }
-
-// export default ModalItemDetailsAdmin;
