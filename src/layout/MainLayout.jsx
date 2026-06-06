@@ -39,7 +39,7 @@ function MainLayout({isLoggedIn, setIsLoggedIn, setCurrentUser,children, pageTit
                         type="header"
                         icon={profile_icon}
                         iconOnly={true}
-                        to="profile"
+                        to="/profile"
                     />
 
                     {/* <Button

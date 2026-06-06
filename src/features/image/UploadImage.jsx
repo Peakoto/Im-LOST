@@ -1,1 +1,0 @@
-// clicking the box will direct the user to the file explorer to pick the image

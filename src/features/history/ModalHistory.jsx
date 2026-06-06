@@ -64,7 +64,7 @@ function ModalHistory({ historyData = [] }) {
                         {
                             historyData.length > 0 ? (
                                 historyData.map((item, index) => (
-                                    <tr key={item.id || index}>
+                                    <tr key={item.item_id || index}>
 
                                         <td>{index + 1}</td>
 
@@ -89,7 +89,17 @@ function ModalHistory({ historyData = [] }) {
                                                     icon={infoIcon}
                                                     iconOnly={true}
                                                     onClick={() => {
-                                                        setSelectedItem(item);
+                                                        // since there are mismatch in naming, map item is added again
+                                                        const mappedItem = {
+                                                            ...item,
+
+                                                            image: item.imageURL,
+                                                            title: item.itemName,
+                                                            date: item.dateLost,
+                                                            description: item.itemDescription,
+                                                        };
+
+                                                        setSelectedItem(mappedItem);
                                                         setShowStudentViewModal(true);
                                                     }}
                                                 />
@@ -100,7 +110,17 @@ function ModalHistory({ historyData = [] }) {
                                                         icon={editIcon}
                                                         iconOnly={true}
                                                         onClick={() => {
-                                                            setSelectedItem(item);
+                                                            // since there are mismatch in naming, map item is added again
+                                                            const mappedItem = {
+                                                                ...item,
+
+                                                                image: item.imageURL,
+                                                                title: item.itemName,
+                                                                date: item.dateLost,
+                                                                description: item.itemDescription,
+                                                            };
+
+                                                            setSelectedItem(mappedItem);
                                                             setShowStudentEditModal(true);
                                                         }}
                                                     />

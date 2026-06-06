@@ -52,11 +52,23 @@
 }
 
 .input-group input {
+    width: 100%;
     padding: 10px;
-
+    box-sizing: border-box;
     border-radius: 8px;
-
     border: 1px solid #ccc;
+}
+
+.input-group:has(input:read-only) label {
+    margin-bottom: 14px;
+}
+
+.input-group input:read-only {
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #dfdfdf;
+    border: 1px solid #dfdfdf;
+    pointer-events: none; 
 }
 
 .profile-buttons {

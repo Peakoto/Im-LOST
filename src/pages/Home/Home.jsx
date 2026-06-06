@@ -30,6 +30,7 @@ const Home = ({isAdmin}) => {
         .select(`
           found_id,
           created_at,
+          date_found,
           Item (*)
         `);
       
