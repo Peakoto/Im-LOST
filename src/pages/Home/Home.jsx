@@ -241,7 +241,7 @@ const Home = ({isAdmin}) => {
           <Dropdown label={viewLostReports} type="viewLostReports">
           <DropdownRadio
             name="viewLostReports"
-            options={["Lost Reports","Items"]}
+            options={["Items","Lost Reports"]}
             selected={viewLostReports}
             setSelected={setViewLostReports}
           />
