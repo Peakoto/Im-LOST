@@ -12,15 +12,12 @@ import filterIcon from "../../assets/filter_icon.png";
 import { supabase } from "../../data/supabase";
 import { mapItem } from "../../data/mapItem";
 
-console.log(import.meta.env);
-
 const Home = ({isAdmin}) => {
 
   // loading state
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  console.log("isAdmin tate is:")
-  console.log(isAdmin)
+  console.log("isAdmin state is:",isAdmin)
   const fetchItems = async () => {
     try {
       setLoading(true);
@@ -259,12 +256,12 @@ const Home = ({isAdmin}) => {
         
         {showItemDetails && selectedItem && (
           isAdmin?(
-          <ModalItemDetailsStudentView
-            item={selectedItem}
-            onClose={() => setShowItemDetails(false)}
+            <ModalItemDetailsAdmin
+              item={selectedItem}
+              onClose={() => setShowItemDetails(false)}
             />
           ):(
-            <ModalItemDetailsAdmin
+            <ModalItemDetailsStudentView
             item={selectedItem}
             onClose={() => setShowItemDetails(false)}
             />

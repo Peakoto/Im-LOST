@@ -23,14 +23,11 @@ const App = () => {
   const checkAdmin = async (userId) => {
     console.log("checkAdmin start", userId);
 
-    const { data } = await supabase
+    const { data,error } = await supabase
       .from("User")
       .select("admin")
       .eq("user_id", userId)
       .single()
-
-    console.log("checkAdmin data:", data);
-    console.log("checkAdmin error:", error);
 
     if (error) {
       setIsAdmin(false);
@@ -38,6 +35,8 @@ const App = () => {
     }
 
     setIsAdmin(data?.admin == true)//sets isAdmin true ot false
+    console.log("checkAdmin data:", data);
+    console.log("checkAdmin error:", error);
   }
 
   // check session on page load
@@ -60,23 +59,11 @@ const App = () => {
       }
     }
     getSession()
-
-    // change callback since
-    // Supabase specifically recommends not doing long async operations directly inside onAuthStateChange
-//from main
-    // const {
-    //   data: { subscription },
-    // } = supabase.auth.onAuthStateChange((event, session) => {
-
-    //   console.log("AUTH EVENT:", event);
-
-    //   if (event === "SIGNED_IN" && session) {
-// =======
 //from Add_isAdmin2
     const{data:{subscription},}= supabase.auth.onAuthStateChange(async(event,session)=>{
       //checks in real time
       if (session){
-// =======
+
         setIsLoggedIn(true);
         setCurrentUser(session.user);
         // await removed

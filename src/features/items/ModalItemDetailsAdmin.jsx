@@ -141,7 +141,7 @@ const ModalItemDetailsAdmin = ({ item, onClose }) => {
                 {/* HEADER */}
                 <div className="item-modal-header">
 
-                    <h1>Item Details A</h1>
+                    <h1>Item Details</h1>
 
                     <button
                         className="close-btn"
