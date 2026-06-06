@@ -7,18 +7,17 @@ import DropdownRadio from "../../components/DropdownRadio";
 import ModalFilter from "../../features/items/ModalFilter";
 import SearchBar from "../../components/SearchBar";
 import ModalItemDetailsStudentView from "../../features/items/ModalItemDetailsStudentView";
+import ModalItemDetailsAdmin from "../../features/items/ModalItemDetailsAdmin";
 import filterIcon from "../../assets/filter_icon.png";
 import { supabase } from "../../data/supabase";
 import { mapItem } from "../../data/mapItem";
-
-console.log(import.meta.env);
 
 const Home = ({isAdmin}) => {
 
   // loading state
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  console.log("isAdmin state is:",isAdmin)
   const fetchItems = async () => {
     try {
       setLoading(true);
@@ -31,14 +30,20 @@ const Home = ({isAdmin}) => {
           date_found,
           Item (*)
         `);
-
-      console.log("Query finished");
-      console.log("Data:", data);
-      console.log("Error:", error);
-
+      
       if (error) throw error;
 
-      const formattedItems = data.map((report) => {
+      //gett all found_id from 
+      const{data:claimedData,error:claimError} = await supabase
+        .from("Claim")
+        .select("found_id")
+
+      if (claimError) throw claimError;
+      //make ids into a set
+      const claimedFoundIds = new Set(claimedData.map(c=>c.found_id))
+      const unclaimedItems = data.filter(i=>!claimedFoundIds.has(i.found_id))
+
+      const formattedItems = unclaimedItems.map((report) => {
         const item = mapItem(report.Item);
 
         return {
@@ -248,15 +253,15 @@ const Home = ({isAdmin}) => {
         )}
 
         {/* Item Details Rendering */}
-
+        
         {showItemDetails && selectedItem && (
-          !isAdmin?(
-          <ModalItemDetailsStudentView
-            item={selectedItem}
-            onClose={() => setShowItemDetails(false)}
+          isAdmin?(
+            <ModalItemDetailsAdmin
+              item={selectedItem}
+              onClose={() => setShowItemDetails(false)}
             />
           ):(
-            <ModalItemDetailsAdmin
+            <ModalItemDetailsStudentView
             item={selectedItem}
             onClose={() => setShowItemDetails(false)}
             />
