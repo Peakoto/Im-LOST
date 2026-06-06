@@ -116,9 +116,6 @@ const ModalLogin = ({item, onClose,isLoggedIn,setIsLoggedIn,setCurrentUser}) => 
         }
     };
 
-    if(isLoggedIn){
-
-    }
     return (
         <>
             <div className="modal-overlay" onClick={onClose}>
