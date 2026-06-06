@@ -28,6 +28,7 @@ const Home = ({isAdmin}) => {
         .select(`
           found_id,
           created_at,
+          date_found,
           Item (*)
         `);
 
@@ -38,6 +39,7 @@ const Home = ({isAdmin}) => {
       if (error) throw error;
 
       const formattedItems = data.map((report) => {
+        console.log("FoundReport row:", report);
         const item = mapItem(report.Item);
 
         return {
