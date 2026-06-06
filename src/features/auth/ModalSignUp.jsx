@@ -2,7 +2,7 @@ import "./ModalSignUp.css";
 import React, {useState} from "react";
 import {supabase} from "../../data/supabase";
 
-const ModalSignUp = ({onClose}) => {
+const ModalSignUp = ({onClose,setIsLoggedIn}) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -66,43 +66,14 @@ const ModalSignUp = ({onClose}) => {
             console.log("Signup complete");
 
             setSuccess("Account created successfully.");
+            setIsLoggedIn(false)
+            onClose();
         } catch (err) {
             console.error("Signup failed:", err);
             setError("Account creation failed.");
         } finally {
             setLoading(false);
         }
-
-        // try {
-        //     setLoading(true);
-
-        //     //create auth user
-        //     const{data,error}= await supabase.auth.signUp({
-        //         email,password
-        //     })
-        //     if (error) throw error;
-        //     console.log("Logged in: ",data.user);
-            
-        //     //insert to supabase
-        //     const{error:insertError}= await supabase.from("User")
-        //         .insert([{
-        //             user_id:data.user.id,//so user id matches with the one created by auth
-        //             email:email,
-        //             admin:false,
-        //             name:null,
-        //             phone:null
-        //         }])
-
-        //     if (insertError) throw insertError;
-        //     setSuccess("Account created successfully.");
-
-        // } catch (err) {
-        //     console.error(err);
-        //     setError("Account creation failed.");
-
-        // } finally {
-        //     setLoading(false);
-        // }
     };
     
     return (
