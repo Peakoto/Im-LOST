@@ -39,7 +39,6 @@ const Home = ({isAdmin}) => {
       if (error) throw error;
 
       const formattedItems = data.map((report) => {
-        console.log("FoundReport row:", report);
         const item = mapItem(report.Item);
 
         return {
