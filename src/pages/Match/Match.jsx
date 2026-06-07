@@ -30,6 +30,21 @@ const Match = () => {
     fetchData();
   }, []);
 
+  const handleClaimSuccess = async (foundId)=>{
+    try{
+      const {error:updateLostError} = await supabase
+        .from("LostReport")
+        .update({claimed:true})
+        .eq("item_id", lostItem.id)
+      
+      if (updateLostError) throw updateLostError
+
+      console.log("Lost report marked as claimed!")
+      fetchData() // refresh list
+    }catch (e){
+      console.error("Failed to update lost report:", e)
+    }
+  }
   async function fetchData() {
     setLoading(true);
     
@@ -93,6 +108,7 @@ const Match = () => {
   }
   
   console.log("lostItem", lostItem)
+
 
   // calculate match score
   function calculateMatchScore(lostItem, foundItem) {
@@ -206,6 +222,7 @@ const Match = () => {
             item={selectedItem}
             onClose={() => setShowItemDetails(false)}
             viewLostReports={"Found Reports"}
+            onClaimSuccess={handleClaimSuccess} 
           />
         ) : (
           <ModalItemDetailsStudentView
