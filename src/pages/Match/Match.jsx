@@ -7,18 +7,21 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../../data/supabase";
 import { mapItem } from "../../data/mapItem";
 import ModalItemDetailsStudentView from "../../features/items/ModalItemDetailsStudentView";
-// import ModalItemDetailsAdmin from "../../features/items/ModalItemDetailsAdmin";
+import ModalItemDetailsAdmin from "../../features/items/ModalItemDetailsAdmin";
 
 // later the lost item will be send in the form of an index to ensure data not lost when reloading
 const Match = () => {
   const [showItemDetails, setShowItemDetails] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+
   
   const location = useLocation();
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [lostItem, setLostItem] = useState(location.state?.item || null);
+  const isAdmin = location.state?.isAdmin || false; 
+  console.log("isAdmin in matchpage",isAdmin)
 
   const [foundItems, setFoundItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -62,7 +65,14 @@ const Match = () => {
         return;
       }
 
+      const{data:claimedData, error:claimError}= await supabase
+        .from("Claim")
+        .select("found_id")
+      //make all the found ids into a set
+      const claimedFoundIds= new Set (claimedData.map(c=>c.found_id))
+
       const mappedFoundItems = foundReports
+        .filter(report=>!claimedFoundIds.has(report.found_id))//only get unclaimed items
         .map(report => ({
           ...mapItem(report.Item),
 
@@ -191,10 +201,18 @@ const Match = () => {
       </div>
 
       {showItemDetails && selectedItem && (
-        <ModalItemDetailsStudentView
-          item={selectedItem}
-          onClose={() => setShowItemDetails(false)}
-        />
+        isAdmin? (
+          <ModalItemDetailsAdmin
+            item={selectedItem}
+            onClose={() => setShowItemDetails(false)}
+            viewLostReports={"Found Reports"}
+          />
+        ) : (
+          <ModalItemDetailsStudentView
+            item={selectedItem}
+            onClose={() => setShowItemDetails(false)}
+          />
+        )
       )}
     </div>
   );

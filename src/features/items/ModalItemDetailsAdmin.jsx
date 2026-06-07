@@ -4,8 +4,11 @@ import Dropdown from "../../components/Dropdown";
 import DropdownRadio from "../../components/DropdownRadio";
 import {supabase} from "../../data/supabase";
 import imageIcon from "../../assets/image_icon.png";
+import matchIcon from "../../assets/match_icon.png";
+import {useNavigate} from "react-router-dom";
+import Button from "../../components/Button";
 
-const ModalItemDetailsAdmin = ({ item, onClose,viewLostReports }) => {
+const ModalItemDetailsAdmin = ({ item, onClose,viewLostReports,isAdmin}) => {
 
     const [owner, setOwner] = useState({});
     const [isClaimed, setClaimed] = useState("Unclaimed");
@@ -13,6 +16,7 @@ const ModalItemDetailsAdmin = ({ item, onClose,viewLostReports }) => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
+    const navigate = useNavigate();
 
     useEffect(()=>{
         const getFoundId =  async()=>{
@@ -208,7 +212,18 @@ const ModalItemDetailsAdmin = ({ item, onClose,viewLostReports }) => {
 
                 </div>
                 
-                {viewLostReports === "Lost Reports"?null:(
+                {viewLostReports === "Lost Reports"?(
+                    <Button
+                        type="matchPage"
+                        label="Match Item"
+                        icon={matchIcon}
+                        onClick={() => {
+                            navigate(`/match/${item.item_id}`, {
+                                        state: {item,isAdmin}
+                                    });
+                        }}
+                    />
+                ):(
                     <>
                     <div className="item-admin-top">
                         <div><p>Status</p></div>
@@ -226,7 +241,7 @@ const ModalItemDetailsAdmin = ({ item, onClose,viewLostReports }) => {
                             </Dropdown>                        
                         </div>
                     </div>
-                {/* BOTTOM SECTION */}
+                    {/* BOTTOM SECTION */}
 
                     <div className="item-admin-contents">
 

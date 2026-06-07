@@ -20,7 +20,7 @@ const ModalItemDetailsStudentView = ({ item, onClose, isAdmin=false }) => {
     const location = item?.location ?? item?.locationFound ?? item?.locationDetails ?? "";
     const locationDescription = item?.locationDescription ?? item?.locationDetails ?? "";
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     // if the expected field name isnt present, try the alternate one
     console.log("ModalItemDetailsStudentView isAdmin:", isAdmin);
@@ -128,19 +128,19 @@ const ModalItemDetailsStudentView = ({ item, onClose, isAdmin=false }) => {
                     </div>
 
                 </div>
-
-                {isAdmin && (
+                
+                {/* {isAdmin && (
                     <Button
                         type="matchPage"
                         label="Match Item"
                         icon={matchIcon}
                         onClick={() => {
                             navigate(`/match/${item.item_id}`, {
-                                state: {item}
+                                state: {item,isAdmin}
                             });
                         }}
                     />
-                )}
+                )} */}
 
             </div>
 
