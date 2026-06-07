@@ -1,23 +1,3 @@
-// can be accessed using bt_history.jsx
-
-// informations consists of
-// unhidden
-// - index number
-// - status
-// - date lost
-// - item name
-// - campus
-// - location
-
-// - edit pencil icon (directs to the 'item_details_student_edit.jsx')
-// - full information (directs to the 'item_details_student_view.jsx')
-
-// hidden (can be seen on the edit popup) *you need to access to the 'edit_item_details.jsx' in the popup folder
-// - floor
-// - color
-// - description (location)
-// - description (item)
-
 import "./ModalHistory.css";
 import Button from "../../components/Button.jsx";
 import infoIcon from "../../assets/info_icon.png"
@@ -31,29 +11,12 @@ import { useNavigate } from "react-router-dom";
 
 
 
-function ModalHistory({ historyData = [] }) {
+function ModalHistory({ historyData = [], isAdmin = false }) {
 
     const [showStudentViewModal, setShowStudentViewModal] = useState(false);
     const [showStudentEditModal, setShowStudentEditModal] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const navigate = useNavigate();
-
-    // function to set the status of the item between lost and claimed
-
-    // setLoadingHistory(true);
-
-    // const {data: historyItems, error: historyError} = await supabase
-    //     .from("LostReport")
-    //     .select("*. Item(*)")
-    //     .eq("user_id", user.id);
-    
-    // if(historyError){
-    //     StorageApiError("Failed to load history")
-    // } else{
-    //     // get all claimed item ids
-    //     const itemIds = {historyItems || []}
-    // }
-
 
     return (
         <div className="history">
@@ -121,42 +84,49 @@ function ModalHistory({ historyData = [] }) {
                                                     }}
                                                 />
 
-                                                {item.status === "Lost" && (
-                                                    <Button
-                                                        type="tableEdit"
-                                                        icon={editIcon}
-                                                        iconOnly={true}
-                                                        onClick={() => {
-                                                            // since there are mismatch in naming, map item is added again
-                                                            const mappedItem = {
-                                                                ...item,
+                                                
+                                                <Button
+                                                    type="tableEdit"
+                                                    icon={editIcon}
+                                                    iconOnly={true}
+                                                    disabled={item.claimed}
+                                                    // if item.claimed false from claimed LostReport
+                                                    style={{
+                                                        opacity: item.claimed ? 0.5 : 1,
+                                                        pointerEvents: item.claimed ? "none" : "auto"
+                                                    }}
+                                                    onClick={() => {
+                                                        // since there are mismatch in naming, map item is added again
+                                                        const mappedItem = {
+                                                            ...item,
 
-                                                                image: item.imageURL,
-                                                                title: item.itemName,
-                                                                date: item.dateLost,
-                                                                description: item.itemDescription,
-                                                            };
+                                                            image: item.imageURL,
+                                                            title: item.itemName,
+                                                            date: item.dateLost,
+                                                            description: item.itemDescription,
+                                                        };
 
-                                                            setSelectedItem(mappedItem);
-                                                            setShowStudentEditModal(true);
-                                                        }}
-                                                    />
-                                                )}
-
-                                                {item.status === "Lost" && (
-                                                    <Button
-                                                        type="tableMatch"
-                                                        icon={matchIcon}
-                                                        iconOnly={true}
-                                                        onClick={() => {
-                                                            navigate(`/match/${item.item_id}`, {
-                                                                state: {
-                                                                    item
-                                                                }
-                                                            });
-                                                        }}
-                                                    />
-                                                )}
+                                                        setSelectedItem(mappedItem);
+                                                        setShowStudentEditModal(true);
+                                                    }}
+                                                />
+                                                
+                                                <Button
+                                                    type="tableMatch"
+                                                    icon={matchIcon}
+                                                    iconOnly={true}
+                                                    disabled={item.claimed}
+                                                    // if item.claimed false from claimed LostReport
+                                                    style={{
+                                                        opacity: item.claimed ? 0.5 : 1,
+                                                        pointerEvents: item.claimed ? "none" : "auto"
+                                                    }}
+                                                    onClick={() => {
+                                                        navigate(`/match/${item.item_id}`, {
+                                                            state: {item}
+                                                        });
+                                                    }}
+                                                />
                                             </div>                                             
                                         </td>
 
@@ -192,13 +162,6 @@ function ModalHistory({ historyData = [] }) {
                         onClose={() => setShowStudentEditModal(false)}
                     />
                 )
-            }
-
-            {
-            /* Note: 
-                ModalItemDetailsStudentView expects an `item` prop.
-                Once history is wired to Supabase, pass the selected row's item data or an item id. 
-            */
             }
         </div>
     );

@@ -15,10 +15,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Button.css";
 
-const Button = ({ type, label, to, onClick, icon, iconOnly, className="" }) => {
+const Button = ({ type, label, to, onClick, icon, iconOnly, className="", disabled = false, style = {} }) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
+        if (disabled) return;
         if (onClick) onClick();
         if (to) navigate(to);
     };
@@ -32,6 +33,8 @@ const Button = ({ type, label, to, onClick, icon, iconOnly, className="" }) => {
                 ${className}
             `}
             onClick={handleClick}
+            disabled={disabled}
+            style={style}
         >
             {icon && (
                 <img 
