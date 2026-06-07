@@ -8,7 +8,7 @@ import matchIcon from "../../assets/match_icon.png";
 import {useNavigate} from "react-router-dom";
 import Button from "../../components/Button";
 
-const ModalItemDetailsAdmin = ({ item, onClose,viewLostReports,isAdmin}) => {
+const ModalItemDetailsAdmin = ({ item, onClose,viewLostReports,isAdmin,onClaimSuccess}) => {
 
     const [owner, setOwner] = useState({});
     const [isClaimed, setClaimed] = useState("Unclaimed");
@@ -107,6 +107,10 @@ const ModalItemDetailsAdmin = ({ item, onClose,viewLostReports,isAdmin}) => {
             if (claimError) throw claimError
 
             setSuccess("Claim submitted successfully!")
+            if (onClaimSuccess) {
+                console.log("masukOnclaimedSuccess")
+                onClaimSuccess(foundId)
+            }
         }catch(e){
             console.error(error)
             setError(err.message|| "Save failed")

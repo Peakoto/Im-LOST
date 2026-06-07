@@ -45,8 +45,8 @@ const Home = ({isAdmin}) => {
         created_at,
         date_lost,
         Item (*)
-      `);
-        
+      `)
+      .eq("claimed", false);
     if (error) throw error;
 
     return data.map((report) => {
