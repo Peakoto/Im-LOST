@@ -11,19 +11,6 @@
     gap: 12px;
 }
 
-.home-btn-wrap button {
-    background: transparent;
-    border: none;
-    padding-left: 10px;
-    box-shadow: none;
-}
-
-.home-btn-wrap img {
-    width: 28px;
-    height: 28px;
-    cursor: pointer;
-}
-
 .image-upload:hover {
     border-color: rgb(0, 140, 255);
     color: rgb(0, 140, 255);
@@ -92,11 +79,10 @@
 }
 
 .layout_found {
-    background-color: rgb(255, 255, 255);
-    padding: 10px;
+    background-color: white;
+    padding: 20px;
     border-radius: 10px;
     border: 2px solid #2289E6;
-
 }
 
 .layout_found .btn {
@@ -105,13 +91,9 @@
     margin-top: 24px;
 }
 
-.layout_found {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    border: 2px solid #2289E6;
+.layout_found .dropdown {
+    margin: 8px 0;
 }
-
 
 table {
     width: 100%;
@@ -129,7 +111,7 @@ td:first-child {
 }
 
 td:not(:first-child) {
-    width: 33%;
+    width: 25%;
 }
 
 .image-upload,
@@ -139,11 +121,29 @@ td:not(:first-child) {
 
 .inputhere {
     padding: 0px 5px 0px 10px;
-    /* background-color: blueviolet; */
+    display: flex;
+    flex-direction: column;
 }
 
-.inputhere > p {
+.inputhere form {
+    margin: 0;
+}
+
+.inputhere p {
     font-weight: bold;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+}
+
+.inputhere .dropdown {
+    width: 100%;
+}
+
+.inputhere .dropdown-btn {
+    width: 100%;
+    height: 46px;
+    font-size: 14px;
+    box-sizing: border-box;
 }
 
 textarea {
@@ -164,6 +164,7 @@ input[type=date] {
     box-sizing: border-box;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 14px;
+    height: 46px;
 }
 
 .textarea-label {

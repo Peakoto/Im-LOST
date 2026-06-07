@@ -38,6 +38,23 @@ function ModalHistory({ historyData = [] }) {
     const [selectedItem, setSelectedItem] = useState(null);
     const navigate = useNavigate();
 
+    // function to set the status of the item between lost and claimed
+
+    // setLoadingHistory(true);
+
+    // const {data: historyItems, error: historyError} = await supabase
+    //     .from("LostReport")
+    //     .select("*. Item(*)")
+    //     .eq("user_id", user.id);
+    
+    // if(historyError){
+    //     StorageApiError("Failed to load history")
+    // } else{
+    //     // get all claimed item ids
+    //     const itemIds = {historyItems || []}
+    // }
+
+
     return (
         <div className="history">
 
@@ -128,7 +145,7 @@ function ModalHistory({ historyData = [] }) {
 
                                                 {item.status === "Lost" && (
                                                     <Button
-                                                        type="matchPage"
+                                                        type="tableMatch"
                                                         icon={matchIcon}
                                                         iconOnly={true}
                                                         onClick={() => {

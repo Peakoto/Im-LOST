@@ -1,4 +1,5 @@
 import "./LostItemDetailBox.css";
+import imageIcon from "../../assets/image_icon.png";
 
 const LostItemDetailBox = ({ item }) => {
   if (!item) return null;
@@ -12,9 +13,9 @@ const LostItemDetailBox = ({ item }) => {
             
         <div className="lost-item-top">
             <img
-            src={item.imageURL}
-            alt={item.title}
-            className="lost-item-img"
+                src={item.imageURL || item.image || imageIcon}
+                alt={item.title}
+                className={`lost-item-img ${!(item.imageURL || item.image) ? "placeholder-image" : "" }`}
             />
 
             <div className="lost-item-details">
@@ -63,7 +64,7 @@ const LostItemDetailBox = ({ item }) => {
         <div className="lost-item-description">
             <div>
                 <label>Item Description</label>
-                <p>{item.itemDescription}</p>
+                <p>{item.itemDescription || item.description}</p>
             </div>
 
             <div>

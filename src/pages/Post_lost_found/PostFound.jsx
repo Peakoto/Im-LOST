@@ -279,6 +279,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
       <div className="home-btn-wrap">
         <Button
           type="home"
+          label="Home"
           icon={homeIcon}
           to="/"
           iconOnly={true}
@@ -293,7 +294,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
               <td rowSpan={3}>
                 <ImgUpload />
               </td>
-              <td>
+              <td colSpan={2}>
                 <div className="inputhere">
                   <p>Item Name</p>
                   <form>
@@ -310,7 +311,7 @@ const PostFound = ({isAdmin,isLoggedIn}) => {
 
 
               </td>
-              <td colSpan={2} className="desc-cell">
+              <td className="desc-cell">
                 <div className="inputhere">
                   <p>Your Name (Founder of the item)</p>
                   <form>

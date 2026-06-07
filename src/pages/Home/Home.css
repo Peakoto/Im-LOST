@@ -2,6 +2,23 @@
     padding: 20px;
 }
 
+.top .dropdown-btn,
+.top .searchbar-input,
+.top .btn {
+    height: 50px;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+.top .dropdown-btn{
+    width: 200px;
+}
+
+.btn-filter .button-icon {
+    width: 40px;
+    height: 40px;
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 270px);
@@ -14,7 +31,7 @@
     margin-top: -20px;
     justify-content: center;
     align-items: center;
-    gap: 30px;
+    gap: 20px;
     flex-direction: row;
     display: flex;
 }

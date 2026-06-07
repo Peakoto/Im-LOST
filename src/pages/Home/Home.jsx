@@ -19,7 +19,7 @@ const Home = ({isAdmin}) => {
   const [loading, setLoading] = useState(true);
     // defaulting the campus dropdown
   const [campus, setCampus] = useState("Alam Sutera");
-  const [viewLostReports,setViewLostReports] = useState("Items");
+  const [viewLostReports,setViewLostReports] = useState("Found Reports");
   const [showFilter, setShowFilter] = useState(false);
   // for the calender filter
   const [appliedStartDate, setAppliedStartDate] = useState("");
@@ -99,7 +99,7 @@ const Home = ({isAdmin}) => {
 
       let formattedItems;
 
-      if (viewLostReports ==="Items"){
+      if (viewLostReports ==="Found Reports"){
         formattedItems= await foundReportItems();
       }else{
         formattedItems = await lostReportItems();
@@ -241,7 +241,7 @@ const Home = ({isAdmin}) => {
           <Dropdown label={viewLostReports} type="viewLostReports">
           <DropdownRadio
             name="viewLostReports"
-            options={["Items","Lost Reports"]}
+            options={["Found Reports","Lost Reports"]}
             selected={viewLostReports}
             setSelected={setViewLostReports}
           />
@@ -296,16 +296,17 @@ const Home = ({isAdmin}) => {
         {/* Item Details Rendering */}
         
         {showItemDetails && selectedItem && (
-          isAdmin?(
+          isAdmin && viewLostReports === "Found Reports" ? (
             <ModalItemDetailsAdmin
               item={selectedItem}
               onClose={() => setShowItemDetails(false)}
               viewLostReports={viewLostReports}
             />
-          ):(
+          ) : (
             <ModalItemDetailsStudentView
-            item={selectedItem}
-            onClose={() => setShowItemDetails(false)}
+              item={selectedItem}
+              onClose={() => setShowItemDetails(false)}
+              isAdmin={isAdmin}
             />
           )
         )}

@@ -1,7 +1,5 @@
 .dropdown {
     position: relative;
-    /* display: inline-block;
-    z-index: 99; */
 }
 
 .dropdown-btn {
@@ -69,4 +67,10 @@
 
 .dropdown-item input {
     transform: scale(1.2);
+}
+
+.dropdown-btn-viewLostReports {
+    width: 180px;
+    height: 50px;
+    font-size: 18px;
 }

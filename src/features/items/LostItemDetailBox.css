@@ -32,6 +32,12 @@
   object-fit: cover;
 }
 
+.placeholder-image {
+    object-fit: contain;
+    padding: 15px;
+    background: #f5f5f5;
+}
+
 .lost-item-details {
   flex: 1;
 

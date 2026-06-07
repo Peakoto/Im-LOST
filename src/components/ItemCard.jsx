@@ -1,10 +1,15 @@
 import React from "react";
 import "./ItemCard.css";
+import imageIcon from "../assets/image_icon.png";
 
 const ItemCard = ({ item, onClick }) => {
     return (
         <div className="item-card" onClick={() => onClick(item)}>
-            <img src={item.image} alt={item.title} className="item-image" />
+            <img
+                src={item.image || imageIcon}
+                alt={item.title}
+                className={`item-image ${!item.image ? "placeholder-image" : ""}`}
+            />
 
             <div className="item-content">
                 <h3 className="item-title">{item.title}</h3>

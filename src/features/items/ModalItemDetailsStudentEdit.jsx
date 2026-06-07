@@ -4,19 +4,7 @@ import Button from "../../components/Button.jsx";
 import uploadIcon from "../../assets/upload_icon.png";
 import { supabase } from "../../data/supabase.js";
 import { updateItem, updateLostReport } from "../../api/itemApi.js";
-
-// Edit modal (normalized field names to match ModalItemDetailsStudentView)
-// Expected `item` shape:
-// - image
-// - title
-// - founder
-// - date
-// - location
-// - campus
-// - category
-// - color (string[] or string)
-// - description
-// - locationDescription
+import imageIcon from "../../assets/image_icon.png";
 
 const ModalItemDetailsStudentEdit = ({ item, onClose }) => {
   const initial = useMemo(() => {
@@ -253,7 +241,11 @@ const ModalItemDetailsStudentEdit = ({ item, onClose }) => {
         <div className="item-edit-top">
           <div className="item-edit-image">
             <div className="item-image-box">
-              <img src={form.image || ""} alt={form.title || "item"} className="item-image" />
+              <img 
+                src={form.image || imageIcon} 
+                alt={form.title || "item"} 
+                className={`item-image ${!form.image ? "placeholder-image" : ""}`} 
+              />
 
                 <Button
                   type="uploadImage"

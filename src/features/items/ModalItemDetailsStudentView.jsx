@@ -1,22 +1,11 @@
-// can be accessed through information button inside history.jsx
-// or from item preview in main page 'main.jsx'
-
-// consists of (view only)
-// - item name
-// - founder's name
-// - date lost
-// - location
-// - campus
-// - category
-// - item color
-// - floor
-// - item description
-// - location description
-
 import React from "react";
 import "./ModalItemDetailsStudentView.css";
+import {useNavigate} from "react-router-dom";
+import Button from "../../components/Button";
+import matchIcon from "../../assets/match_icon.png";
+import imageIcon from "../../assets/image_icon.png";
 
-const ModalItemDetailsStudentView = ({ item, onClose }) => {
+const ModalItemDetailsStudentView = ({ item, onClose, isAdmin=false }) => {
     const safeColor = Array.isArray(item?.color)
         ? item.color
         : item?.color
@@ -31,8 +20,13 @@ const ModalItemDetailsStudentView = ({ item, onClose }) => {
     const location = item?.location ?? item?.locationFound ?? item?.locationDetails ?? "";
     const locationDescription = item?.locationDescription ?? item?.locationDetails ?? "";
 
-    // if the expected field name isnt present, try the alternate one
+    const navigate = useNavigate();
 
+    // if the expected field name isnt present, try the alternate one
+    console.log("ModalItemDetailsStudentView isAdmin:", isAdmin);
+
+    console.log("Modal mounted");
+    console.log("isAdmin:", isAdmin);
     return (
         <div className="item-modal-overlay" onClick={onClose}>
 
@@ -60,9 +54,9 @@ const ModalItemDetailsStudentView = ({ item, onClose }) => {
                     <div className="item-image-container">
 
                         <img
-                            src={item.image}
+                            src={item.image || imageIcon}
                             alt={item.itemName}
-                            className="item-image"
+                            className={`item-image ${!item.image ? "placeholder-image" : ""}`}
                         />
 
                     </div>
@@ -134,6 +128,19 @@ const ModalItemDetailsStudentView = ({ item, onClose }) => {
                     </div>
 
                 </div>
+
+                {isAdmin && (
+                    <Button
+                        type="matchPage"
+                        label="Match Item"
+                        icon={matchIcon}
+                        onClick={() => {
+                            navigate(`/match/${item.item_id}`, {
+                                state: {item}
+                            });
+                        }}
+                    />
+                )}
 
             </div>
 

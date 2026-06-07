@@ -251,6 +251,7 @@ const PostLost = ({ isLoggedIn }) => {
       <div className="home-btn-wrap">
         <Button
           type="home"
+          label="Home"
           icon={homeIcon}
           to="/"
           iconOnly={true}
@@ -265,7 +266,8 @@ const PostLost = ({ isLoggedIn }) => {
               <td rowSpan={3}>
                 <ImgUpload />
               </td>
-              <td>
+
+              <td colSpan={2}>
                 <div className="inputhere">
                   <p>Item Name</p>
                   <form>
@@ -279,10 +281,9 @@ const PostLost = ({ isLoggedIn }) => {
                     </label>
                   </form>
                 </div>
-
-
               </td>
-              <td colSpan={2} className="desc-cell">
+
+              <td className="desc-cell">
                 <div className="inputhere">
                   <p>Your Name (Owner of the item)</p>
                   <form>
@@ -296,11 +297,9 @@ const PostLost = ({ isLoggedIn }) => {
                     </label>
                   </form>
                 </div>
-
-
               </td>
-
             </tr>
+
             <tr>
               <td>
                 <div className="inputhere">
