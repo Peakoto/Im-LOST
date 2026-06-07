@@ -2,7 +2,7 @@ import React from "react";
 import "./ModalItemDetailsStudentView.css";
 import {useNavigate} from "react-router-dom";
 import Button from "../../components/Button";
-import matchIcon from "../../assets/match_icon.png";
+//import matchIcon from "../../assets/match_icon.png";
 import imageIcon from "../../assets/image_icon.png";
 
 const ModalItemDetailsStudentView = ({ item, onClose, isAdmin=false }) => {
