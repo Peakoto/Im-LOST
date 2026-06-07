@@ -296,11 +296,12 @@ const Home = ({isAdmin}) => {
         {/* Item Details Rendering */}
         
         {showItemDetails && selectedItem && (
-          isAdmin && viewLostReports === "Found Reports" ? (
+          isAdmin /*&& viewLostReports === "Found Reports"*/ ? (
             <ModalItemDetailsAdmin
               item={selectedItem}
               onClose={() => setShowItemDetails(false)}
               viewLostReports={viewLostReports}
+              isAdmin={isAdmin}
             />
           ) : (
             <ModalItemDetailsStudentView
