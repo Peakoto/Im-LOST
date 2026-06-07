@@ -10,11 +10,11 @@
 .header {
     position: sticky;
     top: 0;
-    z-index: 9999;
+    z-index: 900;
     height: 120px;
     display: flex;
     align-items: top;
-    width: 100vw;
+    width: 100%;
 
     overflow: hidden;
 }
