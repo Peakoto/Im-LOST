@@ -340,6 +340,7 @@ const Home = ({isAdmin}) => {
           <ItemCard
             key={item.id}
             item={item}
+            viewLostReports={viewLostReports}
             onClick={(clickedItem) => {
               setSelectedItem(clickedItem);
               setShowItemDetails(true);

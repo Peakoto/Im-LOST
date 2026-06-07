@@ -2,7 +2,9 @@ import React from "react";
 import "./ItemCard.css";
 import imageIcon from "../assets/image_icon.png";
 
-const ItemCard = ({ item, onClick }) => {
+const ItemCard = ({ item, onClick, viewLostReports }) => {
+    const isLostReport = viewLostReports === "Lost Reports";
+
     return (
         <div className="item-card" onClick={() => onClick(item)}>
             <img
@@ -14,8 +16,16 @@ const ItemCard = ({ item, onClick }) => {
             <div className="item-content">
                 <h3 className="item-title">{item.title}</h3>
                 <div className="item-subcontent">
-                    <p className="item-subcontent-title">Date Found</p>
-                    <p className="item-date">{new Date(item.dateFound).toLocaleDateString()}</p>
+
+                    <p className="item-subcontent-title">
+                        {isLostReport ? "Date Lost" : "Date Found"}
+                    </p>
+
+                    <p className="item-date">
+                        {new Date(
+                            isLostReport ? item.dateLost : item.dateFound
+                        ).toLocaleDateString()}
+                    </p>
 
                     <p className="item-subcontent-title">Location</p>
                     <p className="item-location">{item.location}</p>
