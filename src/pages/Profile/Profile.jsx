@@ -182,6 +182,7 @@ function Profile() {
                 <div className="home-btn-wrap">
                     <Button
                     type="home"
+                    label="Home"
                     icon={homeIcon}
                     to="/"
                     iconOnly={true}
