@@ -1,24 +1,3 @@
-/*
-  Components: 
-  - Profile Card
-    - name
-    - email
-    - phone number
-    - password (hidden)
-    - change password button
-    - save button
-  - Lost Item History Table
-    - Linked to Supabase
-    - item number from top
-    - status (lost/found)
-    - date lost
-    - item name
-    - Campus found
-    - location found
-    - info button redirect to item details page
-    - edit button redirect to edit item page
-*/
-
 import "./Profile.css";
 import { useEffect, useState } from "react";
 import { fetchHistoryByUserId, getCurrentUser, fetchProfileByUserId } from "../../api/profileApi.js";
@@ -41,31 +20,6 @@ function Profile() {
         email: "Email",
         phone: "Phone",
     });
-
-    // can also just make useState(null) after done wiring up
-
-    // const placeholderHistory = [
-    //   {
-    //     id: 1,
-    //     status: "Lost",
-    //     dateLost: "10/01/2014",
-    //     itemName: "Notebook A5",
-    //     campus: "Alam Sutera",
-    //     location: "LKC",
-    //     image: "",
-    //     founder: "Anonymous",
-    //     category: "Documents",
-    //     color: ["White"],
-    //     description: "A notebook that was turned in in good condition.",
-    //     locationDescription: "Found in the LKC room (Binus Alam Sutera).",
-
-    //   },
-    // ];
-
-    /*
-    once everything is wired up, remove the const placeholderHistory and useState placeholder History into this: 
-    const [historyData, setHistoryData] = useState([])
-    */
 
     const [historyData, setHistoryData] = useState([]);
     const [loadingHistory, setLoadingHistory] = useState(false);
@@ -120,8 +74,8 @@ function Profile() {
                         lost_id: report.lost_id,
                         item_id: report.item_id,
 
-                        // temp since further connection with the match table is needed (ModalItemDetailsAdmin.jsx)
-                        status: "Lost",
+                        claimed: report.claimed || false,
+                        status: report.claimed ? "Claimed" : "Lost",
                         
                         dateLost: report.date_lost,
                         itemName: report.Item?.item_name || "",
